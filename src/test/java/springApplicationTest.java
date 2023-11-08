@@ -19,7 +19,7 @@ public class springApplicationTest {
         // 원하는 테스트를 작성하고 결과를 검증
         assertEquals(1, result);
     }
-    //테스트 코드 다시 짜기..
+    //테스트 코드 오류 잡기..
 }
 
 
