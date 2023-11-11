@@ -11,23 +11,29 @@
 <form method="post" action="/signUp">
     <div class="container">
         <h1>회원가입</h1>
-        <div class="form-group">
+        <div class="form-group"><!--사용자 아이디-->
             <label for="inputAdress">UserId</label>
             <input type="text" class="form-control" id="inputAdress" name="userId" placeholder="사용자 아이디">
         </div>
-        <div class="form-group">
-            <label for="inputEmail4">UserName</label>
-            <input type="text" class="form-control" id="inputEmail4" name="userName" placeholder="사용자 이름">
+
+        <div class="form-group"><!--사용자 이름-->
+            <label for="inputName">UserName</label>
+            <input type="text" class="form-control" id="inputName" name="userName" placeholder="사용자 이름">
         </div>
-        <div class="form-group">
+
+        <div class="form-group"><!--사용자 비밀번호-->
             <label for="inputPassword4">Password</label>
             <input type="password" class="form-control" id="inputPassword4" name="userPw" placeholder="사용자 비밀번호">
         </div>
 
-
-        <div class="form-group">
+        <div class="form-group"><!--사용자 생년월일-->
             <label for="inputBirth">UserBirth</label>
             <input type="number" class="form-control" id="inputBirth" name="userBirth" placeholder="사용자 생년월일">
+        </div>
+
+        <div class="form-group"><!--사용자 이메일-->
+            <label for="inputEmail">UserEmail</label>
+            <input type="number" class="form-control" id="inputEmail" name="userEmail" placeholder="사용자 이메일">
         </div>
 
         <button type="submit" class="btn btn-primary">가입 완료</button>
