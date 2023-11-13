@@ -20,5 +20,12 @@ public class SpringApplicationTest {
         // 원하는 테스트를 작성하고 결과를 검증
         assertEquals(1, result);
         //테스트 성공
+        System.out.printf("sucess : " + result);
+
+//        Object result1 = jdbcTemplate.update("INSERT INTO table_user (USER_ID, USER_NAME, USER_PW) VALUES ('testIdNew','testNameNew','testPwNew')");
+//        assertEquals(1, result1);
+
+
     }
+
 }
