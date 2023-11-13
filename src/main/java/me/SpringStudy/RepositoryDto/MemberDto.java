@@ -5,7 +5,6 @@ public class MemberDto {
     private long userNo;
     private String userId;
     private String userName;
-    private String userPassword;
     private String userPhoneNum;
     private String userBirth;
     private String userEmail;
@@ -19,7 +18,6 @@ public class MemberDto {
         this.userNo = userNo;
         this.userId = userId;
         this.userName = userName;
-        this.userPassword = userPassword;
         this.userPhoneNum = userPhoneNum;
         this.userBirth = userBirth;
         this.userEmail = userEmail;
@@ -51,13 +49,6 @@ public class MemberDto {
         this.userName = userName;
     }
 
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
 
     public String getUserPhoneNum() {
         return userPhoneNum;
