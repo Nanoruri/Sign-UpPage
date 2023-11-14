@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface MemberDao extends JpaRepository<Member,Long> {
-    List<Member> findAllById(Iterable<Long> longs);
-    //TODO :DAO클래스 작성..
+    // 중복된 아이디가 있는지 확인하는 메서드
+    boolean existsByUserId(String userId);
+    // 특정 조건에 따른 회원 검색 메서드
+    List<Member> findByUserName(String userName);
 }
