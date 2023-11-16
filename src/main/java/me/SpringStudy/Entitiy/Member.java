@@ -28,8 +28,8 @@ public class Member {
     private String updateDate;
 
 
-    //기본 생성자(NoArgs Constructor), 셍략가능
-    public Member(String userId, String userName, int userPhoneNum, int userBirth, String userEmail, String appendDate, String updateDate, String hashedPassword) {
+    //기본 생성자(NoArgs Constructor), 생략가능
+    public Member(String userId, String userName, int userPhoneNum, int userBirth, String email, String userEmail, String appendDate, String updateDate) {
     }
 
 
