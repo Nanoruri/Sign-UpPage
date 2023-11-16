@@ -37,7 +37,7 @@ public class MemberController {
         memberService.registerMember(memberDto);//서비스에서 아직 registerMember메서드 구현 안함
 
         // 회원가입 성공 시 로그인 페이지로 리다이렉션
-        return "redirect:/signup";
+        return "redirect:/signupSuccessPage";
     }
 
     // 다른 컨트롤러 메서드들...

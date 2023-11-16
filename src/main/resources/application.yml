@@ -30,3 +30,10 @@ server:
       name : admin
       password : 1217159
       roles : USER,ADMIN
+
+
+# application.yml
+
+logging:
+  level:
+    org.springframework.security: DEBUG
