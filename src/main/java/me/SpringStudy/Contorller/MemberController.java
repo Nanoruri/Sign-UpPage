@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+
 @Controller
 public class MemberController {
 
@@ -22,17 +25,16 @@ public class MemberController {
     }
 
     @GetMapping("/signup")
-    public String showSignUpForm(Model model) {
+    public String SignUpForm(Model model) {
         model.addAttribute("memberDto", new MemberDto());
-        return "signup";
+        return "signupPage";
     }
 
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute("memberDto") @Validated MemberDto memberDto, BindingResult result) {
+    public String signUp(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "signup";
+            return "signupPage";
         }
-
         // 비밀번호를 해시화하여 저장
         memberService.registerMember(memberDto);//서비스에서 아직 registerMember메서드 구현 안함
 

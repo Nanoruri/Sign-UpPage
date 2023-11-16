@@ -16,9 +16,9 @@ public class Member {
     @Column(name ="USER_PW" )
     private String userPassword;
     @Column(name = "USER_PHONE")
-    private String userPhoneNum;
+    private int userPhoneNum;
     @Column(name = "USER_BIRTH")
-    private String userBirth;
+    private int userBirth;
     @Column(name = "USER_EMAIL")
     private String userEmail;
 
@@ -29,12 +29,12 @@ public class Member {
 
 
     //기본 생성자(NoArgs Constructor), 셍략가능
-    public Member() {
+    public Member(String userId, String userName, int userPhoneNum, int userBirth, String userEmail, String appendDate, String updateDate, String hashedPassword) {
     }
 
 
     //AllArgs Constructor
-    public Member(long userNo, String userId, String userName, String userPassword, String userPhoneNum, String userBirth, String userEmail, String appendDate, String updateDate) {
+    public Member(long userNo, String userId, String userName, String userPassword, int userPhoneNum, int userBirth, String userEmail, String appendDate, String updateDate) {
         this.userNo = userNo;
         this.userId = userId;
         this.userName = userName;
@@ -80,19 +80,19 @@ public class Member {
         this.userPassword = userPassword;
     }
 
-    public String getUserPhoneNum() {
+    public int getUserPhoneNum() {
         return userPhoneNum;
     }
 
-    public void setUserPhoneNum(String userPhoneNum) {
+    public void setUserPhoneNum(int  userPhoneNum) {
         this.userPhoneNum = userPhoneNum;
     }
 
-    public String getUserBirth() {
+    public int getUserBirth() {
         return userBirth;
     }
 
-    public void setUserBirth(String userBirth) {
+    public void setUserBirth(int userBirth) {
         this.userBirth = userBirth;
     }
 

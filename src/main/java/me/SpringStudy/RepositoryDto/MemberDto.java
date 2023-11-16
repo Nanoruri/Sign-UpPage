@@ -6,8 +6,8 @@ public class MemberDto {
     private String userId;
     private String userPassWord;
     private String userName;
-    private String userPhoneNum;
-    private String userBirth;
+    private int userPhoneNum;
+    private int userBirth;
     private String userEmail;
     private String appendDate;
     private String updateDate;
@@ -15,7 +15,7 @@ public class MemberDto {
     public MemberDto() {
     }
 
-    public MemberDto(long userNo, String userId, String userName, String userPassword, String userPhoneNum, String userBirth, String userEmail, String appendDate, String updateDate) {
+    public MemberDto(long userNo, String userId, String userName, String userPassword, int userPhoneNum, int userBirth, String userEmail, String appendDate, String updateDate) {
         this.userNo = userNo;
         this.userId = userId;
         this.userPassWord = userPassword;
@@ -58,19 +58,19 @@ public class MemberDto {
     }
 
 
-    public String getUserPhoneNum() {
+    public int getUserPhoneNum() {
         return userPhoneNum;
     }
 
-    public void setUserPhoneNum(String userPhoneNum) {
+    public void setUserPhoneNum(int userPhoneNum) {
         this.userPhoneNum = userPhoneNum;
     }
 
-    public String getUserBirth() {
+    public int getUserBirth() {
         return userBirth;
     }
 
-    public void setUserBirth(String userBirth) {
+    public void setUserBirth(int userBirth) {
         this.userBirth = userBirth;
     }
 

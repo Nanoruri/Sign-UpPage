@@ -18,3 +18,15 @@ jpa:
     ddl-auto: update
   show-sql: true
   generate-ddl: true
+
+# 포트 번호 설정
+server:
+  port: 8081
+
+
+# 스프링 시큐리티
+  security:
+    user:
+      name : kaby1217
+      password : 3d94d261-719f-4730-b978-9d230faeb7c7
+      roles : USER,ADMIN

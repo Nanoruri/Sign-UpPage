@@ -66,6 +66,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency> <!-- Springboot Sarter Data JPA -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
