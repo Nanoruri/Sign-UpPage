@@ -1,5 +1,6 @@
 package me.SpringStudy.Contorller;
 
+import me.SpringStudy.Config.SecurityConfig;
 import me.SpringStudy.RepositoryDto.MemberDto;
 import me.SpringStudy.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class MemberController {
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
+    private SecurityConfig securityConfig;
+
 
     @GetMapping("/signup")
     public String SignUpForm(Model model) {
@@ -29,7 +32,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult result) {
+    public String signUp(@ModelAttribute("memberDto") MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
             return "signupPage";
         }

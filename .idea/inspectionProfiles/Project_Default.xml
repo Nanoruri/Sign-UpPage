@@ -1,0 +1,35 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="CommentedOutCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="minLines" value="4" />
+    </inspection_tool>
+    <inspection_tool class="FieldCanBeLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="EXCLUDE_ANNOS">
+        <value>
+          <list size="1">
+            <item index="0" class="java.lang.String" itemvalue="javax.persistence.GeneratedValue" />
+          </list>
+        </value>
+      </option>
+      <option name="IGNORE_FIELDS_USED_IN_MULTIPLE_METHODS" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="8">
+            <item index="0" class="java.lang.String" itemvalue="th:action" />
+            <item index="1" class="java.lang.String" itemvalue="th:object" />
+            <item index="2" class="java.lang.String" itemvalue="th:field" />
+            <item index="3" class="java.lang.String" itemvalue="th:datetime" />
+            <item index="4" class="java.lang.String" itemvalue="th:pattern" />
+            <item index="5" class="java.lang.String" itemvalue="th:title" />
+            <item index="6" class="java.lang.String" itemvalue="th:errors" />
+            <item index="7" class="java.lang.String" itemvalue="th:if" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+  </profile>
+</component>

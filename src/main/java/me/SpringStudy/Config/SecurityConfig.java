@@ -50,8 +50,6 @@ public class SecurityConfig {
                 .logout()
                 .permitAll();
     }
+}
     //todo : 스프링 시큐리티 404 Whitelabel 문제 잡자...
 
-
-
-}
