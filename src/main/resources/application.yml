@@ -24,7 +24,7 @@ server:
   port: 8082
 
 
-# 스프링 시큐리티
+  # 스프링 시큐리티
   security:
     user:
       name : kaby1217
@@ -34,4 +34,7 @@ server:
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
+
+    # application.yml
+

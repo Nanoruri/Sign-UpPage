@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 public class MemberController {
@@ -32,7 +32,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute("memberDto") MemberDto memberDto, BindingResult result) {
+    public String signUp(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
             return "signupPage";
         }
@@ -42,7 +42,5 @@ public class MemberController {
         // 회원가입 성공 시 로그인 페이지로 리다이렉션
         return "redirect:/signupSuccessPage";
     }
-
-    // 다른 컨트롤러 메서드들...
 }
 

@@ -23,18 +23,22 @@ public class MemberService {
 
     public void registerMember(MemberDto memberDto) {
         // 비밀번호를 해시화하여 저장
-        String hashedPassword = passwordEncoder.encode(memberDto.getUserPassWord());
+        String hashedPassword = passwordEncoder.encode(memberDto.getUserPassword());
+
+
 
         Member member = new Member(
+                memberDto.getUserNo(),
                 memberDto.getUserId(),
+                hashedPassword,
                 memberDto.getUserName(),
-                memberDto.getUserPhoneNum(),
+                memberDto.getUserPassword(),
                 memberDto.getUserBirth(),
                 memberDto.getUserEmail(),
                 memberDto.getAppendDate(),
-                memberDto.getUpdateDate(),
-                hashedPassword // 해시된 비밀번호를 저장
+                memberDto.getUpdateDate()
         );
+                // 해시된 비밀번호를 저장
 
         memberDao.save(member); // Member 엔티티를 데이터베이스에 저장
     }
