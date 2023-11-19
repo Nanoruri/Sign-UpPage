@@ -44,6 +44,8 @@ public class SecurityConfig  {
                 .authorizeRequests()
                     .antMatchers("/signup")
                     .hasRole("USER")
+                    .antMatchers("/signupSuccessPage")
+                    .hasRole("USER")
 
                 //.antMatchers("/templates/**").hasRole("USER") USER 권한을 가진 사람만이 templates 경로에 접근 권한을 가짐.
 
@@ -66,5 +68,5 @@ public class SecurityConfig  {
         return http.build();
     }
 }
-
+//TODO : 동작하면 왜 SignupSuccessPage로 가지..??
 

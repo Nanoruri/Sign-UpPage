@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -17,6 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class MemberController {
 
     private final MemberService memberService;
+    private RedirectAttributes redirectAttributes;
 
     @Autowired
     public MemberController(MemberService memberService) {
@@ -37,10 +39,10 @@ public class MemberController {
             return "signupPage";
         }
         // 비밀번호를 해시화하여 저장
-        memberService.registerMember(memberDto);//서비스에서 아직 registerMember메서드 구현 안함
-
-        // 회원가입 성공 시 로그인 페이지로 리다이렉션
-        return "redirect:/signupSuccessPage";
+        memberService.registerMember(memberDto);
+        // signupPage에서 signupSuccessPage로 이동
+        return "signupPage";
     }
 }
 
+//TODO : 다 잘되는데 포스트 요청이 동작 안하고 회원가입 데이터 작성시 403 에러 뱉는다.

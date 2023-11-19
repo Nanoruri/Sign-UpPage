@@ -24,7 +24,7 @@ public class SpringApplicationTest {
         test1.setUserName("lim");
         test1.setUserBirth(961127);
         test1.setUserEmail("kaby1217@gmail.com");
-        test1.setUserPhoneNum(Long.parseLong("0105256863"));
+        test1.setUserPhoneNum("0105256863");
         test1.setUserId("kaby1217");
         test1.setAppendDate(String.valueOf(LocalDateTime.now()));
         test1.setUpdateDate(String.valueOf(LocalDateTime.now()));
