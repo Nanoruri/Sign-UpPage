@@ -42,9 +42,9 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/signup")
+                    .antMatchers("/signUp")
                     .hasRole("USER")
-                    .antMatchers("/signupSuccessPage")
+                    .antMatchers("/signupSuccess")
                     .hasRole("USER")
 
                 //.antMatchers("/templates/**").hasRole("USER") USER 권한을 가진 사람만이 templates 경로에 접근 권한을 가짐.
@@ -53,10 +53,10 @@ public class SecurityConfig  {
 
                     .formLogin()
 //                      .loginPage("/login")//로그인 페이지 URL 지정
-                        .loginProcessingUrl("/login") // 로그인 Form 처리 Url
+                        .loginProcessingUrl("/signUp") // 로그인 Form 처리 Url
                         .usernameParameter("userId") // 아이디 파라미터명 설정
                         .passwordParameter("userPassword") // 패스워드 파라미터명 설정
-                        .successForwardUrl("/signup") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/signup페이지로 리다이렉트
+                        .successForwardUrl("/signUp") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/signup페이지로 리다이렉트
                         .permitAll() //로그인 페이지 접속하는것에 대해 권한 X
 
                 .and()
@@ -68,5 +68,4 @@ public class SecurityConfig  {
         return http.build();
     }
 }
-//TODO : 동작하면 왜 SignupSuccessPage로 가지..??
 

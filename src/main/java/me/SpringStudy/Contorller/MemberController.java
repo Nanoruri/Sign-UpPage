@@ -27,22 +27,36 @@ public class MemberController {
     private SecurityConfig securityConfig;
 
 
-    @GetMapping("/signup")
+    @GetMapping("/signUp")//이거 안쓰이고 있음
     public String SignUpForm(Model model) {
         model.addAttribute("memberDto", new MemberDto());
-        return "signupPage";
+        return "signUp";
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signUp")//이거 로그인 할때 쓰이고 있음.. 고치셈!
     public String signUp(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "signupPage";
+            return "redirect : /login";
         }
         // 비밀번호를 해시화하여 저장
         memberService.registerMember(memberDto);
         // signupPage에서 signupSuccessPage로 이동
         return "signupPage";
     }
-}
 
-//TODO : 다 잘되는데 포스트 요청이 동작 안하고 회원가입 데이터 작성시 403 에러 뱉는다.
+//    @PostMapping("/signUp")
+//    public String signUpsuccess(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult result) {
+//        if (result.hasErrors()) {
+//            return "redirect : /login";
+//        }
+//        // 비밀번호를 해시화하여 저장
+//        memberService.registerMember(memberDto);
+//        // signupPage에서 signupSuccessPage로 이동
+//        return "redirect : /signUpsuccess";
+
+    }
+
+
+
+//TODO : 403 뱉는 이유 : @Postmapping만 타고 GetMapping은 쓰이지도 않는다. == memberDto 뺴고 다른 Dto, 그에 따른 Entity클래스도 새로 작성
+// 새로이 @PostMapping에 대해 작성 하도록.
