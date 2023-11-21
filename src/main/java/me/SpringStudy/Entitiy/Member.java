@@ -29,7 +29,7 @@ public class Member {
 
 
     //기본 생성자(NoArgs Constructor), 생략가능
-    public Member() {
+    public Member(){
     }
 
 

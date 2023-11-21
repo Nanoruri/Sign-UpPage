@@ -42,6 +42,4 @@ public class MemberService {
 
         memberDao.save(member); // Member 엔티티를 데이터베이스에 저장
     }
-
-    // 다른 비즈니스 로직들...
 }

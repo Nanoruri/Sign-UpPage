@@ -41,19 +41,18 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                    .antMatchers("/signUp")
-                    .hasRole("USER")
-                    .antMatchers("/signupSuccess")
-                    .hasRole("USER")
+                .authorizeRequests()//권한 설정
+                    .antMatchers("/signUp", "/signupSuccess","/login")//해당 페이지에 관해
+                    .permitAll()//모든 접근 혀용
+                    .anyRequest()//다른 모든 요청에 대해서는
+                    .authenticated()//인증된 사용자만
 
-                //.antMatchers("/templates/**").hasRole("USER") USER 권한을 가진 사람만이 templates 경로에 접근 권한을 가짐.
 
                 .and()
 
                     .formLogin()
-//                      .loginPage("/login")//로그인 페이지 URL 지정
-                        .loginProcessingUrl("/signUp") // 로그인 Form 처리 Url
+                        .loginPage("/login")//로그인 페이지 URL 지정
+                        .loginProcessingUrl("/login") // 로그인 Form 처리 Url, 여기를 통해 post요청이 들어감.
                         .usernameParameter("userId") // 아이디 파라미터명 설정
                         .passwordParameter("userPassword") // 패스워드 파라미터명 설정
                         .successForwardUrl("/signUp") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/signup페이지로 리다이렉트
