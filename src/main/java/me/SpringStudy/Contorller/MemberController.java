@@ -30,9 +30,10 @@ public class MemberController {
     private SecurityConfig securityConfig;
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(Model model) {
         return "loginPage";
     }
+
     @PostMapping("login")
     public String login(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult bindingResult) {
         loginService.loginCheck(memberDto);
@@ -42,7 +43,7 @@ public class MemberController {
 
             return "loginPage";
             }//로그인 실패 시의 로직
-        return "redirect : /login";// 로그인 페이지로 리다이렉트
+        return "redirect:/login";// 로그인 페이지로 리다이렉트
     }
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -50,22 +51,37 @@ public class MemberController {
 
     @GetMapping("/signUp")
     public String SignUpForm(Model model) {
+        model.addAttribute("member",new MemberDto());
         return "signUpPage";
     }
 
-    @PostMapping("/signUp")//이거 로그인 할때 쓰이고 있음.. 고치셈! = 스프링 시큐리티에서 loginProcessingUrl에서 쓰고 있었다.고침.
-    public String signUp(@ModelAttribute("memberDto") MemberDto memberDto, BindingResult result) {
-        memberService.registerMember(memberDto);// 비밀번호를 해시화하여 저장
+    @PostMapping("/signUp") // 여기 타지도 않네요
+    public String signUp(@ModelAttribute MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "redirect : /login";
+            return "redirect:/signupError";
         }//회원가입 실패 시의 로직
+        memberService.registerMember(memberDto);// 비밀번호를 해시화하여 저장
+        return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
+    }
 
-        return "signupPage";// signupPage에서 signupSuccessPage로 이동
+    @GetMapping("/signupSuccess")
+    public String signupSuccess(){
+        return "signupSuccessPage";
     }
 
 
+    @GetMapping("/signupError")
+    public String signupEroor (){
+        return "signupEroor";
+    }
+    @GetMapping("main")
+    public String main(Model model) {
+        return "main";
     }
 
 
+}
 
-//TODO : Test코드의 CRUD는 정상작동 되는데 사이트에서의 동작이 안됨. 고치도록. 로직문제거나 DTO,엔티티의 문제일듯
+
+
+//TODO : Test코드의 CRUD는 정상작동 되는데 사이트에서의 동작이 안됨. 고치도록. 아마...스프링시큐리티 권한 문제인거 같음

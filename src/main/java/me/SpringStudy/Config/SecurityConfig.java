@@ -44,8 +44,9 @@ public class SecurityConfig  {
                 .authorizeRequests()//권한 설정
                     .antMatchers("/signUp", "/signupSuccess","/login")//해당 페이지에 관해
                     .permitAll()//모든 접근 혀용
-                    .anyRequest()//다른 모든 요청에 대해서는
-                    .authenticated()//인증된 사용자만
+
+                .anyRequest()//다른 모든 요청에 대해서는 --302는 이부분 문제 같아...
+                .authenticated()//인증된 사용자만
 
 
                 .and()
@@ -55,7 +56,7 @@ public class SecurityConfig  {
                         .loginProcessingUrl("/login") // 로그인 Form 처리 Url, 여기를 통해 post요청이 들어감.
                         .usernameParameter("userId") // 아이디 파라미터명 설정
                         .passwordParameter("userPassword") // 패스워드 파라미터명 설정
-                        .successForwardUrl("/signUp") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/signup페이지로 리다이렉트
+                        .successForwardUrl("/main") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/signup페이지로 리다이렉트
                         .permitAll() //로그인 페이지 접속하는것에 대해 권한 X
 
                 .and()
