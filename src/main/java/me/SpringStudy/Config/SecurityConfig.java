@@ -40,13 +40,12 @@ public class SecurityConfig  {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf().disable()//csrf 비활성화... 여전히 302는 post 뜸
                 .authorizeRequests()//권한 설정
                     .antMatchers("/signUp", "/signupSuccess","/login")//해당 페이지에 관해
                     .permitAll()//모든 접근 혀용
-
-                .anyRequest()//다른 모든 요청에 대해서는 --302는 이부분 문제 같아...
-                .authenticated()//인증된 사용자만
+                    .anyRequest()//다른 모든 요청에 대해서는
+                    .permitAll()//인증된 사용자만
 
 
                 .and()

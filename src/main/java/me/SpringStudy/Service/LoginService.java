@@ -35,5 +35,6 @@ public class LoginService {
 		);
 		memberDao.findByUserId(member.getUserId());//유저 검색~
 
+
 	}
 }
