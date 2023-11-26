@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -22,12 +23,14 @@ public class MemberController {
     private final LoginService loginService;
     private RedirectAttributes redirectAttributes;
 
+    private final SecurityConfig securityConfig;
+
     @Autowired
-    public MemberController(MemberService memberService, LoginService loginService) {
+    public MemberController(MemberService memberService, LoginService loginService, SecurityConfig securityConfig) {
         this.memberService = memberService;
         this.loginService = loginService;
+        this.securityConfig = securityConfig;
     }
-    private SecurityConfig securityConfig;
 
     @GetMapping("/login")
     public String loginForm(Model model) {
@@ -35,16 +38,19 @@ public class MemberController {
         return "loginPage";
     }
 
-    @PostMapping("login")
-    public String login(@ModelAttribute("memberDto") @Valid MemberDto memberDto, BindingResult bindingResult) {
+    @PostMapping("/login")
+    public String login(@ModelAttribute("signin") @Valid MemberDto memberDto, BindingResult bindingResult) {
+
         loginService.loginCheck(memberDto);
-        //로그인 로직.
 
-        if (bindingResult.hasErrors()){
+        // 로그인 로직.
 
+        if (bindingResult.hasErrors()) {
             return "loginPage";
-            }//로그인 실패 시의 로직
-        return "redirect:/login";// 로그인 페이지로 리다이렉트
+        }
+
+        // 로그인 성공 시의 로직
+        return "redirect:/main";// 메인 페이지로 리다이렉트
     }
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -75,7 +81,8 @@ public class MemberController {
     public String signupEroor (){
         return "signupEroor";
     }
-    @GetMapping("main")
+
+    @GetMapping("/main")
     public String main(Model model) {
         return "main";
     }

@@ -45,7 +45,7 @@ public class SecurityConfig  {
                     .antMatchers("/signup", "/signupSuccess","/login")//해당 페이지에 관해
                     .permitAll()//모든 접근 혀용
                     .anyRequest()//다른 모든 요청에 대해서는
-                    .permitAll()//모든 요청 허용, 원래는 .authenticated()였음..!
+                    .authenticated()// 원래는 .authenticated()였음..! -- 로그인 405의 문제는 이부분이라고 함
 
 
                 .and()
