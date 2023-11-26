@@ -19,8 +19,8 @@ public class SecurityConfig  {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails user = User.builder()
-                .username("123")
-                .password(passwordEncoder.encode("123"))
+                .username("kaby1217")
+                .password(passwordEncoder.encode("12171598"))
                 .roles("USER")
                 .build();
 
@@ -42,7 +42,7 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()//csrf 비활성화... Stack Overflow에서 Handler 구현 해주래.. 북마크 참고 할 것. 혹은 CSRF 토큰 관련..
                 .authorizeRequests()//권한 설정
-                    .antMatchers("/signUp", "/signupSuccess","/login")//해당 페이지에 관해
+                    .antMatchers("/signup", "/signupSuccess","/login")//해당 페이지에 관해
                     .permitAll()//모든 접근 혀용
                     .anyRequest()//다른 모든 요청에 대해서는
                     .permitAll()//모든 요청 허용, 원래는 .authenticated()였음..!
@@ -50,7 +50,7 @@ public class SecurityConfig  {
 
                 .and()
 
-                    .formLogin()
+                    .formLogin()//위에 기입된 사이트 들은 로그인이 필요하다..
                         .loginPage("/login")//로그인 페이지 URL 지정
                         .loginProcessingUrl("/login") // 로그인 Form 처리 Url, 여기를 통해 post요청이 들어감.
                         .usernameParameter("userId") // 아이디 파라미터명 설정

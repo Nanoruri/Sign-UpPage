@@ -31,6 +31,7 @@ public class MemberController {
 
     @GetMapping("/login")
     public String loginForm(Model model) {
+        model.addAttribute("signin",new MemberDto());
         return "loginPage";
     }
 
@@ -49,14 +50,14 @@ public class MemberController {
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
 
-    @GetMapping("/signUp")
-    public String SignUpForm(Model model) {
+    @GetMapping("/signup")
+    public String signupForm(Model model) {
         model.addAttribute("member",new MemberDto());
-        return "signUpPage";
+        return "signupPage";
     }
 
-    @PostMapping("/signUp") // 여기 타지도 않네요
-    public String signUp(@ModelAttribute MemberDto memberDto, BindingResult result) {
+    @PostMapping("/signup") // 여기 타지도 않네요
+    public String signup(@ModelAttribute MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
             return "redirect:/signupError";
         }//회원가입 실패 시의 로직
@@ -84,4 +85,4 @@ public class MemberController {
 
 
 
-//TODO : Test코드의 CRUD는 정상작동 되는데 사이트에서의 동작이 안됨. 고치도록. 아마...스프링시큐리티 권한 문제인거 같음
+
