@@ -1,6 +1,9 @@
 package me.SpringStudy.Entitiy;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "table_user")
@@ -23,18 +26,18 @@ public class Member {
     private String userEmail;
 
     @Column(name = "APPEND_DATE")
-    private String appendDate;
+    private LocalDateTime appendDate;
     @Column(name = "UPDATE_DATE")
-    private String updateDate;
+    private LocalDateTime updateDate;
 
 
     //기본 생성자(NoArgs Constructor), 생략가능
-    public Member(){
+    public Member(String userId, String userName, String hashedPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate){
     }
 
 
     //AllArgs Constructor
-    public Member(long userNo, String userId, String userName, String userPassword, String userPhoneNum, int userBirth, String userEmail, String appendDate, String updateDate) {
+    public Member(long userNo, String userId, String userName, String userPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate) {
         this.userNo = userNo;
         this.userId = userId;
         this.userName = userName;
@@ -104,20 +107,25 @@ public class Member {
         this.userEmail = userEmail;
     }
 
-    public String getAppendDate() {
+    public LocalDateTime getAppendDate() {
         return appendDate;
     }
 
-    public void setAppendDate(String appendDate) {
+    public void setAppendDate(LocalDateTime appendDate) {
         this.appendDate = appendDate;
     }
 
-    public String getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(String updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
-}
 
+
+    //비밀번호 암호화 로직
+    public void encryptPassword(PasswordEncoder passwordEncoder) {
+        this.userPassword = passwordEncoder.encode(this.userPassword);
+    }
+}

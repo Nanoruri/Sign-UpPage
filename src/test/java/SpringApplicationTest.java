@@ -25,8 +25,8 @@ public class SpringApplicationTest {
         memberDto.setUserPhoneNum("01012345678");
         memberDto.setUserBirth(961127);
         memberDto.setUserEmail("kaby1217@gmail.com");
-        memberDto.setAppendDate(String.valueOf(LocalDateTime.now()));
-        memberDto.setUpdateDate(String.valueOf(LocalDateTime.now()));
+        memberDto.setAppendDate(LocalDateTime.now());
+        memberDto.setUpdateDate(LocalDateTime.now());
 
         Member test1 = new Member(
                 memberDto.getUserNo(),

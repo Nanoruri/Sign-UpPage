@@ -4,6 +4,7 @@ import me.SpringStudy.Entitiy.Member;
 import me.SpringStudy.RepositoryDao.MemberDao;
 import me.SpringStudy.RepositoryDto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,30 +13,14 @@ public class LoginService {
 
 
 	@Autowired
-	public LoginService(MemberDao memberDao){
+	public LoginService(MemberDao memberDao, PasswordEncoder passwordEncoder){
 		this.memberDao = memberDao;
 	}
 
-	public void loginCheck(MemberDto memberDto){
+	public boolean loginCheck(String userId, String inputPassword) {
+		//todo : 로그인 find로직 구현
 
-
-
-		String hasedpassword = null;
-
-		Member member = new Member(
-				memberDto.getUserNo(),
-				memberDto.getUserId(),
-				hasedpassword,
-				memberDto.getUserName(),
-				memberDto.getUserPassword(),
-				memberDto.getUserBirth(),
-				memberDto.getUserEmail(),
-				memberDto.getAppendDate(),
-				memberDto.getUpdateDate()
-		);
-		memberDao.findByUserId(member.getUserId());//유저 검색~
-
+		return member != null && inputPassword.equals(member.getUserPassword());
 
 	}
 }
-//todo : 로그인 시 405의 에러 문제가 여기인가 싶어...

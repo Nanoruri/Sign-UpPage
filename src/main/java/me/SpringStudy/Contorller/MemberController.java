@@ -38,16 +38,13 @@ public class MemberController {
     @PostMapping("/loginCheck")
     public String login(@ModelAttribute("signin") @Valid MemberDto memberDto, BindingResult bindingResult) {
 
-        loginService.loginCheck(memberDto);
-
-        // 로그인 로직.
-
-        if (bindingResult.hasErrors()) {
-            return "loginPage";
-        }
-
+        //로그인 로직
+        if (loginService.loginCheck(memberDto.getUserId(), memberDto.getUserPassword())){
         // 로그인 성공 시의 로직
         return "redirect:/main";// 메인 페이지로 리다이렉트
+        }
+        else {bindingResult.hasErrors();
+            return "loginPage";}
     }
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ

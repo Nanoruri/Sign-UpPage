@@ -28,17 +28,15 @@ public class MemberService {
 
 
         Member member = new Member(
-                memberDto.getUserNo(),
                 memberDto.getUserId(),
-                hashedPassword,
                 memberDto.getUserName(),
-                memberDto.getUserPassword(),
+                memberDto.getUserPassword(), // 이 부분은 엔티티 클래스에서 자체적으로 암호화 시키도록 변경
+                memberDto.getUserPhoneNum(),
                 memberDto.getUserBirth(),
                 memberDto.getUserEmail(),
                 memberDto.getAppendDate(),
                 memberDto.getUpdateDate()
-        );
-                // 해시된 비밀번호를 저장
+        ); //Dto를 기반으로 Member엔티티 클래스로 저장하게 만듬
 
         memberDao.save(member); // Member 엔티티를 데이터베이스에 저장
     }

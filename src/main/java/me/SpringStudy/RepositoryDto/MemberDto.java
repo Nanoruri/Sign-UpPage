@@ -1,5 +1,7 @@
 package me.SpringStudy.RepositoryDto;
 
+import java.time.LocalDateTime;
+
 public class MemberDto {
 
     private long userNo;
@@ -9,13 +11,13 @@ public class MemberDto {
     private String userPhoneNum;
     private int userBirth;
     private String userEmail;
-    private String appendDate;
-    private String updateDate;
+    private LocalDateTime updateDate;
+    private LocalDateTime appendDate;
 
     public MemberDto() {
     }
 
-    public MemberDto(long userNo, String userId, String userName, String userPassword, String userPhoneNum, int userBirth, String userEmail, String appendDate, String updateDate) {
+    public MemberDto(long userNo, String userId, String userName, String userPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate) {
         this.userNo = userNo;
         this.userId = userId;
         this.userPassword = userPassword;
@@ -84,19 +86,19 @@ public class MemberDto {
         this.userEmail = userEmail;
     }
 
-    public String getAppendDate() {
+    public LocalDateTime getAppendDate() {
         return appendDate;
     }
 
-    public void setAppendDate(String appendDate) {
+    public void setAppendDate(LocalDateTime appendDate) {
         this.appendDate = appendDate;
     }
 
-    public String getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(String updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 }
