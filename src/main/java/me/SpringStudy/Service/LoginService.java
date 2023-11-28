@@ -13,14 +13,13 @@ public class LoginService {
 
 
 	@Autowired
-	public LoginService(MemberDao memberDao, PasswordEncoder passwordEncoder){
+	public LoginService(MemberDao memberDao){
 		this.memberDao = memberDao;
 	}
 
-	public boolean loginCheck(String userId, String inputPassword) {
-		//todo : 로그인 find로직 구현
+	public boolean loginCheck(MemberDto memberDto) {
+		Member member =memberDao.findByUserId(memberDto.getUserId());// 아이디 찾기
 
-		return member != null && inputPassword.equals(member.getUserPassword());
-
+		return member != null && memberDto.getUserPassword().equals(member.getUserPassword());//비밀번호 대조
 	}
 }

@@ -4,9 +4,6 @@ import me.SpringStudy.Entitiy.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
 public interface MemberDao extends JpaRepository<Member,Long> {
 
@@ -15,5 +12,5 @@ public interface MemberDao extends JpaRepository<Member,Long> {
     boolean existsByUserId(String userId);
 
     // 특정 조건에 따른 회원 검색 메서드
-    List<Member> findByUserId(String userId , String userPassword);
+    Member findByUserId(String userId);
 }
