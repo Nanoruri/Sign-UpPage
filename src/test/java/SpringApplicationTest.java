@@ -18,7 +18,6 @@ public class SpringApplicationTest {
     void testMariaDbConnection() {
         // 테스트할 연결을 테스트하는 코드 작성
         MemberDto memberDto = new MemberDto();
-        memberDto.setUserNo(1);
         memberDto.setUserId("kaby1217");
         memberDto.setUserName("lim");
         memberDto.setUserPassword("123123");
@@ -29,7 +28,6 @@ public class SpringApplicationTest {
         memberDto.setUpdateDate(LocalDateTime.now());
 
         Member test1 = new Member(
-                memberDto.getUserNo(),
                 memberDto.getUserId(),
                 memberDto.getUserName(),
                 memberDto.getUserPassword(),

@@ -6,13 +6,14 @@ public class MemberDto {
 
     private long userNo;
     private String userId;
-    private String userPassword;
     private String userName;
+    private String userPassword;
     private String userPhoneNum;
     private int userBirth;
     private String userEmail;
-    private LocalDateTime updateDate;
     private LocalDateTime appendDate;
+    private LocalDateTime updateDate;
+
 
     public MemberDto() {
     }
@@ -20,8 +21,8 @@ public class MemberDto {
     public MemberDto(long userNo, String userId, String userName, String userPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate) {
         this.userNo = userNo;
         this.userId = userId;
-        this.userPassword = userPassword;
         this.userName = userName;
+        this.userPassword = userPassword;
         this.userPhoneNum = userPhoneNum;
         this.userBirth = userBirth;
         this.userEmail = userEmail;

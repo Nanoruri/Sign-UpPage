@@ -32,8 +32,10 @@ public class Member {
 
 
     //기본 생성자(NoArgs Constructor), 생략가능
-    public Member(String userId, String userName, String hashedPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate){
+    public Member(String userId, String userName,String userPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate){
     }
+
+    public Member(){}
 
 
     //AllArgs Constructor

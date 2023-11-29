@@ -37,7 +37,6 @@ public class MemberController {
 
     @PostMapping("/loginCheck")
     public String login(@ModelAttribute("signin") @Valid MemberDto memberDto, BindingResult bindingResult) {
-
         // 로그인 성공 시의 로직
         if (loginService.loginCheck(memberDto)) {
             return "redirect:/main";// 메인 페이지로 리다이렉트
@@ -63,7 +62,7 @@ public class MemberController {
         if (result.hasErrors()) {
             return "redirect:/signupError";
         }//회원가입 실패 시의 로직
-        memberService.registerMember(memberDto);// 비밀번호를 해시화하여 저장
+        memberService.registerMember(memberDto);// 회원가입 서비스
         return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
     }
 
@@ -82,7 +81,6 @@ public class MemberController {
     public String main(Model model) {
         return "main";
     }
-
 
 }
 

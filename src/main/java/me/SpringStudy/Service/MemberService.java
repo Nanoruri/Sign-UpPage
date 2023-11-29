@@ -15,6 +15,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
 
+
     @Autowired
     public MemberService(MemberDao memberDao, PasswordEncoder passwordEncoder) {
         this.memberDao = memberDao;
@@ -28,9 +29,10 @@ public class MemberService {
 
 
         Member member = new Member(
+                memberDto.getUserNo(),
                 memberDto.getUserId(),
                 memberDto.getUserName(),
-                memberDto.getUserPassword(), // 이 부분은 엔티티 클래스에서 자체적으로 암호화 시키도록 변경
+                hashedPassword,
                 memberDto.getUserPhoneNum(),
                 memberDto.getUserBirth(),
                 memberDto.getUserEmail(),
