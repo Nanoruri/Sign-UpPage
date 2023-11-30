@@ -12,7 +12,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userNo;
 
-    @Column(name = "USER_ID")
+    @Column(name = "USER_ID",unique = true)
     private String userId;
     @Column(name = "USER_NAME")
     private String userName;
