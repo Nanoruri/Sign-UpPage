@@ -5,6 +5,8 @@ import me.SpringStudy.RepositoryDto.MemberDto;
 import me.SpringStudy.Service.LoginService;
 import me.SpringStudy.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -65,6 +67,21 @@ public class MemberController {
         memberService.registerMember(memberDto);// 회원가입 서비스
         return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
     }
+
+
+    @GetMapping("/duplicate")
+    @ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청의 본문(body)이 그대로 전달된다.
+    public ResponseEntity<String> checkDuplicateUserId(MemberDto memberDto) {
+        // 아이디 중복 검사
+        boolean isDuplicate = memberService.duplicateId(memberDto.getUserId());
+
+        if (isDuplicate) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");
+        } else {
+            return ResponseEntity.ok("사용가능한 ID입니다.");
+        }
+    }
+
 
     @GetMapping("/signupSuccess")
     public String signupSuccess(){
