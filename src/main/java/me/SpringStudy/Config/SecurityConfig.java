@@ -42,7 +42,7 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()//csrf 비활성화... Stack Overflow에서 Handler 구현 해주래.. 북마크 참고 할 것. 혹은 CSRF 토큰 관련..
                 .authorizeRequests()//권한 설정
-                    .antMatchers("/signup", "/signupSuccess")//해당 페이지에 관해
+                    .antMatchers("/signup", "/signupSuccess","/idCheck")//해당 페이지에 관해
                     .permitAll()//모든 접근 혀용
                     .anyRequest()//다른 모든 요청에 대해서는
                     .permitAll()// 원래는 .authenticated()였음..! -- 로그인 405의 문제는 이부분이라고 함

@@ -69,13 +69,12 @@ public class MemberController {
     }
 
 
-    @GetMapping("/duplicate")
+    @PostMapping("/idCheck")
     @ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청의 본문(body)이 그대로 전달된다.
-    public ResponseEntity<String> checkDuplicateUserId(MemberDto memberDto) {
+    public ResponseEntity<?> checkDuplicateUserId(@RequestParam (value = "userId")String userId) {
         // 아이디 중복 검사
-        boolean isDuplicate = memberService.duplicateId(memberDto.getUserId());
 
-        if (isDuplicate) {
+        if (memberService.duplicateId(userId)) {//TODO : 북마크랑 GPT 참고해서 나머지 ㄱㄱ
             return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");
         } else {
             return ResponseEntity.ok("사용가능한 ID입니다.");
@@ -90,8 +89,8 @@ public class MemberController {
 
 
     @GetMapping("/signupError")
-    public String signupEroor (){
-        return "signupEroor";
+    public String signupError (){
+        return "signupError";
     }
 
     @GetMapping("/main")
