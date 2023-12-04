@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
@@ -8,6 +8,8 @@
 <form method="post" action="/loginCheck"><!--from태그 method = http의 Request method, action = 요청을 보낼 URL-->
     <div class="container">
         <h1>로그인</h1>
+
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /><!--csrf토큰 삽입--><!--TODO : 작동안함-->
 
         <div class="form-group"><!--사용자 아이디-->
             <label for="inputAdress">UserId</label>

@@ -30,7 +30,7 @@ public class MemberController {
         this.loginService = loginService;
         this.securityConfig = securityConfig;
     }
-
+    //로그인 페이지
     @GetMapping("/login")
     public String loginForm(Model model) {
         model.addAttribute("signin",new MemberDto());
@@ -52,14 +52,14 @@ public class MemberController {
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
-
+    // 회원가입 페이지
     @GetMapping("/signup")
     public String signupForm(Model model) {
         model.addAttribute("member",new MemberDto());
         return "signupPage";
     }
 
-    @PostMapping("/signup") // 여기 타지도 않네요
+    @PostMapping("/signup")
     public String signup(@ModelAttribute MemberDto memberDto, BindingResult result) {
         if (result.hasErrors()) {
             return "redirect:/signupError";
@@ -68,16 +68,15 @@ public class MemberController {
         return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
     }
 
-
+    // 아이디 중복 검사
     @PostMapping("/idCheck")
-    @ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청의 본문(body)이 그대로 전달된다.
+    @ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)이 그대로 전달된다.
     public ResponseEntity<?> checkDuplicateUserId(@RequestParam (value = "userId")String userId) {
-        // 아이디 중복 검사
 
-        if (memberService.duplicateId(userId)) {//TODO : 북마크랑 GPT 참고해서 나머지 ㄱㄱ
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");
+        if (memberService.duplicateId(userId)) {//ID 중복검사 해서
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");//중복O http Conflct(409)상태와 함께 메세지 출력
         } else {
-            return ResponseEntity.ok("사용가능한 ID입니다.");
+            return ResponseEntity.ok("사용가능한 ID입니다.");//중복X= http ok(200)상태와 함께 메세지 출력
         }
     }
 
