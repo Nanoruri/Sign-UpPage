@@ -79,7 +79,7 @@ public class SecurityConfig  {
         HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
         // 토큰이 저장될 파라미터명을 설정 (클라이언트에서 전송시 사용됨)
         repository.setSessionAttributeName("_csrf");
-        return repository;//TODO : 작동 안함 고칠것.
+        return repository;//TODO : 동작 안함
     }
 }
 
