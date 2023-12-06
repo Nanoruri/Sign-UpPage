@@ -31,11 +31,11 @@ public class Member {
     private LocalDateTime updateDate;
 
 
-    //기본 생성자(NoArgs Constructor), 생략가능
+
     public Member(String userId, String userName,String userPassword, String userPhoneNum, int userBirth, String userEmail, LocalDateTime appendDate, LocalDateTime updateDate){
     }
 
-    public Member(){}
+    public Member(){}//기본 생성자(NoArgs Constructor), 생략가능
 
 
     //AllArgs Constructor

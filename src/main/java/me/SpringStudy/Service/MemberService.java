@@ -38,7 +38,7 @@ public class MemberService {
                 memberDto.getUserEmail(),
                 memberDto.getAppendDate(),
                 memberDto.getUpdateDate()
-        ); //Dto를 기반으로 Member엔티티 클래스로 저장하게 만듬
+        ); //Dto와 해시된 비밀번호를 받아 Member엔티티 클래스로 저장하게 만듬
 
         memberDao.save(member); // Member 엔티티를 데이터베이스에 저장
     }

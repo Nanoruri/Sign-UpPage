@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+
 
 @Configuration
 @EnableWebSecurity
@@ -46,8 +48,6 @@ public class SecurityConfig  {
         http.csrf().disable()//csrf 비활성화
                 // 요즘은 CSRF만 방어하기 보단 JWT 쓴다고 함. 혹은 같이 쓰거나...
 
-
-
                 .authorizeRequests()//권한 설정
                     .antMatchers("/signup", "/signupSuccess","/login","/idCheck")//해당 페이지에 관해
                     .permitAll()//모든 접근 혀용
@@ -66,9 +66,14 @@ public class SecurityConfig  {
                         .permitAll() //로그인 페이지 접속하는것에 대해 권한 X
 
                 .and()
+                    .sessionManagement()//시큐리티는 세션 형식을 사용하기에 JWT토큰을 위해 세션 형식을 꺼준다.
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                .logout()
-                    .permitAll();
+                .and()
+                    .logout()
+                        .permitAll();
+
+
 
 
         return http.build();

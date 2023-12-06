@@ -34,19 +34,19 @@ public class MemberController {
     //로그인 페이지
     @GetMapping("/login")
     public String loginForm(Model model) {
-        model.addAttribute("signin",new LoginDto());
+        model.addAttribute("signin",new LoginDto());//signin이란 속성이름으로 새로운 LoginDTO 생성
         return "loginPage";
     }
 
     @PostMapping("/loginCheck")
-    public String login(@ModelAttribute("signin") @Valid LoginDto loginDto, BindingResult bindingResult) {
+    public String login(@ModelAttribute("signin") @Valid LoginDto loginDto, BindingResult bindingResult) {//signin이란 이름의 속성이름을 받음.로그인 유효성 검사 해당 DTO체크)
         // 로그인 성공 시의 로직
-        if (loginService.loginCheck(loginDto)) {
+        if (loginService.loginCheck(loginDto)) {//DTO 받아서 서비스 실행
             return "redirect:/main";// 메인 페이지로 리다이렉트
         } else {
             if (bindingResult.hasErrors()) {
                 return "loginPage";
-            }// 로그인 실패 및 입력 검증 오류 시의 로직
+            }// 로그인 유효성 검사 실패 및 입력 검증 오류 시의 로직
         }
         return "loginPage";
     }
@@ -71,7 +71,7 @@ public class MemberController {
 
     // 아이디 중복 검사
     @PostMapping("/idCheck")
-    @ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)이 그대로 전달된다.
+    @ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
     public ResponseEntity<?> checkDuplicateUserId(@RequestParam (value = "userId")String userId) {
 
         if (memberService.duplicateId(userId)) {//ID 중복검사 해서
