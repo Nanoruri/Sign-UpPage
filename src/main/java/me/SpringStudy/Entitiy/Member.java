@@ -126,8 +126,4 @@ public class Member {
     }
 
 
-    //비밀번호 암호화 로직
-    public void encryptPassword(PasswordEncoder passwordEncoder) {
-        this.userPassword = passwordEncoder.encode(this.userPassword);
-    }
 }

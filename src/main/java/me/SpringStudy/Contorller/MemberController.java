@@ -1,6 +1,7 @@
 package me.SpringStudy.Contorller;
 
 import me.SpringStudy.Config.SecurityConfig;
+import me.SpringStudy.RepositoryDto.LoginDto;
 import me.SpringStudy.RepositoryDto.MemberDto;
 import me.SpringStudy.Service.LoginService;
 import me.SpringStudy.Service.MemberService;
@@ -33,14 +34,14 @@ public class MemberController {
     //로그인 페이지
     @GetMapping("/login")
     public String loginForm(Model model) {
-        model.addAttribute("signin",new MemberDto());
+        model.addAttribute("signin",new LoginDto());
         return "loginPage";
     }
 
     @PostMapping("/loginCheck")
-    public String login(@ModelAttribute("signin") @Valid MemberDto memberDto, BindingResult bindingResult) {
+    public String login(@ModelAttribute("signin") @Valid LoginDto loginDto, BindingResult bindingResult) {
         // 로그인 성공 시의 로직
-        if (loginService.loginCheck(memberDto)) {
+        if (loginService.loginCheck(loginDto)) {
             return "redirect:/main";// 메인 페이지로 리다이렉트
         } else {
             if (bindingResult.hasErrors()) {
