@@ -36,5 +36,11 @@ logging:
   level:
     org.springframework: INFO
 
+#JWT설정
+jwt:
+  secret: dlrjgozldgoqhffurh?zz #비밀의 키
+  expiration : 8640000 #만료시간
     # application.yml
+
+
 
