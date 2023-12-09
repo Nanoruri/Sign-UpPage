@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="kr">
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
 </head>
 <body>
-<form method="post" action="/loginCheck"><!--from태그 method = http의 Request method, action = 요청을 보낼 URL-->
+<form method="post" th:action="@{/loginCheck}"><!--from태그 method = http의 Request method, action = 요청을 보낼 URL-->
     <div class="container">
         <h1>로그인</h1>
 
@@ -22,7 +22,7 @@
     </div>
 </form>
 
-<form method="get" action="/signup"> <!--가입하기 버튼에 대한 signUp페이지로의 get 요청-->
+<form method="get" th:action="@{/signup}"> <!--가입하기 버튼에 대한 signUp페이지로의 get 요청-->
     <button type="submit" class="btn btn-primary">회원가입</button>
     <!-- <a href="/signup" class="btn btn-primary">가입하기</a> 앵커 태그 사용시.-->
 </form>

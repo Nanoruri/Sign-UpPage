@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>회원가입 실패</title>
 </head>
 <body>
-<form method="get" action="/signupError">
+<form method="get" th:action="@{/signupError}">
     <h2>다시 입력해주세요!</h2>
     <p>다시 입력해다오!.</p>
 </form>
