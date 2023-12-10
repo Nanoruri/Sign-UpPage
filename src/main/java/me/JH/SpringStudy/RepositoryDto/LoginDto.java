@@ -1,7 +1,7 @@
-package me.SpringStudy.RepositoryDto;
+package me.JH.SpringStudy.RepositoryDto;
 
 import javax.validation.constraints.NotBlank;
-
+@Deprecated
 public class LoginDto {
 
     @NotBlank(message = "아이디를 입력하세요.")//유효성 검사에 쓰이는 어노테이션 공백이 뜨면 해당 메세지 출력

@@ -1,7 +1,7 @@
-package me.SpringStudy.RepositoryDto;
+package me.JH.SpringStudy.RepositoryDto;
 
 import java.time.LocalDateTime;
-
+@Deprecated
 public class MemberDto {
 
     private long userNo;

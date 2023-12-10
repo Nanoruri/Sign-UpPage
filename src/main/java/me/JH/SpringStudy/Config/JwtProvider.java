@@ -1,16 +1,14 @@
-package me.SpringStudy.Config;
+package me.JH.SpringStudy.Config;
 
 import io.jsonwebtoken.*;
-import me.SpringStudy.RepositoryDto.LoginDto;
+import me.JH.SpringStudy.RepositoryDto.LoginDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Deprecated
 public class JwtProvider {
     @Value("${jwt.secret}")
     private String secretKey;
