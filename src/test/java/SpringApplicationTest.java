@@ -1,43 +1,32 @@
-import me.SpringStudy.Entitiy.Member;
-import me.SpringStudy.MySpringBootApplication;
-import me.SpringStudy.RepositoryDao.MemberDao;
-import me.SpringStudy.RepositoryDto.MemberDto;
+import me.JH.SpringStudy.Entitiy.User;
+import me.JH.SpringStudy.MySpringBootApplication;
+import me.JH.SpringStudy.RepositoryDao.MemberDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import java.util.Date;
 
-import java.time.LocalDateTime;
 
 @SpringBootTest(classes = MySpringBootApplication.class)
 public class SpringApplicationTest {
 
-    @Autowired
-    private MemberDao memberDao;
+	@Autowired
+	private MemberDao memberDao;
 
-    @Test
-    void testMariaDbConnection() {
-        // 테스트할 연결을 테스트하는 코드 작성
-        MemberDto memberDto = new MemberDto();
-        memberDto.setUserId("kaby1217");
-        memberDto.setUserName("lim");
-        memberDto.setUserPassword("123123");
-        memberDto.setUserPhoneNum("01012345678");
-        memberDto.setUserBirth(961127);
-        memberDto.setUserEmail("kaby1217@gmail.com");
-        memberDto.setAppendDate(LocalDateTime.now());
-        memberDto.setUpdateDate(LocalDateTime.now());
+	@Test
+	public void testMariaDbConnection() {
+		// 테스트할 연결을 테스트하는 코드 작성
+		User user = new User();
+		user.setUserId("kaby1217");
+		user.setName("Lim");
+		user.setPassword("1217159");
+		user.setBirth(new Date(19961127));
+		user.setPhoneNum("010-9525-6863");
+		user.setEmail("kaby1217@gmail.com");
+		user.setCreatedDate(new Date());
+		user.setUpdateDate(new Date());
 
-        Member test1 = new Member(
-                memberDto.getUserId(),
-                memberDto.getUserName(),
-                memberDto.getUserPassword(),
-                memberDto.getUserPhoneNum(),
-                memberDto.getUserBirth(),
-                memberDto.getUserEmail(),
-                memberDto.getAppendDate(),
-                memberDto.getUpdateDate()
-        );
-
-        memberDao.save(test1);
-    }
+		memberDao.save(user);
+	}
 }
+
