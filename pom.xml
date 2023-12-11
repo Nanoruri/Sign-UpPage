@@ -7,6 +7,11 @@
     <groupId>me.JH.SpringStudy</groupId>
     <artifactId>SignUp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>SpringStudy</module>
+        <module>SpringStudy</module>
+    </modules>
 
 
     <properties>

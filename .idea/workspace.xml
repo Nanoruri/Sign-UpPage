@@ -4,7 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4180e1a-a417-4eca-b1b6-0f9daa58e899" name="Changes" comment="Signup page properties JPA, MariaDB/ 리뷰 반영 됨" />
+    <list default="true" id="d4180e1a-a417-4eca-b1b6-0f9daa58e899" name="Changes" comment="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료">
+      <change afterPath="$PROJECT_DIR$/SpringStudy/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023-12-10_0010__3_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023-12-10_0010__3_37__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SignUp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SignUp.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Config/JwtProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/JwtProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Entitiy/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Entitiy/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/MySpringBootApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/MySpringBootApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/RepositoryDto/LoginDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDto/LoginDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/RepositoryDto/MemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDto/MemberDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Service/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Service/LoginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Service/MemberService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/loginPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/loginPage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/signupError.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/signupError.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/signupPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/signupPage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/signupSuccessPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/signupSuccessPage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/CRUDTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/test/java/CRUDTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/SpringApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/test/java/SpringApplicationTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -91,11 +117,11 @@
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;azul-11&quot;,
     &quot;last_directory_selection&quot;: &quot;C:/Users/NanoRuri/IdeaProjects/SignUp/src/me/JH&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/NanoRuri/IdeaProjects/SignUp&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;아티팩트&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -104,6 +130,8 @@
       <recent name="me.SpringStudy" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\NanoRuri\IdeaProjects\SignUp\SpringStudy\src\main\resources" />
+      <recent name="C:\Users\NanoRuri\IdeaProjects\SignUp\SpringStudy\src\test\java" />
       <recent name="C:\Users\NanoRuri\IdeaProjects\SignUp\src\test\java" />
       <recent name="C:\Users\NanoRuri\IdeaProjects\SignUp\src\test" />
       <recent name="C:\Users\NanoRuri\IdeaProjects\SignUp\Page" />
@@ -115,10 +143,10 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MySpringBootApplication">
-    <configuration name="MySpringBootApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.MySpringBootApplication (1)">
+    <configuration name="MySpringBootApplication (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="me.JH.SpringStudy.MySpringBootApplication" />
-      <module name="SignUp" />
+      <module name="SpringStudy" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="me.JH.SpringStudy.*" />
@@ -158,13 +186,13 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.MySpringBootApplication" />
+      <item itemvalue="Application.MySpringBootApplication (1)" />
       <item itemvalue="JUnit.SpringApplicationTest" />
       <item itemvalue="JUnit.SpringApplicationTest.testMariaDbConnection" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.MySpringBootApplication" />
+        <item itemvalue="Application.MySpringBootApplication (1)" />
         <item itemvalue="JUnit.SpringApplicationTest.testMariaDbConnection" />
         <item itemvalue="JUnit.SpringApplicationTest" />
       </list>
@@ -178,22 +206,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1699248607123</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Signup page properties JPA, MariaDB/테스트 코드, pom.xml 다시하기">
-      <option name="closed" value="true" />
-      <created>1699446258072</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1699446258072</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Signup page properties JPA, MariaDB/테스트 코드 오류 잡기">
-      <option name="closed" value="true" />
-      <created>1699446361401</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1699446361401</updated>
     </task>
     <task id="LOCAL-00005" summary="Signup page properties JPA, MariaDB/테스트 코드 성공, mockito 디펜던시 추가">
       <option name="closed" value="true" />
@@ -571,7 +583,23 @@
       <option name="project" value="LOCAL" />
       <updated>1702190245113</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Signup page properties JPA, MariaDB/ 리뷰 반영 됨">
+      <option name="closed" value="true" />
+      <created>1702192854673</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1702192854673</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료">
+      <option name="closed" value="true" />
+      <created>1702192987001</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1702192987001</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -586,7 +614,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Signup page properties JPA, MariaDB/signupPage의 DTO,DAO,Entity클래스" />
     <MESSAGE value="Signup page properties JPA, MariaDB/signupPage의 DTO,DAO 작성" />
     <MESSAGE value="Signup page properties JPA, MariaDB/signupPage의 DB연결 테스트" />
     <MESSAGE value="Signup page properties JPA, MariaDB/DAO, DTO, Controller구현 //Service 미구현" />
@@ -611,7 +638,8 @@
     <MESSAGE value="Signup page properties JPA, MariaDB/ Java Doc 주석" />
     <MESSAGE value="Signup page properties JPA, MariaDB/ JWT 구현중" />
     <MESSAGE value="Signup page properties JPA, MariaDB/ 리뷰 반영 됨" />
-    <option name="LAST_COMMIT_MESSAGE" value="Signup page properties JPA, MariaDB/ 리뷰 반영 됨" />
+    <MESSAGE value="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료" />
+    <option name="LAST_COMMIT_MESSAGE" value="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
