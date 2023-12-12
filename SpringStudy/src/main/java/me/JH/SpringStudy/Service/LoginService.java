@@ -18,7 +18,7 @@ public class LoginService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public boolean loginCheck(String userId, String password) {//true와 false만 반환하면 되니 boolean타입으로 // todo : member 로 고치고 DTO 말고 MEMBER로
+	public boolean loginCheck(String userId, String password) {//true와 false만 반환하면 되니 boolean타입으로
 		User user = memberDao.findByUserId(userId);// 아이디 찾기 및 대조
 		//25번째 줄에서 에러 터짐, 로그 내용 : javax.persistence.NonUniqueResultException: query did not return a unique result: 2
 		// 아이디 중복 검사로 해결

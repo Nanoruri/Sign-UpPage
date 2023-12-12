@@ -4,32 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4180e1a-a417-4eca-b1b6-0f9daa58e899" name="Changes" comment="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료">
-      <change afterPath="$PROJECT_DIR$/SpringStudy/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023-12-10_0010__3_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023-12-10_0010__3_37__Changes_.xml" afterDir="false" />
+    <list default="true" id="d4180e1a-a417-4eca-b1b6-0f9daa58e899" name="Changes" comment="Signup page properties JPA, MariaDB/ 서브 모듈 추가,이동">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SignUp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SignUp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Config/JwtProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/JwtProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Entitiy/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Entitiy/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/MySpringBootApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/MySpringBootApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/RepositoryDto/LoginDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDto/LoginDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/RepositoryDto/MemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDto/MemberDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Service/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Service/LoginService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/JH/SpringStudy/Service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Service/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/loginPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/loginPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/signupError.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/signupError.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/signupPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/signupPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/signupSuccessPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/signupSuccessPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/CRUDTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/test/java/CRUDTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/SpringApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/test/java/SpringApplicationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Entitiy/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Entitiy/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Service/MemberService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,22 +187,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1699248607123</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Signup page properties JPA, MariaDB/테스트 코드 성공, mockito 디펜던시 추가">
-      <option name="closed" value="true" />
-      <created>1699523013118</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1699523013118</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Signup page properties JPA, MariaDB/signupPage의 템플릿">
-      <option name="closed" value="true" />
-      <created>1699608555301</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1699608555301</updated>
     </task>
     <task id="LOCAL-00007" summary="Signup page properties JPA, MariaDB/signupPage의 템플릿">
       <option name="closed" value="true" />
@@ -599,7 +564,23 @@
       <option name="project" value="LOCAL" />
       <updated>1702192987001</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Signup page properties JPA, MariaDB/ 서브 모듈 추가,이동">
+      <option name="closed" value="true" />
+      <created>1702288192501</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1702288192501</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Signup page properties JPA, MariaDB/ 서브 모듈 추가,이동">
+      <option name="closed" value="true" />
+      <created>1702288370540</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1702288370540</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -614,7 +595,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Signup page properties JPA, MariaDB/signupPage의 DTO,DAO 작성" />
     <MESSAGE value="Signup page properties JPA, MariaDB/signupPage의 DB연결 테스트" />
     <MESSAGE value="Signup page properties JPA, MariaDB/DAO, DTO, Controller구현 //Service 미구현" />
     <MESSAGE value="Signup page properties JPA, MariaDB/DAO, DTO, Controller, Service 구현" />
@@ -639,7 +619,8 @@
     <MESSAGE value="Signup page properties JPA, MariaDB/ JWT 구현중" />
     <MESSAGE value="Signup page properties JPA, MariaDB/ 리뷰 반영 됨" />
     <MESSAGE value="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료" />
+    <MESSAGE value="Signup page properties JPA, MariaDB/ 서브 모듈 추가,이동" />
+    <option name="LAST_COMMIT_MESSAGE" value="Signup page properties JPA, MariaDB/ 서브 모듈 추가,이동" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
