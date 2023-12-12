@@ -54,8 +54,8 @@ public class CommonController {
 	/**
 	 * 로그인을 위한 로그인 체크 POST 요청 메서드.
 	 *
-	 * @param userId
-	 * @param password  로그인 정보
+	 * @param userId, 로그인에 사용될 ID HTML 파라미터
+	 * @param password  로그인에 사용될 Password HTML 파라미터
 	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
 	 */
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
