@@ -1,6 +1,5 @@
 package me.JH.SpringStudy.Contorller;
 
-
 import me.JH.SpringStudy.Entitiy.User;
 import me.JH.SpringStudy.Service.LoginService;
 import me.JH.SpringStudy.Service.MemberService;
@@ -47,21 +46,21 @@ public class CommonController {
 	 */
 	@GetMapping("/login")
 	public String loginForm(Model model) {
-		model.addAttribute("signin", new User());//signin이란 속성이름으로 새로운 LoginDTO 생성
+		model.addAttribute("signin", new User());//signin이란 속성이름으로 새로운 User객체 생성
 		return "loginPage";
 	}
 
 	/**
 	 * 로그인을 위한 로그인 체크 POST 요청 메서드.
 	 *
-	 * @param userId, 로그인에 사용될 ID HTML 파라미터
-	 * @param password  로그인에 사용될 Password HTML 파라미터
+	 * @param userId  로그인에 사용될 ID HTML 파라미터
+	 * @param password 로그인에 사용될 Password HTML 파라미터
 	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
 	 */
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
-	public String login(@RequestParam("userId")String userId, @RequestParam("password") String password, BindingResult result) {
+	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password, BindingResult result) {
 		// 로그인 성공 시의 로직
-		boolean loginSucceess = loginService.loginCheck(userId,password);//userId,userPassword 받아서 서비스 실행
+		boolean loginSucceess = loginService.loginCheck(userId, password);//userId,userPassword 받아서 서비스 실행
 		if (!loginSucceess) {//로그인 실패 시의 로직
 			return "redirect:/login";// 로그인 실패시 로그인페이지로 리다이렉트
 		}
@@ -115,7 +114,7 @@ public class CommonController {
 		if (memberService.isDuplicateId(userId)) {//ID 중복검사 로직
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");//중복O http Conflct(409)상태와 함께 메세지 출력
 		}
-			return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
+		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
 	}
 
 
@@ -145,11 +144,21 @@ public class CommonController {
 	 * @return 메인페이지 뷰 반환(로그인 성공 여부용 임시 페이지)
 	 */
 	@GetMapping("/")
-	public String index()
-	{
+	public String index() {
 		return "index";
 	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
 
+	@GetMapping("/findId")//todo : 아이디찾기 서비스 만들기(postMapping도)
+	public String findId(Model model){
+		model.addAttribute("signin", new User());
+		return "findIdPage";
+	}
+
+	@GetMapping("/findPw")//todo : 비밀번호 찾기 서비스 만들기(postMapping도)
+	public String findPw(Model model){
+		model.addAttribute("signin", new User());
+		return "findPwPage";
+	}
 }
 
 
