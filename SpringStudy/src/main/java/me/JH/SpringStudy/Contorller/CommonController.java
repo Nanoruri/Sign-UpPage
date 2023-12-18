@@ -1,6 +1,7 @@
 package me.JH.SpringStudy.Contorller;
 
 import me.JH.SpringStudy.Entitiy.User;
+import me.JH.SpringStudy.Service.FindService;
 import me.JH.SpringStudy.Service.LoginService;
 import me.JH.SpringStudy.Service.MemberService;
 import org.slf4j.Logger;
@@ -24,17 +25,20 @@ public class CommonController {
 	private final MemberService memberService;
 	private final LoginService loginService;
 
+	private final FindService findService;
+
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
 	 *
 	 * @param memberService 회원 관련 작업을 수행하는 서비스
 	 * @param loginService  로그인 관련 작업을 수행하는 서비스
+	 * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public CommonController(MemberService memberService, LoginService loginService) {
+	public CommonController(MemberService memberService, LoginService loginService, FindService findservice) {
 		this.memberService = memberService;
 		this.loginService = loginService;
-
+		this.findService = findservice;
 	}
 
 
@@ -53,7 +57,7 @@ public class CommonController {
 	/**
 	 * 로그인을 위한 로그인 체크 POST 요청 메서드.
 	 *
-	 * @param userId  로그인에 사용될 ID HTML 파라미터
+	 * @param userId   로그인에 사용될 ID HTML 파라미터
 	 * @param password 로그인에 사용될 Password HTML 파라미터
 	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
 	 */
@@ -61,7 +65,9 @@ public class CommonController {
 	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password, BindingResult result) {
 		// 로그인 성공 시의 로직
 		boolean loginSucceess = loginService.loginCheck(userId, password);//userId,userPassword 받아서 서비스 실행
+
 		if (!loginSucceess) {//로그인 실패 시의 로직
+			log.info("로그인 실패");
 			return "redirect:/login";// 로그인 실패시 로그인페이지로 리다이렉트
 		}
 		log.info("로그인 성공");
@@ -97,7 +103,7 @@ public class CommonController {
 //		if (result.hasErrors()) {//회원가입 실패 시의 로직
 //			return "redirect:/signupError";
 //		}
-
+		log.info("회원 정보 저장성공");
 		return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
 	}
 
@@ -109,11 +115,12 @@ public class CommonController {
 	 */
 	@PostMapping("/idCheck")
 	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
-	public ResponseEntity<?> checkDuplicateUserId(@RequestParam("userId") String userId) {
-
+	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
 		if (memberService.isDuplicateId(userId)) {//ID 중복검사 로직
+			log.info("중복된 ID 발견.DB 확인 요망");
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");//중복O http Conflct(409)상태와 함께 메세지 출력
 		}
+		log.info("ID 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
 	}
 
@@ -149,13 +156,28 @@ public class CommonController {
 	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
 
 	@GetMapping("/findId")//todo : 아이디찾기 서비스 만들기(postMapping도)
-	public String findId(Model model){
-		model.addAttribute("signin", new User());
+	public String findId(Model model) {
+		model.addAttribute("findUserId", new User());
 		return "findIdPage";
 	}
 
+	@PostMapping("/findId")// TODO : ResponseBody 써야하나...아니면 html로 반환페이지를 만들어줘야하나...
+	@ResponseBody
+	public ResponseEntity<?> findId(@RequestParam("name") String name, @RequestParam("email") String email) {
+		findService.findId(name, email);//todo : 12/19일날 이거 체크해보셈.
+
+		if (findService.findId(name, email) == null) {
+			log.info("아이디 찾기 실패");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
+		}
+
+		log.info("아이디 찾기 성공");
+
+		return ResponseEntity.ok("아이디는" + name);
+	}
+
 	@GetMapping("/findPw")//todo : 비밀번호 찾기 서비스 만들기(postMapping도)
-	public String findPw(Model model){
+	public String findPw(Model model) {
 		model.addAttribute("signin", new User());
 		return "findPwPage";
 	}

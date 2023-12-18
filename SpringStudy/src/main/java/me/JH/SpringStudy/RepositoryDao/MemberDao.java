@@ -22,4 +22,6 @@ public interface MemberDao extends JpaRepository<User,String>, CustomDao {//이�
 //    Optional<User> findByProperties(String userId, String name, String email);
 // todo : 이거를 추상클래스에서 구현()...or 인터페이스 다중 확장 기능 이용...
 
+    User findByNameAndEmail(String name, String email);
+
 }
