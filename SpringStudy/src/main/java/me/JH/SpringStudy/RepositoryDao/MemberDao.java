@@ -24,4 +24,6 @@ public interface MemberDao extends JpaRepository<User,String>, CustomDao {//Ïù¥Î
 
     User findByNameAndEmail(String name, String email);
 
+    User findByNameAndEmailAndUserId(String name, String email, String userId);
+
 }

@@ -163,8 +163,7 @@ public class CommonController {
 
 	@PostMapping("/findId")// TODO : ResponseBody 써야하나...아니면 html로 반환페이지를 만들어줘야하나...
 	@ResponseBody
-	public ResponseEntity<?> findId(@RequestParam("name") String name, @RequestParam("email") String email) {
-		findService.findId(name, email);//todo : 12/19일날 이거 체크해보셈.
+	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("email") String email) {
 
 		if (findService.findId(name, email) == null) {
 			log.info("아이디 찾기 실패");
@@ -173,14 +172,27 @@ public class CommonController {
 
 		log.info("아이디 찾기 성공");
 
-		return ResponseEntity.ok("아이디는" + name);
+		return ResponseEntity.ok("아이디는" + findService.findId(name, email) + "입니다.");//todo : 더 줄일 수 있지 않나
 	}
 
 	@GetMapping("/findPw")//todo : 비밀번호 찾기 서비스 만들기(postMapping도)
 	public String findPw(Model model) {
-		model.addAttribute("signin", new User());
+		model.addAttribute("findUserPw", new User());
 		return "findPwPage";
 	}
+
+	@PostMapping("/findPw")
+	public String findPw( @RequestParam("userId") String userId, @RequestParam("email") String email, @RequestParam("name") String name){
+		findService.findpassword(userId, email, name);
+
+		if (findService.findpassword(userId, email, name) ==null){//실패로직..
+			log.info("잘못된 입력입니다");
+			return "findPw";
+		}//todo : FindService 클래스 점검
+		return "newPasswordPage ";
+	}
+
+
 }
 
 
