@@ -35,6 +35,6 @@ public class MemberService {
         memberDao.save(user); // Member 엔티티를 데이터베이스에 저장
     }
     public boolean isDuplicateId(String userId){
-        return memberDao.existsByUserId(userId);//아이디 중복 검사 하는 메서드
+        return memberDao.existsById(userId);//아이디 중복 검사 하는 메서드
     }
 }
