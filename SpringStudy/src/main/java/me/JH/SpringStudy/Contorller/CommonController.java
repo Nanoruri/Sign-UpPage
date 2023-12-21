@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +61,7 @@ public class CommonController {
 	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
 	 */
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
-	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password, BindingResult result) {
+	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
 		// 로그인 성공 시의 로직
 		boolean loginSucceess = loginService.loginCheck(userId, password);//userId,userPassword 받아서 서비스 실행
 
@@ -175,24 +174,63 @@ public class CommonController {
 		return ResponseEntity.ok("아이디는" + findService.findId(name, email) + "입니다.");//todo : 더 줄일 수 있지 않나
 	}
 
-	@GetMapping("/findPw")//todo : 비밀번호 찾기 서비스 만들기(postMapping도)
+	/**
+	 * 비밀번호 찾는 페이지
+	 *
+	 * @param model findUserPw라는 이름으로 새로윤 User객체 생성
+	 * @return 비밀번호 찾기에 대한 인증페이지 뷰 반환
+	 */
+	@GetMapping("/findPw")
 	public String findPw(Model model) {
 		model.addAttribute("findUserPw", new User());
 		return "findPwPage";
 	}
 
-	@PostMapping("/findPw")
-	public String findPw( @RequestParam("userId") String userId, @RequestParam("email") String email, @RequestParam("name") String name){
-		findService.findpassword(userId, email, name);
+	/**
+	 * 비밀번호 찾는 페이지에 대한 유저 인증 로직
+	 * @param userId 사용자 아이디
+	 * @param name 사용자 이름
+	 * @param email 사용자 이메일
+	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
+	 */
 
-		if (findService.findpassword(userId, email, name) ==null){//실패로직..
+	@PostMapping("/findPw")
+	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("email") String email) {
+		boolean validateUser = findService.validateUser(userId, name, email);
+
+		if (!validateUser) {//실패로직..
 			log.info("잘못된 입력입니다");
-			return "findPw";
-		}//todo : FindService 클래스 점검
-		return "newPasswordPage ";
+			return "findPwPage";
+		}
+
+		return "newPasswordPage";
 	}
 
+	/**
+	 * 비밀번호 변경하는 페이지
+	 *
+	 * @param model newpassword 이름으로 새로운 User객체 생성
+	 * @return 새 패스워드 설정 뷰 반환
+	 */
+	@GetMapping("/newPassword")
+	public String resetPassword(Model model) {
+		model.addAttribute("newPassword", new User());
+		return "newPasswordPage";
+	}
 
+	/**
+	 * 비밀번호 변경로직
+	 *
+	 * @param presentPassword 현재 비밀번호
+	 * @param newPassword     새로운 비밀번호
+	 * @return 비밀번호변경 성공 시 성공 메세지 페이지로 반환 후 구현한 로그인 버튼으로 로그인 페이지로 돌아감.
+	 */
+
+	@PostMapping("/newPassword")
+	public String resetPassword(@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
+		findService.resetPassword(presentPassword, newPassword);//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
+		return "passwordChangeSuccess";
+	}
 }
 
 
