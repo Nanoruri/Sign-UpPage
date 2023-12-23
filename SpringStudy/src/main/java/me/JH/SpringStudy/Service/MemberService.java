@@ -16,7 +16,7 @@ public class MemberService {
 
     private final MemberDao memberDao;
     private final PasswordEncoder passwordEncoder;
-    private final static Logger log = LoggerFactory.getLogger(MemberService.class);
+
 
 
     @Autowired

@@ -200,10 +200,10 @@ public class CommonController {
 
 		if (!validateUser) {//실패로직..
 			log.info("잘못된 입력입니다");
-			return "findPwPage";
+			return "redirect:/findPwPage";//todo : 404페이지 해결하기
 		}
 
-		return "newPasswordPage";
+		return "redirect:/passwordChange";// 페이지의 12번째 줄 71컬럼 문제
 	}
 
 	/**
@@ -212,9 +212,9 @@ public class CommonController {
 	 * @param model newpassword 이름으로 새로운 User객체 생성
 	 * @return 새 패스워드 설정 뷰 반환
 	 */
-	@GetMapping("/newPassword")
+	@GetMapping("/passwordChange")
 	public String resetPassword(Model model) {
-		model.addAttribute("newPassword", new User());
+		model.addAttribute("passwordChange", new User());// todo : 엔티티에 newpassword라는 필드가 없는데 어떻게 처리 해줘야 하지..
 		return "newPasswordPage";
 	}
 
@@ -226,8 +226,8 @@ public class CommonController {
 	 * @return 비밀번호변경 성공 시 성공 메세지 페이지로 반환 후 구현한 로그인 버튼으로 로그인 페이지로 돌아감.
 	 */
 
-	@PostMapping("/newPassword")
-	public String resetPassword(@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
+	@PostMapping("/passwordChange")
+	public String resetPassword(@ModelAttribute("passwordChange")@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
 		findService.resetPassword(presentPassword, newPassword);//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
 		return "passwordChangeSuccess";
 	}
