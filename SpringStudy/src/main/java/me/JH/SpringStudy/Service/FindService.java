@@ -28,12 +28,11 @@ public class FindService {
 		return user != null;
 	}
 
-	public void resetPassword(String presentPassword, String newPassword) {
-		String hashedRawPassword = passwordEncoder.encode(presentPassword);
-		User user = memberDao.findByPassword(hashedRawPassword);
+	public void resetPassword(String presentPassword, String newPassword) {//todo : 이거 없는 비밀번호 넣어도 로직이 정상작동됨;;
+//		String hashedRawPassword = passwordEncoder.encode(presentPassword);
+		User user = memberDao.findByPassword(presentPassword);
 
-		if (user != null) {
-			passwordEncoder.matches(presentPassword, user.getPassword());
+		if (user != null && passwordEncoder.matches(presentPassword, user.getPassword())) {
 
 			// 새로운 비밀번호로 업데이트
 			user.setPassword(passwordEncoder.encode(newPassword));
