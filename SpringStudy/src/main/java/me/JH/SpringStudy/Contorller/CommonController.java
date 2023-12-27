@@ -195,15 +195,16 @@ public class CommonController {
 	 */
 
 	@PostMapping("/findPw")
-	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("email") String email) {
+	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("email") String email, Model model) {
 		boolean validateUser = findService.validateUser(userId, name, email);
+		model.addAttribute("passwordChangeUser",new User());
 
 		if (!validateUser) {//실패로직..
 			log.info("잘못된 입력입니다");
 			return "redirect:/findPwPage";//todo : 404페이지 해결하기
 		}
 
-		return "redirect:/passwordChange";// 페이지의 12번째 줄 71컬럼 문제
+		return "newPasswordPage";
 	}
 
 	/**
@@ -227,11 +228,29 @@ public class CommonController {
 	 */
 
 	@PostMapping("/passwordChange")
-	public String resetPassword(@ModelAttribute("passwordChange")@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
-		findService.resetPassword(presentPassword, newPassword);//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
-		return "passwordChangeSuccess";
+	public String resetPassword(@ModelAttribute("passwordChangeUser") User changePasswordUser,
+	                            @RequestParam("newPassword") String newPassword
+	                            ) {//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
+		if (!findService.changePassword(changePasswordUser, newPassword)){
+			log.info("실패.");
+			return "redirect:/findPw";
+		}
+		return "redirect:/passwordChangeSuccess";
+	}
+
+//	@PostMapping("/passwordChange")
+//	public String resetPassword(@ModelAttribute("passwordChange")@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
+//		findService.resetPassword(presentPassword, newPassword);//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
+//		return "passwordChangeSuccess";
+//	}
+
+
+		@GetMapping("/passwordChangeSuccess")
+	public String passwordChangeSuccess(){
+		return "passwordChangeSuccessPage";
 	}
 }
+
 
 
 
