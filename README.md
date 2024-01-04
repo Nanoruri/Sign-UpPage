@@ -1,1 +1,1 @@
-Study용 임시 브랜치. 후에 git-flow방식의 repository로 옮길 예정
+gitflow전략을 사용한 스프링 공부용 프로젝트 
