@@ -1,4 +1,4 @@
-import me.JH.SpringStudy.Config.MyFilter;
+import me.JH.SpringStudy.Config.LoggingFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -9,16 +9,17 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MyFilterTest {
+public class ConfigTest {
+
 	@Test
 	void doFilter_ShouldLogRequestAndResponse() throws Exception {
 		// Arrange
-		MyFilter myFilter = new MyFilter();
+		LoggingFilter loggingFilter = new LoggingFilter();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockFilterChain filterChain = new MockFilterChain();
 
-		myFilter.doFilter(request, response, filterChain);
+		loggingFilter.doFilter(request, response, filterChain);
 
 		// 로깅이 호출되었는지 검증
 		System.out.println(response.getContentAsString());
@@ -27,14 +28,12 @@ public class MyFilterTest {
 		assertTrue(true, "테스트 성공.");
 
 		// 필터 소멸이 정상적으로 호출되었는지 검증
-		myFilter.destroy();
+		loggingFilter.destroy();
 	}
 
 
-
-
 	@Test
-	void generateRequestId_ShouldReturnValidUUID() {
+	void generateRequestId_ShouldReturnValidUUIDT() {
 		// Arrange
 		String generateRequestId = UUID.randomUUID().toString();
 

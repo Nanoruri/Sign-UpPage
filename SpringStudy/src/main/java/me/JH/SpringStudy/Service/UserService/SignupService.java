@@ -10,14 +10,14 @@ import java.util.Date;
 
 
 @Service
-public class SignuprService {
+public class SignupService {
 
 	private final MemberDao memberDao;
 	private final PasswordEncoder passwordEncoder;
 
 
 	@Autowired
-	public SignuprService(MemberDao memberDao, PasswordEncoder passwordEncoder) {
+	public SignupService(MemberDao memberDao, PasswordEncoder passwordEncoder) {
 		this.memberDao = memberDao;
 		this.passwordEncoder = passwordEncoder;
 	}

@@ -10,7 +10,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Optional;
 
-//@Repository//todo : 하나의 엔티티엔 하나의 Dao가 일반적인데 두개를 해야하는가
+
 public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나..? DAO 인터페이스 있는데... Repository를 또 등록 해주는게 맞나...
 	//todo : 클래스명 한번 더 생각해서 짜기
 	@PersistenceContext

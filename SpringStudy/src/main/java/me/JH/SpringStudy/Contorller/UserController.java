@@ -3,7 +3,7 @@ package me.JH.SpringStudy.Contorller;
 import me.JH.SpringStudy.Entitiy.User;
 import me.JH.SpringStudy.Service.UserService.FindService;
 import me.JH.SpringStudy.Service.UserService.LoginService;
-import me.JH.SpringStudy.Service.UserService.SignuprService;
+import me.JH.SpringStudy.Service.UserService.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {//todo : 컨트롤러 분리하기.
 
 	private final static Logger log = LoggerFactory.getLogger(UserController.class);// Log 찍는 내용
-	private final SignuprService memberService;
+	private final SignupService memberService;
 	private final LoginService loginService;
 
 	private final FindService findService;
@@ -34,7 +34,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public UserController(SignuprService memberService, LoginService loginService, FindService findservice) {
+	public UserController(SignupService memberService, LoginService loginService, FindService findservice) {
 		this.memberService = memberService;
 		this.loginService = loginService;
 		this.findService = findservice;
