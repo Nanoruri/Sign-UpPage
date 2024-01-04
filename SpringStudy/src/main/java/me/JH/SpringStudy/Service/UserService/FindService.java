@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class FindService {
@@ -27,20 +28,21 @@ public class FindService {
 	}//todo : criteria 들어간 MemberDaoEntityManager클래스 점검하기
 
 	public boolean validateUser(String userId, String name, String email) {//todo : findBy properties, Criteria 사용, name이랑 email 왜 받지
-		boolean isValid = memberDao.findById(userId).isPresent();
+		boolean isValid = memberDao.findByProperties(userId, name, email).isPresent();
 		log.info(isValid ? "사용자를 찾았습니다" + userId : "사용자를 찾을 수 없습니다.");
 		return isValid;
 	}
 
 	public boolean changePassword(User changePasswordUser, String newPassword) {
-		User user = memberDao.findByUserIdAndNameAndEmail(changePasswordUser.getUserId(),//todo : 주성이한테 검사 받고 findByProperties 적용하기
+		Optional<User> optionalUser = memberDao.findByProperties(changePasswordUser.getUserId(),//todo : 주성이한테 검사 받고 findByProperties 적용하기
 				changePasswordUser.getName(),
 				changePasswordUser.getEmail());//todo : 이거 html에서 hidden으로 받아오긴 한데 찾아지는건가..?
 
-		if (user == null) {
+		if (optionalUser.isEmpty()) {
 			log.info("사용자를 찾을 수 없습니다.");
 			return false;
 		}
+		User user = optionalUser.get();
 
 		// 새로운 비밀번호로 업데이트
 		user.setPassword(passwordEncoder.encode(newPassword));
