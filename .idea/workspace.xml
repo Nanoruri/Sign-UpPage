@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4180e1a-a417-4eca-b1b6-0f9daa58e899" name="Changes" comment="feat : Logging Filter 일부 구현">
-      <change afterPath="$PROJECT_DIR$/SpringStudy/SpringStudy.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/WebFilterConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="d4180e1a-a417-4eca-b1b6-0f9daa58e899" name="Changes" comment="Signup page properties JPA, MariaDB/ 리뷰 반영">
+      <change afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/findIdPage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/findPwPage.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/LoggingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/LoggingFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Config/MyFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDaoEntityManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SpringStudy/src/test/java/ConfigTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/test/java/ConfigTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Contorller/CommonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Entitiy/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/Entitiy/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/java/me/JH/SpringStudy/RepositoryDao/MemberDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/SpringStudy/src/main/resources/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +22,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="XML Properties File" />
-        <option value="HTML File" />
         <option value="Class" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -80,11 +77,8 @@
       </UrlAndAccount>
     </option>
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -95,24 +89,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Sign-UP&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;azul-11&quot;,
-    &quot;last_directory_selection&quot;: &quot;C:/Users/NanoRuri/IdeaProjects/SignUp/src/me/JH&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/NanoRuri/IdeaProjects/SignUp&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Sign-UP",
+    "ignore.virus.scanning.warn.message": "true",
+    "jdk.selected.JAVA_MODULE": "azul-11",
+    "last_directory_selection": "C:/Users/NanoRuri/IdeaProjects/SignUp/src/me/JH",
+    "last_opened_file_path": "C:/Users/NanoRuri/IdeaProjects/SignUp",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="me.SpringStudy.Service" />
@@ -132,8 +125,8 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ConfigTest">
-    <configuration name="MySpringBootApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.MySpringBootApplication (1)">
+    <configuration name="MySpringBootApplication (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="me.JH.SpringStudy.MySpringBootApplication" />
       <module name="SpringStudy" />
       <extension name="coverage">
@@ -146,59 +139,44 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConfigTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SpringStudy" />
+    <configuration name="SpringApplicationTest" type="JUnit" factoryName="JUnit" activateToolWindowBeforeRun="false" temporary="true" nameIsGenerated="true">
+      <module name="SignUp" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="azul-11" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="ConfigTest" />
+      <option name="MAIN_CLASS_NAME" value="SpringApplicationTest" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConfigTest.doFilter_ShouldLogRequestAndResponse" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SpringStudy" />
+    <configuration name="SpringApplicationTest.testMariaDbConnection" type="JUnit" factoryName="JUnit" activateToolWindowBeforeRun="false" temporary="true" nameIsGenerated="true">
+      <module name="SignUp" />
       <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="ConfigTest" />
-      <option name="METHOD_NAME" value="doFilter_ShouldLogRequestAndResponse" />
+      <option name="MAIN_CLASS_NAME" value="SpringApplicationTest" />
+      <option name="METHOD_NAME" value="testMariaDbConnection" />
       <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ConfigTest.generateRequestId_ShouldReturnValidUUIDT" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SpringStudy" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="ConfigTest" />
-      <option name="METHOD_NAME" value="generateRequestId_ShouldReturnValidUUIDT" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ConfigTest.testLoggingFilter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SpringStudy" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="ConfigTest" />
-      <option name="METHOD_NAME" value="testLoggingFilter" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.MySpringBootApplication" />
-      <item itemvalue="JUnit.ConfigTest" />
-      <item itemvalue="JUnit.ConfigTest.doFilter_ShouldLogRequestAndResponse" />
-      <item itemvalue="JUnit.ConfigTest.generateRequestId_ShouldReturnValidUUIDT" />
-      <item itemvalue="JUnit.ConfigTest.testLoggingFilter" />
+      <item itemvalue="Application.MySpringBootApplication (1)" />
+      <item itemvalue="JUnit.SpringApplicationTest" />
+      <item itemvalue="JUnit.SpringApplicationTest.testMariaDbConnection" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.ConfigTest" />
-        <item itemvalue="JUnit.ConfigTest.generateRequestId_ShouldReturnValidUUIDT" />
-        <item itemvalue="JUnit.ConfigTest.doFilter_ShouldLogRequestAndResponse" />
-        <item itemvalue="Application.MySpringBootApplication" />
-        <item itemvalue="JUnit.ConfigTest.testLoggingFilter" />
+        <item itemvalue="Application.MySpringBootApplication (1)" />
+        <item itemvalue="JUnit.SpringApplicationTest.testMariaDbConnection" />
+        <item itemvalue="JUnit.SpringApplicationTest" />
       </list>
     </recent_temporary>
   </component>
@@ -210,6 +188,46 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1699248607123</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Signup page properties JPA, MariaDB/signupPage의 템플릿">
+      <option name="closed" value="true" />
+      <created>1699608799953</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1699608799953</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Signup page properties JPA, MariaDB/signupPage의 템플릿">
+      <option name="closed" value="true" />
+      <created>1699692681180</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1699692681180</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Signup page properties JPA, MariaDB/signupPage정보의 템플릿,DTO">
+      <option name="closed" value="true" />
+      <created>1699696854246</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1699696854246</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Signup page properties JPA, MariaDB/signupPage의 DTO">
+      <option name="closed" value="true" />
+      <created>1699715554404</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1699715554404</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Signup page properties JPA, MariaDB/signupPage의 DTO,DAO,Entity클래스">
+      <option name="closed" value="true" />
+      <created>1699870354225</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1699870354225</updated>
     </task>
     <task id="LOCAL-00014" summary="Signup page properties JPA, MariaDB/signupPage의 DTO,DAO 작성">
       <option name="closed" value="true" />
@@ -563,47 +581,7 @@
       <option name="project" value="LOCAL" />
       <updated>1702367048940</updated>
     </task>
-    <task id="LOCAL-00058" summary="chore : 오타 수정 및 리포멧, 테스트 클래스 네이밍 변경">
-      <option name="closed" value="true" />
-      <created>1704375257025</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1704375257025</updated>
-    </task>
-    <task id="LOCAL-00059" summary="chore : ignore 서브모듈 target추가">
-      <option name="closed" value="true" />
-      <created>1704375381893</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1704375381893</updated>
-    </task>
-    <task id="LOCAL-00060" summary="chore : 의존성 추가">
-      <option name="closed" value="true" />
-      <created>1704375840844</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1704375840844</updated>
-    </task>
-    <task id="LOCAL-00061" summary="repactor : memberDao의 &#10;Optional&lt;User&gt; findByProperties메서드를 사용하도록 조정">
-      <option name="closed" value="true" />
-      <created>1704376080931</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1704376080931</updated>
-    </task>
-    <task id="LOCAL-00062" summary="feat : Logging Filter 일부 구현">
-      <option name="closed" value="true" />
-      <created>1704376271344</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1704376271344</updated>
-    </task>
-    <option name="localTasksCounter" value="63" />
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -618,6 +596,11 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="Signup page properties JPA, MariaDB/DAO, DTO, Controller구현 //Service 미구현" />
+    <MESSAGE value="Signup page properties JPA, MariaDB/DAO, DTO, Controller, Service 구현" />
+    <MESSAGE value="Signup page properties JPA, MariaDB/WhitelabelPage 처리하기" />
+    <MESSAGE value="Signup page properties JPA, MariaDB/WhitelabelPage500 처리하기" />
+    <MESSAGE value="Signup page properties JPA, MariaDB/403에러, 포스트 동작 안함" />
     <MESSAGE value="Signup page properties JPA, MariaDB/에러 고치기" />
     <MESSAGE value="Signup page properties JPA, MariaDB/로그인 구현" />
     <MESSAGE value="Signup page properties JPA, MariaDB/로그인 구현중" />
@@ -638,12 +621,7 @@
     <MESSAGE value="Signup page properties JPA, MariaDB/ 테스트 코드 재작성 완료" />
     <MESSAGE value="Signup page properties JPA, MariaDB/ 서브 모듈 추가,이동" />
     <MESSAGE value="Signup page properties JPA, MariaDB/ 리뷰 반영" />
-    <MESSAGE value="chore : 오타 수정 및 리포멧, 테스트 클래스 네이밍 변경" />
-    <MESSAGE value="chore : ignore 서브모듈 target추가" />
-    <MESSAGE value="chore : 의존성 추가" />
-    <MESSAGE value="repactor : memberDao의 &#10;Optional&lt;User&gt; findByProperties메서드를 사용하도록 조정" />
-    <MESSAGE value="feat : Logging Filter 일부 구현" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : Logging Filter 일부 구현" />
+    <option name="LAST_COMMIT_MESSAGE" value="Signup page properties JPA, MariaDB/ 리뷰 반영" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
