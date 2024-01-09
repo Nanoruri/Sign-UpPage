@@ -1,7 +1,5 @@
 package me.JH.SpringStudy.Contorller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,6 +8,7 @@ public class TestController {
 
 	/**
 	 * Filter 테스트용 Get요청
+	 *
 	 * @return 500에러 강제 유발
 	 */
 
