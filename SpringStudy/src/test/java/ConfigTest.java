@@ -1,4 +1,4 @@
-import me.JH.SpringStudy.Config.LoggingFilter;
+import me.JH.SpringStudy.Filter.LoggingFilter;
 import me.JH.SpringStudy.MySpringBootApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,4 +68,11 @@ public class ConfigTest {
 				.andDo(MockMvcResultHandlers.print());
 	}
 
+
+	@Test
+	public void testLoggingFilterExceptionHandling() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/test"))
+				.andExpect(MockMvcResultMatchers.status().isInternalServerError())
+				.andExpect(MockMvcResultMatchers.content().string("서버 에러"));
+	}
 }
