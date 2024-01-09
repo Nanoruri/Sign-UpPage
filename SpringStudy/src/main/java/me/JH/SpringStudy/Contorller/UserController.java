@@ -1,6 +1,8 @@
 package me.JH.SpringStudy.Contorller;
 
 import me.JH.SpringStudy.Entitiy.User;
+import me.JH.SpringStudy.Exception.SigninException.SigninException;
+import me.JH.SpringStudy.Exception.SigninException.SigninExceptionType;
 import me.JH.SpringStudy.Service.UserService.FindService;
 import me.JH.SpringStudy.Service.UserService.LoginService;
 import me.JH.SpringStudy.Service.UserService.SignupService;
@@ -50,7 +52,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	@GetMapping("/login")
 	public String loginForm(Model model) {
 		model.addAttribute("signin", new User());//signin이란 속성이름으로 새로운 User객체 생성
-		return "loginPage";
+		return "login/loginPage";
 	}
 
 	/**
@@ -85,7 +87,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	@GetMapping("/signup")
 	public String signupForm(Model model) {
 		model.addAttribute("user", new User());
-		return "signupPage";
+		return "signUp/signupPage";
 	}
 
 	/**
@@ -96,14 +98,14 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 */
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute("user") @Validated User user) {
-
 		memberService.registerMember(user);//회원가입 서비스
 
 //		if (result.hasErrors()) {//회원가입 실패 시의 로직
 //			return "redirect:/signupError";
 //		}
+
 		log.info("회원 정보 저장성공");
-		return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
+		return "redirect:signUp/signupSuccess";// signupPage에서 signupSuccessPage로 이동
 	}
 
 	/**
@@ -131,7 +133,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 */
 	@GetMapping("/signupSuccess")
 	public String signupSuccess() {
-		return "signupSuccessPage";
+		return "signUp/signupSuccessPage";
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 */
 	@GetMapping("/signupError")
 	public String signupError() {
-		return "signupError";
+		return "errors/signupError";
 	}
 
 	/**
@@ -157,7 +159,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	@GetMapping("/findId")//todo : 아이디찾기 서비스 만들기(postMapping도)
 	public String findId(Model model) {
 		model.addAttribute("findUserId", new User());
-		return "findIdPage";
+		return "finds/findIdPage";
 	}
 
 	@PostMapping("/findId")// TODO : ResponseBody 써야하나...아니면 html로 반환페이지를 만들어줘야하나...
@@ -183,7 +185,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	@GetMapping("/findPw")
 	public String findPw(Model model) {
 		model.addAttribute("findUserPw", new User());
-		return "findPwPage";
+		return "finds/findPwPage";
 	}
 
 	/**
@@ -209,7 +211,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 		validateUsers.setEmail(email);
 
 		model.addAttribute("passwordChangeUser", validateUsers);
-		return "newPasswordPage";
+		return "finds/newPasswordPage";
 	}
 
 	/**
@@ -221,7 +223,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	@GetMapping("/passwordChange")
 	public String resetPassword(Model model) {
 		model.addAttribute("passwordChange", new User());// todo : 엔티티에 newpassword라는 필드가 없는데 어떻게 처리 해줘야 하지..
-		return "newPasswordPage";
+		return "finds/newPasswordPage";
 	}
 
 	/**
@@ -248,10 +250,9 @@ public class UserController {//todo : 컨트롤러 분리하기.
 //		return "passwordChangeSuccess";
 //	}
 
-
 	@GetMapping("/passwordChangeSuccess")
 	public String passwordChangeSuccess() {
-		return "passwordChangeSuccessPage";
+		return "finds/passwordChangeSuccessPage";
 	}
 }
 
