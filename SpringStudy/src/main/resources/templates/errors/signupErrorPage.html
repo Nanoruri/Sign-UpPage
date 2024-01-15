@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+</head>
+<body>
+    <h1>Error Page</h1>
+        <p th:text="${signupError}"></p>
+
+    <form method="get" th:action="@{/signup}">
+        <button type="submit">회원가입 페이지로</button>
+    </form>
+</body>
+</html>
