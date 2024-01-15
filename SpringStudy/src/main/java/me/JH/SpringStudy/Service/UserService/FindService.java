@@ -1,12 +1,15 @@
 package me.JH.SpringStudy.Service.UserService;
 
 import me.JH.SpringStudy.Entitiy.User;
+import me.JH.SpringStudy.Exception.Finds.FindPwException;
+import me.JH.SpringStudy.Exception.Finds.FindPwExceptionType;
 import me.JH.SpringStudy.RepositoryDao.MemberDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -22,10 +25,10 @@ public class FindService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public String findId(String name, String email) {//todo : findBy properties, Criteria 사용
+	public String findId(String name, String email) {
 		User user = memberDao.findByNameAndEmail(name, email);
-		return (user != null) ? user.getUserId() : null;
-	}//todo : criteria 들어간 MemberDaoEntityManager클래스 점검하기
+		return (user != null) ? user.getUserId() : null;//todo : 여기서 컨트롤러의 예외처리 해도 되나??
+	}
 
 	public boolean validateUser(String userId, String name, String email) {//todo : findBy properties, Criteria 사용, name이랑 email 왜 받지
 		boolean isValid = memberDao.findByProperties(userId, name, email).isPresent();
@@ -40,7 +43,7 @@ public class FindService {
 
 		if (optionalUser.isEmpty()) {
 			log.info("사용자를 찾을 수 없습니다.");
-			return false;
+			throw new FindPwException(FindPwExceptionType.USER_NOT_FOUND);
 		}
 		User user = optionalUser.get();
 
