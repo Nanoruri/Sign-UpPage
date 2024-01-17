@@ -3,6 +3,8 @@ server:
   port: 8082
   servlet:
     context-path: /study
+  error:
+    path: /errors
 
 #로그 레벨
 logging:
