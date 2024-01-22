@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{/css/finds/findId.css}">
+	<title>Title</title>
 </head>
-<body><!--todo: ID찾는 서비스, 컨트롤러에 구현-->
-    <form method="post" th:action="@{/findId}" th:object="${findUserId}">
-        <!--사용자 이름 입력란-->
-        <div class="form-group">
-            <label for="inputName">이름</label>
-            <input type="text"  id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
-        </div>
+<body><!--todo: JS로 팝업창에 구현(ID 있으면 알려주고 로그인 페이지로/없으면 메인페이지로)-->
+	<div class="wrapper">
+		<div class="container">
+			<h1>아이디 찾기</h1>
 
-        <!--이메일 입력란-->
-        <div class="form-group">
-            <label for="inputEmail">이메일</label>
-            <input type="text"  id="inputEmail" name="email" th:field="*{email}" placeholder="이메일"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다. 다시 입력하여 주십시오" required>
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-        </div>
+			<form method="post" th:action="@{/findId}" class="form" th:object="${findUserId}">
+				<!--사용자 이름 입력란-->
+				<label for="inputName">이름</label>
+				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
 
-        <button type="submit" >입력</button>
-    </form>
+				<!--이메일 입력란-->
+				<label for="inputEmail">이메일</label>
+				<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="이메일"
+				       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다. 다시 입력하여 주십시오"
+				       required>
+				<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+				<button type="submit">입력</button>
+			</form>
+		</div>
+		<ul class="bg-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
 </body>
 </html>

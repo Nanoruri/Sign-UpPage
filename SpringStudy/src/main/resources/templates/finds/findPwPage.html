@@ -1,34 +1,51 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{/css/finds/findPw.css}">
+	<title>Title</title>
 </head>
 <body><!--todo: 비밀번호 찾는 서비스, 컨트롤러에 구현 -->
-    <form method="post" th:action="@{/findPw}" th:object="${findUserPw}">
-        <!--아이디 입력란-->
-        <div class="form-group">
-            <label for="inputAdress">아이디</label>
-            <input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" required>
-            <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
-        </div>
+	<div class="wrapper">
+		<div class="container">
+			<h1>비밀번호 찾기</h1>
 
-        <!--사용자 이름 입력란-->
-        <div class="form-group">
-            <label for="inputName">이름</label>
-            <input type="text"  id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
-        </div>
+			<form method="post" th:action="@{/findPw}" class="form" th:object="${findUserPw}">
+				<!--아이디 입력란-->
+				<label for="inputAdress">아이디</label>
+				<input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" required>
+				<span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
 
-        <!--이메일 입력란-->
-        <div class="form-group">
-            <label for="inputEmail">이메일</label>
-            <input type="text"  id="inputEmail" name="email" th:field="*{email}" placeholder="이메일"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다. 다시 입력하여 주십시오" required>
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-        </div>
+				<!--사용자 이름 입력란-->
+				<label for="inputName">이름</label>
+				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
 
-        <button type="submit">입력</button>
-    </form>
+
+				<!--이메일 입력란-->
+				<label for="inputEmail">이메일</label>
+				<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="이메일"
+				       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다. 다시 입력하여 주십시오"
+				       required>
+				<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+
+				<button type="submit">입력</button>
+			</form>
+		</div>
+
+		<ul class="bg-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
 
 
 </body>
