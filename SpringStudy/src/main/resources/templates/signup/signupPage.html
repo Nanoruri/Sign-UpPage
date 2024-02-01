@@ -39,7 +39,7 @@
             <label for="confirmPassword">비밀번호 확인</label>
             <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" required>
 
-            <div id="duplicatePasswordMessage"></div>
+            <div id="matchingMessage"></div>
         </div>
 
         <div class="textForm"><!--사용자 생년월일-->
@@ -68,6 +68,7 @@
         <button type="submit" id="signupButton" class="btn">가입하기</button>
 
         <script th:src="@{/js/signup/duplicateCheck.js}"></script>
+        <script th:src="@{/js/signup/passwordValidate.js}"></script>
     </form>
     
 <!--    <form method="post" class="idCheckForm" th:action="@{/idCheck}">-->
