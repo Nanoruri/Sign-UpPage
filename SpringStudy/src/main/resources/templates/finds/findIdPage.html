@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" th:href="@{/css/finds/findId.css}">
+	<script th:src="@{/js/userValidate.js}"></script>
 	<title>Title</title>
 </head>
 <body><!--todo: JS로 팝업창에 구현(ID 있으면 알려주고 로그인 페이지로/없으면 메인페이지로)-->
@@ -13,16 +14,16 @@
 			<form method="post" th:action="@{/findId}" class="form" th:object="${findUserId}">
 				<!--사용자 이름 입력란-->
 				<label for="inputName">이름</label>
-				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
+				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름">
 
 				<!--이메일 입력란-->
 				<label for="inputEmail">이메일</label>
 				<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="이메일"
 				       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다. 다시 입력하여 주십시오"
-				       required>
+				       >
 				<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 
-				<button type="submit">입력</button>
+				<button type="submit"  id="button">입력</button>
 			</form>
 		</div>
 		<ul class="bg-bubbles">

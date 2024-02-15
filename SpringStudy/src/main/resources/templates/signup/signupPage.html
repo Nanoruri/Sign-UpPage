@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/signup/signup.css}">
+    <script th:src="@{/js/userValidate.js}"></script><!--todo-->
     <title>회원가입 페이지</title>
 </head>
 
@@ -15,7 +16,7 @@
         <h2>회원가입</h2>
         <div class="textForm"><!--사용자 아이디-->
             <label for="inputAdress">아이디</label>
-            <input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" required>
+            <input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" >
             <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
 
             <div id="duplicateMessage"></div>
@@ -29,7 +30,7 @@
         </div>
 
         <div class="textForm"><!--사용자 비밀번호-->
-            <label for="inputPassword">비밀번호</label><!--비밀번호 유효성 검사 로직 추가하기-->
+            <label for="inputPassword">비밀번호</label>
             <input type="password" id="inputPassword" name="password" th:field="*{password}" placeholder="비밀번호"
                 required>
             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
@@ -44,28 +45,23 @@
 
         <div class="textForm"><!--사용자 생년월일-->
             <label for="inputBirth">생년월일</label>
-            <input type="text" id="inputBirth" name="birth" th:field="*{birth}" value maxlength="8"
-                pattern="\d{4}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])" placeholder="ex) 19960101"
-                title="올바른 날짜 형식이 아닙니다. 년,월,일 형식으로 입력해주세요." required>
-            <!--todo : date타입은 사용감이 불편함.text타입으로 받고 JS 사용하여 유효성 검사하여 년-월-일로 받게끔하기-->
+            <input type="text" id="inputBirth" name="birth" th:field="*{birth}" maxlength="10" placeholder="년-월-일 형식으로 입력">
         </div>
 
         <div class="textForm"><!--사용자 이메일-->
             <label for="inputEmail">이메일</label>
-            <input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="ex) abcd127@gmail.com"
-                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다.@를 추가하여 다시 입력하여 주십시오"
-                required><!--TODO : JS사용해서 유효성 검사 추가하기-->
+            <input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="ex) abcd127@gmail.com">
             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         </div>
 
         <div class="textForm"><!--사용자 전화번호-->
             <label for="inputPhoneNum">전화번호</label>
-            <input type="tel" id="inputPhoneNum" name="phoneNum" th:field="*{phoneNum}" required
-                pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" maxlength="13" title="XXX-XXXX-XXXX" placeholder="000-0000-0000">
+            <input type="tel" id="inputPhoneNum" name="phoneNum" th:field="*{phoneNum}" maxlength="13" placeholder="전화번호 입력">
             <span th:if="${#fields.hasErrors('phoneNum')}" th:errors="*{phoneNum}"></span>
         </div>
 
-        <button type="submit" id="signupButton" class="btn">가입하기</button>
+        <button type="submit" id="button" class="btn" >가입하기</button> 
+
 
         <script th:src="@{/js/signup/duplicateCheck.js}"></script>
         <script th:src="@{/js/signup/passwordValidate.js}"></script>
