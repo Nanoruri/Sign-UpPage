@@ -81,6 +81,7 @@ function validateBirthday(birthday) {
     return true;
 }
 
+//todo : 생년월일, 전화번호 숫자를 수정하고 난 뒤에 입력커서가 문자의 끝으로 가는 문제 처리하기
 // 자동으로 년-월-일 형식 맞춰주기
 function formatDatePickerInput(inputBirthday) {
     if (inputBirthday) {
@@ -106,39 +107,70 @@ function formatDatePickerInput(inputBirthday) {
                 value = year + '-' + month + (day ? '-' + day : '');
             } else {
                 value = year + (month ? '-' + month : '') + (day ? '-' + day : '');
-            }
+            }// todo : 
 
             // 입력값 업데이트
             inputBirthday.value = value;
+
+            if (event.inputType === 'deleteContentBackward' && cursorPosition > 0) {
+                inputBirthday.setSelectionRange(cursorPosition, cursorPosition);
+            }
         });
     }
 }
 
 
 
-// 전화번호 형식 맞추기 //todo (2/15) : 여기부터. 생년월일 받는 것과 비슷하게 처리하기
-function formatPhoneNumberInput(inputElement) {
-    if (inputElement) {
-        inputElement.addEventListener('input', function () {
-            var value = inputElement.value.trim();
+// 전화번호 형식 맞추기
+function formatPhoneNumberInput(inputPhoneNumber) {
+    if (inputPhoneNumber) {
+        inputPhoneNumber.addEventListener('input', function (event) {
+            var value = inputPhoneNumber.value.replace(/[^\d]/g, ''); // 숫자 이외의 문자 제거
+            var cursorPosition = inputPhoneNumber.selectionStart;
 
-            // 입력된 값이 텍스트인경우 삭제
-            if (!/^\d+$/.test(value) && !/^\d{3}-\d{4}-?$/.test(value)) {
-                inputElement.value = value.replace(/[^\d-]/g, '');
+            if (event.inputType === 'deleteContentBackward') {
+                // 백스페이스로 삭제 시
+                if (cursorPosition > 0 && value.charAt(cursorPosition - 1) === '-') {
+                    // '-'를 삭제하는 경우 처리
+                    inputPhoneNumber.value = value.slice(0, cursorPosition - 2) + value.slice(cursorPosition - 1);
+                    inputPhoneNumber.setSelectionRange(cursorPosition - 2, cursorPosition - 2);
+                    return;
+                }
             }
 
-            //입력된 값이 3자리 숫자인경우 '-' 추가  
-            if (/^\d{3}$/.test(value)) {
-                inputElement.value = value + '-';
-            } else if (/^\d{3}-\d{4}$/.test(value)) {
-                inputElement.value = value + '-';
-            }
+            // 지역번호, 중간번호, 끝번호 추출
+            var areaCode = value.slice(0, 3);
+            var middleNumber = value.slice(3, 7);
+            var lastNumber = value.slice(7, 11);
 
-            if (/^\d{3}-\d{4}-\d{4}$/.test(value)) {
-                console.log('전화번호 형식이 올바름:', value);
+            // 전화번호 형식 처리
+            if (middleNumber && middleNumber.length >= 4) {
+                value = areaCode + '-' + middleNumber.slice(0, 4) + (lastNumber ? '-' + lastNumber : '');
             } else {
-                console.log('전화번호 형식이 올바르지 않음:', value);
+                value = areaCode + (middleNumber ? '-' + middleNumber : '') + (lastNumber ? '-' + lastNumber : '');
             }
+
+            // 입력값 업데이트
+            inputPhoneNumber.value = value;
+
+            // 수정 후 커서 위치 조정
+            if (event.inputType === 'deleteContentBackward' && cursorPosition > 0) {
+                inputPhoneNumber.setSelectionRange(cursorPosition, cursorPosition);
+            }
+
+
+            // //입력된 값이 3자리 숫자인경우 '-' 추가  
+            // if (/^\d{3}$/.test(value)) {
+            //     inputPhoneNum.value = value + '-';
+            // } else if (/^\d{3}-\d{4}$/.test(value)) {
+            //     inputPhoneNum.value = value + '-';
+            // }
+
+            // if (/^\d{3}-\d{4}-\d{4}$/.test(value)) {
+            //     console.log('전화번호 형식이 올바름:', value);
+            // } else {
+            //     console.log('전화번호 형식이 올바르지 않음:', value);
+            // }
         });// todo : 전화번호 형식 010 자동입력 고려해보기
     }
 }
