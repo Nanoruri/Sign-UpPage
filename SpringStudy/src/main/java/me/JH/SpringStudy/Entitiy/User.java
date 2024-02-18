@@ -28,7 +28,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 	@Column(name = "USER_PHONE")
 	private String phoneNum;//010-0000-0000
 
-	@DateTimeFormat(pattern = "yyyyMMdd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")//todo : 24/12/13일 변경된 부분, develop브랜치 수정 필요
 	@Column(name = "USER_BIRTH")
 	private Date birth;//YYYY-MM-DD
 
