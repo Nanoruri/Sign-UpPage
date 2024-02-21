@@ -25,20 +25,20 @@
 
         <div class="textForm"><!--사용자 이름-->
             <label for="inputName">이름</label>
-            <input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
+            <input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름">
             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
         </div>
 
         <div class="textForm"><!--사용자 비밀번호-->
             <label for="inputPassword">비밀번호</label>
             <input type="password" id="inputPassword" name="password" th:field="*{password}" placeholder="비밀번호"
-                required>
+                >
             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
         </div>
 
         <div class="textForm">
             <label for="confirmPassword">비밀번호 확인</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" required>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" >
 
             <div id="matchingMessage"></div>
         </div>
