@@ -1,12 +1,12 @@
 // 공통적으로 사용되는 유효성 검사 함수 정의
-function commonValidate() {// todo : signupPage, findIdPage 완료
+function commonValidate() {
+    console.debug('commonValidate함수 실행')
     var userIdInput = document.getElementById('inputAdress');
     var nameInput = document.getElementById('inputName');
     var passwordInput = document.getElementById('inputPassword');
     var birthInput = document.getElementById('inputBirth');
     var emailInput = document.getElementById('inputEmail');
     var phoneNumInput = document.getElementById('inputPhoneNum');
-    var button = document.getElementById('button');
 
     // 요소가 존재하지 않는 경우에는 기본값으로 null을 할당
     var userId = userIdInput ? userIdInput.value.trim() : null;
@@ -18,28 +18,43 @@ function commonValidate() {// todo : signupPage, findIdPage 완료
     var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;//이메일 유효성
     var phoneNumRegex = /^\d{3}-\d{4}-\d{4}$/
 
-    if (userId === null || userId === '') {
-        showAlertAndDisableButton('아이디를 입력해주세요', button);
-    } else if (name === null || name === '') {
-        showAlertAndDisableButton('이름을 입력해주세요', button);
-    } else if (password === null || password === '') {
-        showAlertAndDisableButton('비밀번호를 입력해주세요', button);
-    } else if (birth === null || birth === '') {
-        showAlertAndDisableButton('생년월일을 입력해주세요', button);
-    } else if (!validateBirthday(birth)) {
-        showAlertAndDisableButton('올바른 날짜 형식이 아닙니다.다시 입력하여 주십시오', button)
-    } else if (email === null || email === '') {
-        showAlertAndDisableButton('이메일을 입력해주세요', button);
-    } else if (!emailRegex.test(email)) {
-        showAlertAndDisableButton('이메일이 형식에 맞지 않습니다. @를 추가하여 형식에 맞게 다시 입력해주세요', button)
-    } else if (phoneNum === null || phoneNum === '') {
-        showAlertAndDisableButton('전화번호를 입력해주세요', button);
-    } else if (!phoneNumRegex.test(phoneNum)) {
-        showAlertAndDisableButton('전화번호는 11자리 숫자로 입력해주세요', button)
-    } else {
-        button.disabled = false;
-
+    if (userId === '') {
+        console.debug('아이디 유효성 검증 실행');
+        alert('아이디를 입력해주세요');
+        return false;
+    } else if (name === '') {
+        console.debug('비밀번호 유효성 검증 실행');
+        alert('이름을 입력해주세요');
+        return false;
+    } else if (password === '') {
+        console.debug('이름 유효성 검증 실행')
+        alert('비밀번호를 입력해주세요');
+        return false;
+    } else if (birth === '') {
+        console.debug('생년월일 유효성 검증 실행')
+        alert('생년월일을 입력해주세요');
+        return false;
+    } else if (birth !== null && !validateBirthday(birth)) {
+        console.debug('생년월일 유효성 검증 실행 됨')
+        alert('올바른 날짜 형식이 아닙니다.다시 입력하여 주십시오')
+        return false;
+    } else if (email === '') {
+        console.debug('이메일 실행 됨')
+        alert('이메일을 입력해주세요');
+        return false;
+    } else if (email !== null && !emailRegex.test(email)) {
+        console.debug('이메일 유효성 검증 실행 됨.')
+        alert('이메일이 형식에 맞지 않습니다. @를 추가하여 형식에 맞게 다시 입력해주세요')
+        return false;
+    } else if (phoneNum === '') {
+        console.debug('전화번호 실행 됨.')
+        alert('전화번호를 입력해주세요');
+        return false;
+    } else if (phoneNum !== null && !phoneNumRegex.test(phoneNum)) {
+        console.debug('전화번호 검증 실행 됨')
+        alert('전화번호는 11자리 숫자로 입력해주세요')
     }
+    console.debug('commonValidate함수 종료')
 }
 
 
@@ -48,8 +63,10 @@ function validateBirthday(birthday) {
     // 정규식을 사용하여 '년-월-일' 형식 체크
     var regex = /^\d{4}-\d{1,2}-\d{1,2}$/;
 
+    console.debug('validateBirthday 실행')
 
     if (!regex.test(birthday)) {
+        console.debug('생년월일 유효성 검사 실패')
         return false;
     }
 
@@ -69,6 +86,7 @@ function validateBirthday(birthday) {
     // 유효한 날짜인지 검사
     if (isNaN(year) || isNaN(month) || isNaN(day) ||
         month < 1 || month > 12 || day < 1 || day > 31) {
+        console.log('날짜 유효성 검사 실패:', birthday);
         return false;
     }
 
@@ -77,7 +95,6 @@ function validateBirthday(birthday) {
     //        alert('올바른 년도를 입력해주세요.');
     //        return false;
     //    }
-    console.log(validateBirthday(birthday));
     return true;
 }
 
@@ -107,7 +124,7 @@ function formatDatePickerInput(inputBirthday) {
                 value = year + '-' + month + (day ? '-' + day : '');
             } else {
                 value = year + (month ? '-' + month : '') + (day ? '-' + day : '');
-            }// todo : 
+            }
 
             // 입력값 업데이트
             inputBirthday.value = value;
@@ -177,10 +194,10 @@ function formatPhoneNumberInput(inputPhoneNumber) {
 
 
 // 공통적으로 사용되는 알림 및 버튼 비활성화 함수 정의
-function showAlertAndDisableButton(message, button) {
-    alert(message);
-    button.disabled = false;
-}
+// function alert(message) {
+//     alert(message);
+//     // button.disabled = true;
+// }
 
 
 // 초기화 함수
@@ -190,9 +207,9 @@ function init() {
     var birthInput = document.getElementById('inputBirth')
     var phoneNumInput = document.getElementById('inputPhoneNum')
 
-    if (button) {
-        button.addEventListener('click', commonValidate);
-    }
+    // if (button) {
+    //     button.addEventListener('click', commonValidate);
+    // }
 
     formatDatePickerInput(birthInput)
     formatPhoneNumberInput(phoneNumInput)
