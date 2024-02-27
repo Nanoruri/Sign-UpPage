@@ -1,20 +1,19 @@
 // validationPassword.js
-function checkPasswordMatch(event) {
-    if (event) {
-        event.preventDefault();
-    }
+function checkPasswordMatch() {
+
 
     // 비밀번호와 비밀번호 확인 값 가져오기
     var newPassword = document.getElementById('inputPassword').value;
     var validatePassword = document.getElementById('inputPasswordConfirm').value;
-
     // 비밀번호가 일치하지 않으면 모달 띄우기
-    if (newPassword !== validatePassword) {
-        displayModal("비밀번호가 일치하지 않습니다.");
-    } else {
-        // 비밀번호가 일치하면 폼 제출
-        document.getElementById('passwordChangeForm').submit();
-    }
+    
+    
+    if (newPassword !== validatePassword || newPassword === '') {
+        displayModal(newPassword === '' ? "공백은 비밀번호로 할 수 없습니다." : "비밀번호가 일치하지 않습니다.");
+        return false;
+    } 
+    // 비밀번호가 일치하면 폼 제출 
+    return true;        
 }
 
 // 모달 띄우기
