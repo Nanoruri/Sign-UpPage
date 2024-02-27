@@ -11,7 +11,7 @@
 </head>
 
 <body> <!--todo : pattern,title속성은 JS로 유효성 검사, 기본 에러 메세지 변경 가능-->
-    <form method="post" class="joinForm" th:action="@{/signup}" onsubmit="return commonValidate();" th:object="${user}">
+    <form method="post" class="joinForm" th:action="@{/signup}" onsubmit="return commonValidate()" th:object="${user}">
 
         <h2>회원가입</h2>
         <div class="textForm"><!--사용자 아이디-->
