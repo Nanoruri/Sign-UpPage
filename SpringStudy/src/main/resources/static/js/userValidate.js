@@ -23,11 +23,11 @@ function commonValidate() {
         alert('아이디를 입력해주세요');
         return false;
     } else if (name === '') {
-        console.debug('비밀번호 유효성 검증 실행');
+        console.debug('이름 유효성 검증 실행');
         alert('이름을 입력해주세요');
         return false;
     } else if (password === '') {
-        console.debug('이름 유효성 검증 실행')
+        console.debug('비밀번호 유효성 검증 실행')
         alert('비밀번호를 입력해주세요');
         return false;
     } else if (birth === '') {
@@ -55,6 +55,7 @@ function commonValidate() {
         alert('전화번호는 11자리 숫자로 입력해주세요')
     }
     console.debug('commonValidate함수 종료')
+    return true;
 }
 
 

@@ -21,7 +21,7 @@ function displayModal(message) {
     var missMatchModal = new bootstrap.Modal(document.getElementById('missMatchModal'));
 
     // 모달 내용 설정
-    var modalMessage = document.getElementById('passwordMisttMatchMessage');
+    var modalMessage = document.getElementById('passwordMissMatchMessage');
     modalMessage.innerHTML = message;
 
     // 모달 열기
