@@ -2,7 +2,6 @@ function doFindId() {// todo : 모달로 아이디 보여주기
 
     var name = document.getElementById('inputName').value;
     var email = document.getElementById('inputEmail').value;
-    var modalMessage = document.getElementById('findIdModal')
 
 
     fetch('/study/findId', {
@@ -13,19 +12,37 @@ function doFindId() {// todo : 모달로 아이디 보여주기
         body: 'name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email),
     })
         .then(function (response) {
-            if (!response.status=== 404) {
-                alert('사용자를 찾을 수 없습니다.');
+            if (response.status === 404) {
+                displayModal('해당 정보로 가입한 가입자가 없습니다!');
+                throw new Error('사용자가 없습니다.')
             } else {
                 return response.text();
             }
         })
         .then(function (userId) {
-            alert(userId);
+            displayModal(userId);
         })
         .catch(function (error) {
             console.error('아이디를 찾는 중 오류 발생:', error);
         });
 
-        return false;// 폼제출 X
+    return false;// 폼제출 X
+
+}
+
+
+function displayModal(message) {
+    var IdInfoModal = new bootstrap.Modal(document.getElementById('showIdInfoModal'));
+    var idModalMessage = document.getElementById('showUserIdMessage');
+    idModalMessage.innerHTML = message;
+
+    IdInfoModal.show();
+
+    var closeModalButtons = document.querySelectorAll('[data-bs-dismiss="modal"]');
+    closeModalButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            IdInfoModal.hide();
+        });
+    });
 
 }
