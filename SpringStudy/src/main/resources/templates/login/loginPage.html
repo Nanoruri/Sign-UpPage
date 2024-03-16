@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" th:href="@{/css/login/login.css}">
+	<script th:src="@{/js/userValidate.js}"></script>
 	<title>로그인</title>
 </head>
 
@@ -11,7 +12,7 @@
 	<div class="wrapper">
 		<div class="container">
 			<h1>Welcome</h1>
-			<form method="post" class="form" th:action="@{/loginCheck}" th:object="${signin}">
+			<form method="post" class="form" th:action="@{/loginCheck}" onsubmit="return commonValidate();" th:object="${signin}">
 				<!--from태그 method = http의 Request method, action = 요청을 보낼 URL-->
 
 				<!--사용자 아이디-->

@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" th:href="@{/css/finds/findPw.css}">
+	<script th:src="@{/js/userValidate.js}"></script>
 	<title>Title</title>
 </head>
 <body><!--todo: 비밀번호 찾는 서비스, 컨트롤러에 구현 -->
@@ -10,26 +11,24 @@
 		<div class="container">
 			<h1>비밀번호 찾기</h1>
 
-			<form method="post" th:action="@{/findPw}" class="form" th:object="${findUserPw}">
+			<form method="post" th:action="@{/findPw}" class="form" onsubmit="return commonValidate();" th:object="${findUserPw}">
 				<!--아이디 입력란-->
 				<label for="inputAdress">아이디</label>
-				<input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" required>
+				<input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" >
 				<span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
 
 				<!--사용자 이름 입력란-->
 				<label for="inputName">이름</label>
-				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름" required>
+				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름" >
 
 
 				<!--이메일 입력란-->
 				<label for="inputEmail">이메일</label>
-				<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="이메일"
-				       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="올바른 이메일 형식이 아닙니다. 다시 입력하여 주십시오"
-				       required>
+				<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="이메일">
 				<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 
 
-				<button type="submit">입력</button>
+				<button type="submit" id="button" >입력</button>
 			</form>
 		</div>
 
