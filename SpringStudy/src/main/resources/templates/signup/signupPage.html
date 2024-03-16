@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/signup/signup.css}">
     <script th:src="@{/js/userValidate.js}"></script><!--todo-->
+    <script th:src="@{/js/signup/duplicateCheck.js}"></script>
+    <script th:src="@{/js/signup/passwordValidate.js}"></script>
     <title>회원가입 페이지</title>
 </head>
 
@@ -61,10 +63,6 @@
         </div>
 
         <button type="submit" id="button" class="btn" >가입하기</button> 
-
-
-        <script th:src="@{/js/signup/duplicateCheck.js}"></script>
-        <script th:src="@{/js/signup/passwordValidate.js}"></script>
     </form>
     
 <!--    <form method="post" class="idCheckForm" th:action="@{/idCheck}">-->
