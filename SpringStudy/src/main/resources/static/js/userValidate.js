@@ -204,22 +204,25 @@ function formatPhoneNumberInput(inputPhoneNumber) {
 // 초기화 함수
 function init() {
     // 문서가 로드될 때 실행되는 초기화 코드
-    var button = document.getElementById('button');
-    var birthInput = document.getElementById('inputBirth')
-    var phoneNumInput = document.getElementById('inputPhoneNum')
+    var form = document.getElementById('joinForm'); // 폼 요소 가져오기
 
-    // if (button) {
-    //     button.addEventListener('click', commonValidate);
-    // }
+    if (form) {
+        // 폼이 존재할 경우에만 이벤트 리스너 추가
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // 폼 제출의 기본 동작 막기
+            commonValidate(); // 유효성 검사 실행
+        });
+    }
 
-    formatDatePickerInput(birthInput)
-    formatPhoneNumberInput(phoneNumInput)
+    var birthInput = document.getElementById('inputBirth');
+    var phoneNumInput = document.getElementById('inputPhoneNum');
+
+    formatDatePickerInput(birthInput);
+    formatPhoneNumberInput(phoneNumInput);
 }
 
 // 초기화 함수 호출
 window.onload = init;
-
-
 
 
 
