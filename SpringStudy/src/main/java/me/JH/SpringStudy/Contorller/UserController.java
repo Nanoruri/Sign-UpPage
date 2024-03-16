@@ -15,11 +15,14 @@ import me.JH.SpringStudy.Service.UserService.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 /**
  * 일반적인 작업을 처리하는 컨트롤러 클래스. 로그인 및 회원가입과 관련된 기능이 있음.
@@ -90,7 +93,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@GetMapping("/signup")
 	public String signupForm(Model model) {
 		model.addAttribute("user", new User());
-		return "signUp/signupPage";
+		return "signup/signupPage";
 	}
 
 	/**
@@ -106,7 +109,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //			return "redirect:/signupError";
 //		}
 		log.info("회원 정보 저장성공");
-		return "redirect:signUp/signupSuccess";// signupPage에서 signupSuccessPage로 이동
+		return "redirect:signup/signupSuccess";// signupPage에서 signupSuccessPage로 이동
 	}
 
 	/**
@@ -120,7 +123,9 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
 		if (memberService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
-			throw new SignupException(SignupExceptionType.ID_ALREADY_EXIST);//중복O GlobalExceptionHandler에서 처리
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();// todo : 임시조치
+//			throw new SignupException(SignupExceptionType.ID_ALREADY_EXIST);//중복O GlobalExceptionHandler에서 처리
+			//TODO: GlobalExceptionHandler에서 SignupException으로 Conflict나게끔 처리할 수 없나...
 		}
 		log.info("ID 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
@@ -230,7 +235,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 */
 	@GetMapping("/passwordChange")
 	public String resetPassword(Model model) {
-		model.addAttribute("passwordChange", new User());// todo : 엔티티에 newpassword라는 필드가 없는데 어떻게 처리 해줘야 하지..
+		model.addAttribute("passwordChange", new User());//
 		return "finds/newPasswordPage";
 	}
 
@@ -256,7 +261,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 //	@PostMapping("/passwordChange")
 //	public String resetPassword(@ModelAttribute("passwordChange")@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
-//		findService.resetPassword(presentPassword, newPassword);//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
+//		findService.resetPassword(presentPassword, newPassword);
 //		return "passwordChangeSuccess";
 //	}
 

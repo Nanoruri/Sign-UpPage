@@ -5,6 +5,7 @@ import me.JH.SpringStudy.Exception.Finds.FindPwException;
 import me.JH.SpringStudy.Exception.Signin.SigninException;
 import me.JH.SpringStudy.Exception.Signin.SigninExceptionType;
 import me.JH.SpringStudy.Exception.Signup.SignupException;
+import me.JH.SpringStudy.Exception.Signup.SignupExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -37,9 +38,25 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(value = SignupException.class)
-	public String doCheckSignUpException(SignupException signUpException, Model model) {
-		model.addAttribute("signupError", resoveSignUpErrormassage(signUpException));
+	public String doCheckSignupException(SignupException signupException, Model model) {
+		HttpStatus httpStatus = resolveHttpStatus(signupException.getExceptionType());
+		model.addAttribute("signupError", resoveSignUpErrormassage(signupException));
 		return "errors/signupErrorPage";
+	}
+
+//TODO : 위 코드의 return "errors/signupErrorPage"; 때문에  Conflict 나도  http상태 200 나오면서 duplicateCheck.js의 동작이 제대로 안됨.
+//TODO : /IdCheck
+	private HttpStatus resolveHttpStatus (SignupExceptionType signupException){
+		switch (signupException) {
+			case MISSING_INFORMATION:
+				return HttpStatus.NOT_FOUND; // 404 상태 코드
+			case ID_ALREADY_EXIST:
+			case USER_ALREADY_EXIST:
+				return HttpStatus.CONFLICT; // 409 상태 코드
+			default:
+				return HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
 	}
 
 	private String resoveSignUpErrormassage(SignupException signUpException) {
@@ -102,7 +119,7 @@ public class GlobalExceptionHandler {
 	public String handle403(Exception exception, Model model) {
 		logger.error("404 AccessDenied: {}", exception.getMessage());
 		model.addAttribute("errorMessage", "해당 페이지에 접근할 권한이 없습니다.");
-		return "Error403";
+		return "errors/error403";
 	}
 
 	@ExceptionHandler(value = MethodNotFoundException.class)
@@ -110,7 +127,7 @@ public class GlobalExceptionHandler {
 	public String handle404(Exception exception, Model model) {
 		logger.error("404 NotFound: {}", exception.getMessage());
 		model.addAttribute("errorMessage", "해당 페이지를 찾을 수 없습니다.");
-		return "Error404";//todo : 에러페이지 구현하기, 컨트롤러에 해당 클래스 적용하기
+		return "errors/error404";//todo : 에러페이지 구현하기, 컨트롤러에 해당 클래스 적용하기
 	}
 
 	@ExceptionHandler(value = Exception.class)
@@ -118,7 +135,7 @@ public class GlobalExceptionHandler {
 	public String handle500(Exception exception, Model model) {
 		logger.error("500 Internal Server Error: {}", exception.getMessage());
 		model.addAttribute("errorMessage", "내부 서버 에러 입니다.");
-		return "Error500";
+		return "errors/error500";
 	}
 
 
