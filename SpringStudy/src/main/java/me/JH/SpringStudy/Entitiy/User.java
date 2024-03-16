@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_Info")//TODO : MEMBER 말고 USER로
+@Table(name = "user_Info")//TODO : 싱글톤 적용해서 컨트롤러에서 new로 인스턴스 생성하는거 막을 수 있지 않나.
 public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정하고  seq와 연결
 	@Id
 	@Column(name = "USER_ID", unique = true)
@@ -28,7 +28,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 	@Column(name = "USER_PHONE")
 	private String phoneNum;//010-0000-0000
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")//todo : 24/12/13일 변경된 부분, develop브랜치 수정 필요
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "USER_BIRTH")
 	private Date birth;//YYYY-MM-DD
 
