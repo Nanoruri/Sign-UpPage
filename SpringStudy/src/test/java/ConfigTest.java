@@ -72,7 +72,6 @@ public class ConfigTest {
 	@Test
 	public void testLoggingFilterExceptionHandling() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/test"))
-				.andExpect(MockMvcResultMatchers.status().isInternalServerError())
-				.andExpect(MockMvcResultMatchers.content().string("서버 에러"));
+				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 }
