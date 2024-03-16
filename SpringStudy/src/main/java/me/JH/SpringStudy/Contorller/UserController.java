@@ -96,14 +96,14 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 */
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute("user") @Validated User user) {
-
 		memberService.registerMember(user);//회원가입 서비스
 
 //		if (result.hasErrors()) {//회원가입 실패 시의 로직
 //			return "redirect:/signupError";
 //		}
+
 		log.info("회원 정보 저장성공");
-		return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
+		return "redirect:signUp/signupSuccess";// signupPage에서 signupSuccessPage로 이동
 	}
 
 	/**
@@ -247,7 +247,6 @@ public class UserController {//todo : 컨트롤러 분리하기.
 //		findService.resetPassword(presentPassword, newPassword);//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
 //		return "passwordChangeSuccess";
 //	}
-
 
 	@GetMapping("/passwordChangeSuccess")
 	public String passwordChangeSuccess() {

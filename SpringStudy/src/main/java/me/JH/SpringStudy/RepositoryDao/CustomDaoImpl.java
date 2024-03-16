@@ -44,7 +44,7 @@ public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나
 		//CriteriaQuery에 검색 조건 설정
 
 		//쿼리 실행 및 결과 반환
-		User user = entityManager.createQuery(query).getResultList().stream().findFirst().orElse(null);//todo : 람다식을 사용한 코드. 람다식 공부하기
+		User user = entityManager.createQuery(query).getResultList().stream().findFirst().orElse(null);//todo :메서드 체이닝,  스트림 공부
 
 		// 동적으로 생성된 검색 조건에 맞는 사용자 반환
 		return Optional.ofNullable(user);
