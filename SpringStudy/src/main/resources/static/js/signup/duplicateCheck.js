@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', function() {
+
+
+document.getElementById('inputAdress').addEventListener('input', checkDuplicate);
+
+});
+
+
+
 function checkDuplicate() {//todo : 일관성을 위해 함수형이 아닌 객체지향형으로 짜는 것도 고민해보기
 
     var userId = document.getElementById('inputAdress').value;
@@ -30,4 +39,3 @@ function checkDuplicate() {//todo : 일관성을 위해 함수형이 아닌 객�
             console.error('중복 검사 중 오류 발생:', error);
         });
 }
-document.getElementById('inputAdress').addEventListener('input', checkDuplicate);
