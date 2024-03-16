@@ -1,13 +1,20 @@
 package me.JH.SpringStudy.Contorller;
 
 import me.JH.SpringStudy.Entitiy.User;
+import me.JH.SpringStudy.Exception.Finds.FindIdException;
+import me.JH.SpringStudy.Exception.Finds.FindIdExceptionType;
+import me.JH.SpringStudy.Exception.Finds.FindPwException;
+import me.JH.SpringStudy.Exception.Finds.FindPwExceptionType;
+import me.JH.SpringStudy.Exception.Signin.SigninException;
+import me.JH.SpringStudy.Exception.Signin.SigninExceptionType;
+import me.JH.SpringStudy.Exception.Signup.SignupException;
+import me.JH.SpringStudy.Exception.Signup.SignupExceptionType;
 import me.JH.SpringStudy.Service.UserService.FindService;
 import me.JH.SpringStudy.Service.UserService.LoginService;
 import me.JH.SpringStudy.Service.UserService.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * 일반적인 작업을 처리하는 컨트롤러 클래스. 로그인 및 회원가입과 관련된 기능이 있음.
  */
 @Controller
-public class UserController {//todo : 컨트롤러 분리하기.
+public class UserController {//todo : 컨트롤러 분리하기(분리 기준 생각하기)
 
 	private final static Logger log = LoggerFactory.getLogger(UserController.class);// Log 찍는 내용
 	private final SignupService memberService;
@@ -62,15 +69,13 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 */
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
 	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
-		// 로그인 성공 시의 로직
-		boolean loginSucceess = loginService.loginCheck(userId, password);//userId,userPassword 받아서 서비스 실행
-
-		if (!loginSucceess) {//로그인 실패 시의 로직
+		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
 			log.info("로그인 실패");
-			return "redirect:/login";// 로그인 실패시 로그인페이지로 리다이렉트
-		}
+			throw new SigninException(SigninExceptionType.ID_OR_PASSWORD_WRONG);
+			// SigninException으로 예외 투척
+		}// todo : loginService.loginCheck(userId, password) 하고 서비스 클래스의 loginCheck는 void로..?
 		log.info("로그인 성공");
-		return "redirect:/";//
+		return "redirect:/";//로그인 성공시 메인페이지로 리다이렉트
 	}
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -85,7 +90,7 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	@GetMapping("/signup")
 	public String signupForm(Model model) {
 		model.addAttribute("user", new User());
-		return "signup/signupPage";
+		return "signUp/signupPage";
 	}
 
 	/**
@@ -96,12 +101,10 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	 */
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute("user") @Validated User user) {
-		memberService.registerMember(user);//회원가입 서비스
-
+		memberService.registerMember(user);//회원가입 서비스, 예외처리는 서비스 클래스에서 한다.
 //		if (result.hasErrors()) {//회원가입 실패 시의 로직
 //			return "redirect:/signupError";
 //		}
-
 		log.info("회원 정보 저장성공");
 		return "redirect:signUp/signupSuccess";// signupPage에서 signupSuccessPage로 이동
 	}
@@ -117,10 +120,11 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
 		if (memberService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID입니다.");//중복O http Conflct(409)상태와 함께 메세지 출력
+			throw new SignupException(SignupExceptionType.ID_ALREADY_EXIST);//중복O GlobalExceptionHandler에서 처리
 		}
 		log.info("ID 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
+		//todo : html로 사용하기 버튼 or 돌아가기 버튼 짜기
 	}
 
 
@@ -154,11 +158,12 @@ public class UserController {//todo : 컨트롤러 분리하기.
 		return "index";
 	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
 
-	@GetMapping("/findId")//todo : 아이디찾기 서비스 만들기(postMapping도)
+	@GetMapping("/findId")
 	public String findId(Model model) {
 		model.addAttribute("findUserId", new User());
 		return "finds/findIdPage";
 	}
+
 
 	@PostMapping("/findId")// TODO : ResponseBody 써야하나...아니면 html로 반환페이지를 만들어줘야하나...
 	@ResponseBody
@@ -166,7 +171,11 @@ public class UserController {//todo : 컨트롤러 분리하기.
 
 		if (findService.findId(name, email) == null) {
 			log.info("아이디 찾기 실패");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
+			throw new FindIdException(FindIdExceptionType.USER_NOT_FOUND);
+		} else if (name.isBlank()) {
+			throw new FindIdException(FindIdExceptionType.NAME_NULL);
+		} else if (email.isBlank()) {
+			throw new FindIdException(FindIdExceptionType.EMAIL_NULL);
 		}
 
 		log.info("아이디 찾기 성공");
@@ -197,12 +206,13 @@ public class UserController {//todo : 컨트롤러 분리하기.
 
 	@PostMapping("/findPw")
 	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("email") String email, Model model) {
-		boolean validateUser = findService.validateUser(userId, name, email);
+//		boolean validateUser = findService.validateUser(userId, name, email);
 
-		if (!validateUser) {//실패로직..
+		if (!findService.validateUser(userId, name, email)) {//실패로직..
 			log.info("잘못된 입력입니다");
-			return "redirect:/findPwPage";//todo : 404페이지 해결하기
+			throw new FindPwException(FindPwExceptionType.USER_NOT_FOUND);//todo : USER_NOT_FOUND 공통 에러에 넣어도 될 듯
 		}
+
 		User validateUsers = new User();
 		validateUsers.setUserId(userId);
 		validateUsers.setName(name);
@@ -236,8 +246,10 @@ public class UserController {//todo : 컨트롤러 분리하기.
 	                            @RequestParam("newPassword") String newPassword
 	) {//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
 		if (!findService.changePassword(changePasswordUser, newPassword)) {
-			log.info("실패.");
+			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
 			return "redirect:/findPw";
+		} else if (newPassword == null) {
+			throw new FindPwException(FindPwExceptionType.PASSWORD_NULL);
 		}
 		return "redirect:/passwordChangeSuccess";
 	}
