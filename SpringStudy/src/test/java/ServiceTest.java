@@ -1,6 +1,7 @@
 import me.JH.SpringStudy.Entitiy.User;
 import me.JH.SpringStudy.MySpringBootApplication;
 import me.JH.SpringStudy.RepositoryDao.UserDao;
+import me.JH.SpringStudy.Service.UserService.LoginService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = MySpringBootApplication.class)
@@ -16,10 +18,12 @@ public class ServiceTest {
 	@Autowired
 	private UserDao userDao;
 	private PasswordEncoder passwordEncoder;
+@Autowired
+	private LoginService loginService;
 
 
 	@Test
-	public void changePasswordTest() {//todo :
+	public void changePasswordTest() {
 
 		String userId = "test";
 		String name = "test";
@@ -40,6 +44,25 @@ public class ServiceTest {
 		assertTrue(true, "저장에 성공하였습니다.");
 	}
 
+	@Test
+	public void loginServiceSuccesseTest(){
+		String userId = "kaby1217";
+		String password = "1234";
+
+		boolean result = loginService.loginCheck(userId, password);
+		assertTrue(result, "로그인 성공해야 함");
+	}
+
+	@Test
+	public void loginServiceFailedTest(){
+		String userId = "Unknown";
+		String password = "HolyMoly";
+
+		boolean result = loginService.loginCheck(userId, password);
+		assertFalse(result, "로그인 실패해야함");
 
 	}
-}
+
+
+	}
+
