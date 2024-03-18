@@ -1,5 +1,6 @@
 package me.JH.SpringStudy.Exception.Finds;
 
+@Deprecated
 public class FindIdException extends RuntimeException {
 
 	private final FindIdExceptionType findIdExceptionType;

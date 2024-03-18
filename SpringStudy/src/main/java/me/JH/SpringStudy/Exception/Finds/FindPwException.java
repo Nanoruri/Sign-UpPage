@@ -1,5 +1,6 @@
 package me.JH.SpringStudy.Exception.Finds;
 
+@Deprecated
 public class FindPwException extends RuntimeException {//todo : 이 클래스는 findPw 전반에 걸쳐 쓰임
 	private final FindPwExceptionType findPwExceptionType;
 
@@ -7,5 +8,7 @@ public class FindPwException extends RuntimeException {//todo : 이 클래스는
 		this.findPwExceptionType = findPwExceptionType;
 	}
 
-	public FindPwExceptionType getExceptionType() {return findPwExceptionType;}
+	public FindPwExceptionType getExceptionType() {
+		return findPwExceptionType;
+	}
 }

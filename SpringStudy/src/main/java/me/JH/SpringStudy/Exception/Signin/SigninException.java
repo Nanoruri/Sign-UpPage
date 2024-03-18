@@ -1,5 +1,6 @@
 package me.JH.SpringStudy.Exception.Signin;
 
+@Deprecated
 public class SigninException extends RuntimeException {
 	private final SigninExceptionType signinExceptionType;
 

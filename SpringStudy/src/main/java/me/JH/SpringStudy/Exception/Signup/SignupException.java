@@ -1,5 +1,6 @@
 package me.JH.SpringStudy.Exception.Signup;
 
+@Deprecated
 public class SignupException extends RuntimeException {
 	private final SignupExceptionType signupExceptionType;
 

@@ -1,5 +1,6 @@
 package me.JH.SpringStudy.Exception.Finds;
 
+@Deprecated
 public enum FindPwExceptionType {
 	ID_NULL,
 	NAME_NULL,
