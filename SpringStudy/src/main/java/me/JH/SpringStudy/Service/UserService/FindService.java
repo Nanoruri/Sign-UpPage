@@ -1,8 +1,8 @@
 package me.JH.SpringStudy.Service.UserService;
 
 import me.JH.SpringStudy.Entitiy.User;
-import me.JH.SpringStudy.Exception.Finds.FindPwException;
-import me.JH.SpringStudy.Exception.Finds.FindPwExceptionType;
+import me.JH.SpringStudy.Exception.User.UserErrorType;
+import me.JH.SpringStudy.Exception.User.UserException;
 import me.JH.SpringStudy.RepositoryDao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class FindService {
 
 		if (optionalUser.isEmpty()) {
 			log.info("사용자를 찾을 수 없습니다.");
-			throw new FindPwException(FindPwExceptionType.USER_NOT_FOUND);
+			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 		User user = optionalUser.get();
 
@@ -55,7 +55,7 @@ public class FindService {
 	}
 }
 
-//	public void resetPassword(String presentPassword, String newPassword) {//todo : 이거 없는 비밀번호 넣어도 로직이 정상작동됨;;
+//	public void resetPassword(String presentPassword, String newPassword) {
 //		String hashedRawPassword = passwordEncoder.encode(presentPassword);
 //		User user = memberDao.findByPassword(presentPassword);
 //

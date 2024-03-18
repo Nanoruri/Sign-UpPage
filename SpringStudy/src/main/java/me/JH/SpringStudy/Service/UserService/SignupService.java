@@ -1,8 +1,8 @@
 package me.JH.SpringStudy.Service.UserService;
 
 import me.JH.SpringStudy.Entitiy.User;
-import me.JH.SpringStudy.Exception.Signup.SignupException;
-import me.JH.SpringStudy.Exception.Signup.SignupExceptionType;
+import me.JH.SpringStudy.Exception.User.UserErrorType;
+import me.JH.SpringStudy.Exception.User.UserException;
 import me.JH.SpringStudy.RepositoryDao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,10 +26,9 @@ public class SignupService {
 
 	public void registerMember(User user) {//로그인 할때에도 한번더 중복 검사 하게 끔하고 예외가 나오면 Catch하도록
 		if (isDuplicateId(user.getUserId())) {//중복검사 한번 더 하는 로직
-			throw new SignupException(SignupExceptionType.ID_ALREADY_EXIST);
-		}
-		else if (userDao.findById(user.getUserId()).isPresent()) {
-			throw new SignupException(SignupExceptionType.USER_ALREADY_EXIST);
+			throw new UserException(UserErrorType.ID_ALREADY_EXIST);
+		} else if (userDao.findById(user.getUserId()).isPresent()) {
+			throw new UserException(UserErrorType.USER_ALREADY_EXIST);
 		}//todo : 이렇게 처리 해도 되나??
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));// 비밀번호를 해시화하여 저장

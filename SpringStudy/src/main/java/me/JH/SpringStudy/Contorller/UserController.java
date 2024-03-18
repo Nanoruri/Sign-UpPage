@@ -1,14 +1,8 @@
 package me.JH.SpringStudy.Contorller;
 
 import me.JH.SpringStudy.Entitiy.User;
-import me.JH.SpringStudy.Exception.Finds.FindIdException;
-import me.JH.SpringStudy.Exception.Finds.FindIdExceptionType;
-import me.JH.SpringStudy.Exception.Finds.FindPwException;
-import me.JH.SpringStudy.Exception.Finds.FindPwExceptionType;
-import me.JH.SpringStudy.Exception.Signin.SigninException;
-import me.JH.SpringStudy.Exception.Signin.SigninExceptionType;
-import me.JH.SpringStudy.Exception.Signup.SignupException;
-import me.JH.SpringStudy.Exception.Signup.SignupExceptionType;
+import me.JH.SpringStudy.Exception.User.UserErrorType;
+import me.JH.SpringStudy.Exception.User.UserException;
 import me.JH.SpringStudy.Service.UserService.FindService;
 import me.JH.SpringStudy.Service.UserService.LoginService;
 import me.JH.SpringStudy.Service.UserService.SignupService;
@@ -21,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 /**
  * 일반적인 작업을 처리하는 컨트롤러 클래스. 로그인 및 회원가입과 관련된 기능이 있음.
@@ -74,7 +66,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
 		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
 			log.info("로그인 실패");
-			throw new SigninException(SigninExceptionType.ID_OR_PASSWORD_WRONG);
+			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
 			// SigninException으로 예외 투척
 		}// todo : loginService.loginCheck(userId, password) 하고 서비스 클래스의 loginCheck는 void로..?
 		log.info("로그인 성공");
@@ -123,13 +115,11 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
 		if (memberService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();// todo : 임시조치
-//			throw new SignupException(SignupExceptionType.ID_ALREADY_EXIST);//중복O GlobalExceptionHandler에서 처리
-			//TODO: GlobalExceptionHandler에서 SignupException으로 Conflict나게끔 처리할 수 없나...
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");//중복O
+			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.
 		}
 		log.info("ID 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
-		//todo : html로 사용하기 버튼 or 돌아가기 버튼 짜기
 	}
 
 
@@ -170,17 +160,14 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 
-	@PostMapping("/findId")// TODO : ResponseBody 써야하나...아니면 html로 반환페이지를 만들어줘야하나...
+	@PostMapping("/findId")
 	@ResponseBody
 	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("email") String email) {
 
 		if (findService.findId(name, email) == null) {
 			log.info("아이디 찾기 실패");
-			throw new FindIdException(FindIdExceptionType.USER_NOT_FOUND);
 		} else if (name.isBlank()) {
-			throw new FindIdException(FindIdExceptionType.NAME_NULL);
 		} else if (email.isBlank()) {
-			throw new FindIdException(FindIdExceptionType.EMAIL_NULL);
 		}
 
 		log.info("아이디 찾기 성공");
@@ -215,7 +202,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 		if (!findService.validateUser(userId, name, email)) {//실패로직..
 			log.info("잘못된 입력입니다");
-			throw new FindPwException(FindPwExceptionType.USER_NOT_FOUND);//todo : USER_NOT_FOUND 공통 에러에 넣어도 될 듯
+			throw new UserException(UserErrorType.USER_NOT_FOUND);//todo : USER_NOT_FOUND 공통 에러에 넣어도 될 듯
 		}
 
 		User validateUsers = new User();
@@ -249,12 +236,12 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@PostMapping("/passwordChange")
 	public String resetPassword(@ModelAttribute("passwordChangeUser") User changePasswordUser,
 	                            @RequestParam("newPassword") String newPassword
-	) {//todo : 에러 로직 구현하기, 비밀번호 설정 로직 점검하기
+	) {
 		if (!findService.changePassword(changePasswordUser, newPassword)) {
 			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
 			return "redirect:/findPw";
 		} else if (newPassword == null) {
-			throw new FindPwException(FindPwExceptionType.PASSWORD_NULL);
+			throw new UserException(UserErrorType.PASSWORD_NULL);
 		}
 		return "redirect:/passwordChangeSuccess";
 	}
@@ -269,6 +256,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public String passwordChangeSuccess() {
 		return "finds/passwordChangeSuccessPage";
 	}
+
 }
 
 
