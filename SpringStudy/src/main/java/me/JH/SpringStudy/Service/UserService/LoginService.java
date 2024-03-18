@@ -1,7 +1,7 @@
 package me.JH.SpringStudy.Service.UserService;
 
 import me.JH.SpringStudy.Entitiy.User;
-import me.JH.SpringStudy.RepositoryDao.MemberDao;
+import me.JH.SpringStudy.RepositoryDao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +12,19 @@ import java.util.Optional;
 
 @Service
 public class LoginService {
-	private final MemberDao memberDao;
+	private final UserDao userDao;
 	private final PasswordEncoder passwordEncoder;
 	private static final Logger log = LoggerFactory.getLogger(LoginService.class);
 
 
 	@Autowired//의존성 쭈와왑
-	public LoginService(MemberDao memberDao, PasswordEncoder passwordEncoder) {
-		this.memberDao = memberDao;
+	public LoginService(UserDao userDao, PasswordEncoder passwordEncoder) {
+		this.userDao = userDao;
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	public boolean loginCheck(String userId, String password) {//true와 false만 반환하면 되니 boolean타입으로
-		Optional<User> user = memberDao.findById(userId);// 아이디 찾기 및 대조//todo : if문 사용시 여기 삭제
+		Optional<User> user = userDao.findById(userId);// 아이디 찾기 및 대조//todo : if문 사용시 여기 삭제
 		//25번째 줄에서 에러 터짐, 로그 내용 : javax.persistence.NonUniqueResultException: query did not return a unique result: 2
 		// 아이디 중복 검사로 해결
 

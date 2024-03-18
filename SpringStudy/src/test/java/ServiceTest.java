@@ -1,6 +1,6 @@
 import me.JH.SpringStudy.Entitiy.User;
 import me.JH.SpringStudy.MySpringBootApplication;
-import me.JH.SpringStudy.RepositoryDao.MemberDao;
+import me.JH.SpringStudy.RepositoryDao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServiceTest {
 
 	@Autowired
-	private MemberDao memberDao;
+	private UserDao userDao;
 	private PasswordEncoder passwordEncoder;
 
 
@@ -26,7 +26,7 @@ public class ServiceTest {
 		String email = "test@test.com";
 		String newPassword = "12345678";
 
-		Optional<User> optionalUser = memberDao.findByProperties(userId, name, email);
+		Optional<User> optionalUser = userDao.findByProperties(userId, name, email);
 
 		assertTrue(optionalUser.isPresent(), "사용자를 찾았습니다.");
 
@@ -35,9 +35,10 @@ public class ServiceTest {
 		// 새로운 비밀번호로 업데이트
 		user.setPassword(newPassword);//변경값을 확인하기 위해 PasswordEncoder 사용 X
 		// 업데이트된 사용자 정보 저장
-		memberDao.save(user);
+		userDao.save(user);
 
 		assertTrue(true, "저장에 성공하였습니다.");
+	}
 
 
 	}

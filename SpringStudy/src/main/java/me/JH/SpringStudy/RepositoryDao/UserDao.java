@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberDao extends JpaRepository<User, String>, CustomDao {//이러면 JPA 쓰는 의미가 있는가..
+public interface UserDao extends JpaRepository<User, String>, CustomDao {//이러면 JPA 쓰는 의미가 있는가..
 //todo : dao네이밍 다시 생각해보기 UserDao..?
 
 	//JPA는 메서드 이름을 기준으로  분석하여 쿼리를 자동으로 생성함. 그래서 엔티티 테이블과 매핑할 수 있는

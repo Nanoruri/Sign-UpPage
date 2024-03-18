@@ -1,6 +1,6 @@
 import me.JH.SpringStudy.Entitiy.User;
 import me.JH.SpringStudy.MySpringBootApplication;
-import me.JH.SpringStudy.RepositoryDao.MemberDao;
+import me.JH.SpringStudy.RepositoryDao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ import java.util.Date;
 public class SpringApplicationTest {
 
 	@Autowired
-	private MemberDao memberDao;
+	private UserDao userDao;
 	private PasswordEncoder passwordEncoder;
 
 	@Test
@@ -29,7 +29,7 @@ public class SpringApplicationTest {
 		user.setCreatedDate(new Date());
 		user.setUpdateDate(new Date());
 
-		memberDao.save(user);
+		userDao.save(user);
 	}
 
 }
