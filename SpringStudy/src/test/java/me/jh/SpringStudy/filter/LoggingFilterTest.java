@@ -1,5 +1,7 @@
-import me.JH.SpringStudy.Filter.LoggingFilter;
+package me.jh.SpringStudy.filter;
+
 import me.JH.SpringStudy.MySpringBootApplication;
+import me.JH.SpringStudy.filter.LoggingFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 @ExtendWith(SpringExtension.class)// 스프링 컨텍스트 관련 기능 제공
 @SpringBootTest(classes = MySpringBootApplication.class)
 @AutoConfigureMockMvc//Http 요청 및 응답에 대한 테스트 지원 어노테이션
-public class ConfigTest {
+public class LoggingFilterTest {
+
 
 	@Test
 	void doFilter_ShouldLogRequestAndResponse() throws Exception {

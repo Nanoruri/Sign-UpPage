@@ -1,6 +1,6 @@
-import me.JH.SpringStudy.Entitiy.User;
+import me.JH.SpringStudy.entitiy.User;
 import me.JH.SpringStudy.MySpringBootApplication;
-import me.JH.SpringStudy.RepositoryDao.UserDao;
+import me.JH.SpringStudy.repositoryDao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

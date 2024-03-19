@@ -1,7 +1,9 @@
-import me.JH.SpringStudy.Entitiy.User;
+package me.jh.SpringStudy.service.userService;
+
+import me.JH.SpringStudy.entitiy.User;
 import me.JH.SpringStudy.MySpringBootApplication;
-import me.JH.SpringStudy.RepositoryDao.UserDao;
-import me.JH.SpringStudy.Service.UserService.LoginService;
+import me.JH.SpringStudy.repositoryDao.UserDao;
+import me.JH.SpringStudy.Service.userService.LoginService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
