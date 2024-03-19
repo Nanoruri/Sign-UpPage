@@ -1,7 +1,7 @@
-package me.JH.SpringStudy.Service.UserService;
+package me.jh.springStudy.service.userService;
 
-import me.JH.SpringStudy.Entitiy.User;
-import me.JH.SpringStudy.RepositoryDao.UserDao;
+import me.jh.springStudy.entitiy.User;
+import me.jh.springStudy.repositoryDao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

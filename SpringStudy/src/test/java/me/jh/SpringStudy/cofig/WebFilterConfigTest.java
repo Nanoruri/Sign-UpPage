@@ -1,7 +1,7 @@
-package me.jh.SpringStudy.cofig;
+package me.jh.springStudy.cofig;
 
-import me.JH.SpringStudy.config.WebFilterConfig;
-import me.JH.SpringStudy.filter.LoggingFilter;
+import me.jh.springStudy.config.WebFilterConfig;
+import me.jh.springStudy.filter.LoggingFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;

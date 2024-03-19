@@ -1,6 +1,7 @@
-package me.JH.SpringStudy.Config;
+package me.jh.springStudy.config;
 
-import me.JH.SpringStudy.Filter.LoggingFilter;
+
+import me.jh.springStudy.filter.LoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,7 @@ public class WebFilterConfig {
 
 		FilterRegistrationBean<LoggingFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new LoggingFilter());//등록할 필터 클래스 지정
-//		registrationBean.setOrder(1);//필터 순서 설정
+		registrationBean.setOrder(0);//필터 순서 설정
 		registrationBean.addUrlPatterns("/*"); // 필터가 적용될 URL 설정. 필터를 모든 URL 패턴에 적용
 
 		return registrationBean;

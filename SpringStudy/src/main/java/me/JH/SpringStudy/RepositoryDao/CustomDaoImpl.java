@@ -1,6 +1,6 @@
-package me.JH.SpringStudy.RepositoryDao;
+package me.jh.springStudy.repositoryDao;
 
-import me.JH.SpringStudy.Entitiy.User;
+import me.jh.springStudy.entitiy.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

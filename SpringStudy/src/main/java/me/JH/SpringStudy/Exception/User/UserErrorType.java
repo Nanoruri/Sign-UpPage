@@ -1,4 +1,4 @@
-package me.JH.SpringStudy.Exception.User;
+package me.jh.springStudy.exception.user;
 
 import org.springframework.http.HttpStatus;
 

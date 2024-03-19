@@ -1,7 +1,6 @@
-package me.jh.SpringStudy.filter;
+package me.jh.springStudy.filter;
 
-import me.JH.SpringStudy.MySpringBootApplication;
-import me.JH.SpringStudy.filter.LoggingFilter;
+import me.jh.springStudy.MySpringBootApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

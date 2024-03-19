@@ -1,4 +1,4 @@
-package me.JH.SpringStudy.Config;
+package me.jh.springStudy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

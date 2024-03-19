@@ -1,4 +1,4 @@
-package me.JH.SpringStudy.Exception.Signup;
+package me.jh.springStudy.exception.signup;
 
 @Deprecated
 public enum SignupExceptionType {

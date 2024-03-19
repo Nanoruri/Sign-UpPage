@@ -1,7 +1,7 @@
-package me.JH.SpringStudy.Config;
+package me.jh.springStudy.config;
 
 import io.jsonwebtoken.*;
-import me.JH.SpringStudy.RepositoryDto.LoginDto;
+import me.jh.springStudy.repositoryDto.LoginDto;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;

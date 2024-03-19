@@ -1,11 +1,11 @@
-package me.JH.SpringStudy.Contorller;
+package me.jh.springStudy.contorller;
 
-import me.JH.SpringStudy.Entitiy.User;
-import me.JH.SpringStudy.Exception.User.UserErrorType;
-import me.JH.SpringStudy.Exception.User.UserException;
-import me.JH.SpringStudy.Service.UserService.FindService;
-import me.JH.SpringStudy.Service.UserService.LoginService;
-import me.JH.SpringStudy.Service.UserService.SignupService;
+import me.jh.springStudy.entitiy.User;
+import me.jh.springStudy.exception.user.UserErrorType;
+import me.jh.springStudy.exception.user.UserException;
+import me.jh.springStudy.service.userService.FindService;
+import me.jh.springStudy.service.userService.LoginService;
+import me.jh.springStudy.service.userService.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {//todo : 컨트롤러 분리하기(분리 기준 생각하기)
 
 	private final static Logger log = LoggerFactory.getLogger(UserController.class);// Log 찍는 내용
-	private final SignupService memberService;
+	private final SignupService signupService;
 	private final LoginService loginService;
 
 	private final FindService findService;
@@ -31,13 +31,13 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
 	 *
-	 * @param memberService 회원 관련 작업을 수행하는 서비스
+	 * @param signupService 회원 관련 작업을 수행하는 서비스
 	 * @param loginService  로그인 관련 작업을 수행하는 서비스
 	 * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public UserController(SignupService memberService, LoginService loginService, FindService findservice) {
-		this.memberService = memberService;
+	public UserController(SignupService signupService, LoginService loginService, FindService findservice) {
+		this.signupService = signupService;
 		this.loginService = loginService;
 		this.findService = findservice;
 	}
@@ -96,7 +96,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 */
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute("user") @Validated User user) {
-		memberService.registerMember(user);//회원가입 서비스, 예외처리는 서비스 클래스에서 한다.
+		signupService.registerMember(user);//회원가입 서비스, 예외처리는 서비스 클래스에서 한다.
 //		if (result.hasErrors()) {//회원가입 실패 시의 로직
 //			return "redirect:/signupError";
 //		}
@@ -113,7 +113,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@PostMapping("/idCheck")
 	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
-		if (memberService.isDuplicateId(userId)) {//ID 중복검사 로직
+		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");//중복O
 			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.

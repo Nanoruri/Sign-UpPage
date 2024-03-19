@@ -1,4 +1,4 @@
-package me.JH.SpringStudy.Entitiy;
+package me.jh.springStudy.entitiy;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
