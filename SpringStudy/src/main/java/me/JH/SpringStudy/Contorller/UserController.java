@@ -101,7 +101,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //			return "redirect:/signupError";
 //		}
 		log.info("회원 정보 저장성공");
-		return "redirect:signup/signupSuccess";// signupPage에서 signupSuccessPage로 이동
+		return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
 	}
 
 	/**
@@ -159,16 +159,19 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "finds/findIdPage";
 	}
 
-
 	@PostMapping("/findId")
 	@ResponseBody
 	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("email") String email) {
 
 		if (findService.findId(name, email) == null) {
 			log.info("아이디 찾기 실패");
-		} else if (name.isBlank()) {
-		} else if (email.isBlank()) {
+			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
+//		} else if (name.isBlank()) {
+//			throw new UserException(UserErrorType.NAME_NULL);
+//		} else if (email.isBlank()) {
+//			throw new UserException(UserErrorType.EMAIL_NULL);
+//		}
 
 		log.info("아이디 찾기 성공");
 
