@@ -7,8 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
-@Entity
-@Table(name = "user_Info")//TODO : 싱글톤 적용해서 컨트롤러에서 new로 인스턴스 생성하는거 막을 수 있지 않나.
+@Entity//TODO : 싱글톤 적용해서 컨트롤러에서 new로 인스턴스 생성하는거 막을 수 있지 않나.
+@Table(name = "user_Info")
 public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정하고  seq와 연결
 	@Id
 	@Column(name = "USER_ID", unique = true)
@@ -25,7 +25,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 
 	@NotBlank(message = "전화번호를 입력해 주세요")//todo : @NotBlank와 @Pattern이 작동하지 않음...
 	@Pattern(regexp = "[0-9]{3}-[0-9]{4}-[0-9]{4}", message = "전화번호는 XXX-XXXX-XXXX 형식이어야 합니다.")
-	@Column(name = "USER_PHONE")
+	@Column(name = "USER_PHONE")// todo: 여기에다가 unique 설정하는 방법도 존재 함.
 	private String phoneNum;//010-0000-0000
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
