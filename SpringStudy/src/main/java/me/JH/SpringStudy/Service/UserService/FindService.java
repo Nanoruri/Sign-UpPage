@@ -25,8 +25,8 @@ public class FindService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public String findId(String name, String email) {
-		User user = userDao.findByNameAndEmail(name, email);// TODO : 이름과 이메일이 같으면 500에러 발생, 이메일 말고 다른걸로 받게 하기
+	public String findId(String name, String phoneNum) {
+		User user = userDao.findByNameAndPhoneNum(name, phoneNum);// TODO : 이름과 이메일이 같으면 500에러 발생, 이메일 말고 다른걸로 받게 하기
 		return (user != null) ? user.getUserId() : null;//todo : 여기서 컨트롤러의 예외처리 해도 되나??
 	}
 

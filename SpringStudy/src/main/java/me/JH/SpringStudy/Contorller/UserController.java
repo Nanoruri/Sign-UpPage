@@ -159,11 +159,13 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "finds/findIdPage";
 	}
 
+
+	// todo : findId email부분 ->전화번호로 변경하기 / service에서도 변경하기 / Userdao에서도 변경하기
 	@PostMapping("/findId")
 	@ResponseBody
-	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("email") String email) {
+	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("phoneNum") String phoneNum) {
 
-		if (findService.findId(name, email) == null) {
+		if (findService.findId(name, phoneNum) == null) {
 			log.info("아이디 찾기 실패");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
@@ -175,7 +177,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 		log.info("아이디 찾기 성공");
 
-		return ResponseEntity.ok("아이디는" + findService.findId(name, email) + "입니다.");//todo : 더 줄일 수 있지 않나
+		return ResponseEntity.ok("아이디는" + findService.findId(name, phoneNum) + "입니다.");//todo : 더 줄일 수 있지 않나
 	}
 
 	/**

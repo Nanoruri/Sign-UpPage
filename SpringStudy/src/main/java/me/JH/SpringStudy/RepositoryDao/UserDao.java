@@ -12,7 +12,7 @@ public interface UserDao extends JpaRepository<User, String>, CustomDao {//이�
 	//엔티티 클래스가 필요한거라고 추즉 됨
 
 	//
-	User findByNameAndEmail(String name, String email);
+	User findByNameAndPhoneNum(String name, String phoneNum);
 
 	//찾기 서비스
 //    User findByUserIdAndNameAndEmail(String userId, String name, String email);

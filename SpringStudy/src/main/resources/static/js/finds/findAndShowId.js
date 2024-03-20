@@ -1,7 +1,7 @@
 function doFindId() {// todo : 모달로 아이디 보여주기
 
     var name = document.getElementById('inputName').value;
-    var email = document.getElementById('inputEmail').value;
+    var phoneNum = document.getElementById('inputPhoneNum').value;
 
 
     fetch('/study/findId', {
@@ -9,7 +9,7 @@ function doFindId() {// todo : 모달로 아이디 보여주기
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email),
+        body: 'name=' + encodeURIComponent(name) + '&phoneNum=' + encodeURIComponent(phoneNum),
     })
         .then(function (response) {
             if (response.status === 404) {

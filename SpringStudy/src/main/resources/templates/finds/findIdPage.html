@@ -26,9 +26,9 @@
 				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름">
 
 				<!--이메일 입력란-->
-				<label for="inputEmail">이메일</label>
-				<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="이메일">
-				<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+				<label for="inputPhoneNum">전화번호</label>
+				<input type="text" id="inputPhoneNum" name="phoneNum" th:field="*{phoneNum}" placeholder="전화번호">
+				<span th:if="${#fields.hasErrors('phoneNum')}" th:errors="*{phoneNum}"></span>
 
 				<button type="submit" id="button">입력</button>
 			</form>
