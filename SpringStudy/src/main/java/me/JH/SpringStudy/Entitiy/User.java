@@ -8,13 +8,13 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity//TODO : 싱글톤 적용해서 컨트롤러에서 new로 인스턴스 생성하는거 막을 수 있지 않나.
-@Table(name = "user_Info")
+@Table(name = "user_Info" , uniqueConstraints = @UniqueConstraint(columnNames = {"USER_ID", "USER_PHONE"}))
 public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정하고  seq와 연결
 	@Id
-	@Column(name = "USER_ID", unique = true)
+	@Column(name = "USER_ID"/*,unique = true*/)
 	private String userId;//ID
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)// seq를 사용하면 db에서는 pk로 자동 설정됨
 	@Column(name = "USER_NO")
 	private long seq;
 
