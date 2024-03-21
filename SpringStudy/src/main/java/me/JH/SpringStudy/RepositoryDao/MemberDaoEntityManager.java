@@ -1,6 +1,6 @@
-package me.jh.springStudy.repositoryDao;
+package me.jh.springstudy.repositorydao;
 
-import me.jh.springStudy.entitiy.User;
+import me.jh.springstudy.entitiy.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

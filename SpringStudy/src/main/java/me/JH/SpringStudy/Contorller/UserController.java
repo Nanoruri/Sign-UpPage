@@ -1,11 +1,11 @@
-package me.jh.springStudy.contorller;
+package me.jh.springstudy.contorller;
 
-import me.jh.springStudy.entitiy.User;
-import me.jh.springStudy.exception.user.UserErrorType;
-import me.jh.springStudy.exception.user.UserException;
-import me.jh.springStudy.service.userService.FindService;
-import me.jh.springStudy.service.userService.LoginService;
-import me.jh.springStudy.service.userService.SignupService;
+import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.user.UserErrorType;
+import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.userservice.FindService;
+import me.jh.springstudy.service.userservice.LoginService;
+import me.jh.springstudy.service.userservice.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

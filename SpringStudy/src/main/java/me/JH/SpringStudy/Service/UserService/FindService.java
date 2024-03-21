@@ -1,9 +1,9 @@
-package me.jh.springStudy.service.userService;
+package me.jh.springstudy.service.userservice;
 
-import me.jh.springStudy.entitiy.User;
-import me.jh.springStudy.exception.user.UserErrorType;
-import me.jh.springStudy.exception.user.UserException;
-import me.jh.springStudy.repositoryDao.UserDao;
+import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.user.UserErrorType;
+import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.repositorydao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

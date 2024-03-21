@@ -1,4 +1,4 @@
-package me.jh.springStudy.exception.finds;
+package me.jh.springstudy.exception.finds;
 
 @Deprecated
 public enum FindIdExceptionType {

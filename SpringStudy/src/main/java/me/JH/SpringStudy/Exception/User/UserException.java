@@ -1,4 +1,4 @@
-package me.jh.springStudy.exception.user;
+package me.jh.springstudy.exception.user;
 
 public class UserException extends RuntimeException {
 	private final UserErrorType userErrorType;

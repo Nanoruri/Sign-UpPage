@@ -1,4 +1,4 @@
-package me.jh.springStudy;
+package me.jh.springstudy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

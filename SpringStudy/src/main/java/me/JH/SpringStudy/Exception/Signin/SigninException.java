@@ -1,4 +1,4 @@
-package me.jh.springStudy.exception.signin;
+package me.jh.springstudy.exception.signin;
 
 @Deprecated
 public class SigninException extends RuntimeException {

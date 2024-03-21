@@ -1,4 +1,4 @@
-package me.jh.springStudy.repositoryDto;
+package me.jh.springstudy.repositorydto;
 
 import javax.validation.constraints.NotBlank;
 @Deprecated

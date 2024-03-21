@@ -1,4 +1,4 @@
-package me.jh.springStudy.contorller;
+package me.jh.springstudy.contorller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

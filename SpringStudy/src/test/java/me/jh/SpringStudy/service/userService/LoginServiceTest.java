@@ -1,6 +1,6 @@
-package me.jh.springStudy.service.userService;
+package me.jh.springstudy.service.userservice;
 
-import me.jh.springStudy.MySpringBootApplication;
+import me.jh.springstudy.MySpringBootApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

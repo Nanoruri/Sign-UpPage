@@ -1,6 +1,6 @@
-package me.jh.springStudy.exception;
+package me.jh.springstudy.exception;
 
-import me.jh.springStudy.exception.user.UserException;
+import me.jh.springstudy.exception.user.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

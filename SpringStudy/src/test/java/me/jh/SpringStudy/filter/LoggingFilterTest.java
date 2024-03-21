@@ -1,6 +1,6 @@
-package me.jh.springStudy.filter;
+package me.jh.springstudy.filter;
 
-import me.jh.springStudy.MySpringBootApplication;
+import me.jh.springstudy.MySpringBootApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

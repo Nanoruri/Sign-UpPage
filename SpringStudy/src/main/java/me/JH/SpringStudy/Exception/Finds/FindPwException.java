@@ -1,4 +1,4 @@
-package me.jh.springStudy.exception.finds;
+package me.jh.springstudy.exception.finds;
 
 @Deprecated
 public class FindPwException extends RuntimeException {//todo : 이 클래스는 findPw 전반에 걸쳐 쓰임

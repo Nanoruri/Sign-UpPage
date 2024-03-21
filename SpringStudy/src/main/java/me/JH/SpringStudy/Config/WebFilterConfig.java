@@ -1,7 +1,7 @@
-package me.jh.springStudy.config;
+package me.jh.springstudy.config;
 
 
-import me.jh.springStudy.filter.LoggingFilter;
+import me.jh.springstudy.filter.LoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
