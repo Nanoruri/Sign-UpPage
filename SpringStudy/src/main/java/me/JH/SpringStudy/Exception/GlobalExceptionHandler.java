@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-	
+
 	@ExceptionHandler(value = UserException.class)
 	public ResponseEntity<UserException> handleMyException(UserException userException) {
 		String errorMessage = userException.getExceptionType().getMessage();
