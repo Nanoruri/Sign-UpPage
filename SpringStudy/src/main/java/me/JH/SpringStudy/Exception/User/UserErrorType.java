@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public enum UserErrorType {
 
-	//사용자에 관한 에러 (몇몇개는 front에서 한번 걸러짐.) == todo :front에서 걸러지는 것들은 필요한가
+	//사용자에 관한 에러 (nullException은 front에서 한번 걸러짐.) == todo :front에서 걸러지는 것들은 필요한가
 	ID_NULL("아이디를 입력해주세요.", HttpStatus.BAD_REQUEST),
 	NAME_NULL("이름을 입력해주세요.", HttpStatus.BAD_REQUEST),
 	EMAIL_NULL("이메일을 입력해주세요.", HttpStatus.BAD_REQUEST),
