@@ -14,11 +14,11 @@ public class GlobalExceptionHandler {
 
 
 	@ExceptionHandler(value = UserException.class)
-	public ResponseEntity<UserException> handleMyException(UserException userException) {
+	public ResponseEntity<String> handleMyException(UserException userException) {
 		String errorMessage = userException.getExceptionType().getMessage();
 		logger.error("MyException: {}", errorMessage);
-		return  ResponseEntity.status(userException.getExceptionType().getHttpStatus()).body(userException);
-		//todo : ResponseEntity (에러)페이지 좀 꾸며야 하지 않을까...?
+		return ResponseEntity.status(userException.getExceptionType().getHttpStatus()).body(userException.getExceptionType().getMessage());
+		//todo : ResponseEntity (에러)페이지 좀 꾸며야 하지 않을까...? 에러페이지도 함께 반환시키는 방법 알아보기.
 	}
 
 //	@ExceptionHandler(value = SigninException.class)

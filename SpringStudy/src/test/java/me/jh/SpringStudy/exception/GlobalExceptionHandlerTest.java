@@ -19,6 +19,7 @@ public class GlobalExceptionHandlerTest {
 
 	@Mock//todo : powermock을 사용하면 static 메서드를 mock할 수 있다. 근데 권장되지 않는다.
 	private Logger logger;
+	private UserException userException;
 
 	@InjectMocks
 	private GlobalExceptionHandler globalExceptionHandler;
@@ -30,11 +31,11 @@ public class GlobalExceptionHandlerTest {
 		UserException userException = new UserException(UserErrorType.USER_NOT_FOUND);
 
 		// Act
-		ResponseEntity<UserException> responseEntity = globalExceptionHandler.handleMyException(userException);
+		ResponseEntity<String> responseEntity = globalExceptionHandler.handleMyException(userException);
 
 		// Assert
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-		assertEquals(userException, responseEntity.getBody());
+		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
 //		verify(logger).error("MyException: {}", userException.getExceptionType().getMessage());
 		//todo : 테스트 대상 클래스에 static으로 선언된 logger를 mock으로 만들어서 verify를 할 수 없다.
 		//fuckfuckfuckfuck
@@ -46,11 +47,11 @@ public class GlobalExceptionHandlerTest {
 		UserException userException = new UserException(UserErrorType.USER_ALREADY_EXIST);
 
 		// Act
-		ResponseEntity<UserException> responseEntity = globalExceptionHandler.handleMyException(userException);
+		ResponseEntity<String> responseEntity = globalExceptionHandler.handleMyException(userException);
 
 		// Assert
 		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		assertEquals(userException, responseEntity.getBody());
+		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
 	}
 
 	@Test// ID_OR_PASSWORD_WRONG 에러가 발생 시 403 상태 코드와 함께 UserException을 반환하는지 확인
@@ -59,11 +60,11 @@ public class GlobalExceptionHandlerTest {
 		UserException userException = new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
 
 		// Act
-		ResponseEntity<UserException> responseEntity = globalExceptionHandler.handleMyException(userException);
+		ResponseEntity<String> responseEntity = globalExceptionHandler.handleMyException(userException);
 
 		// Assert
 		assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
-		assertEquals(userException, responseEntity.getBody());
+		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
 	}
 
 	@Test// MISSING_INFORMATION 에러가 발생 시 400 상태 코드와 함께 UserException을 반환하는지 확인
@@ -72,11 +73,11 @@ public class GlobalExceptionHandlerTest {
 		UserException userException = new UserException(UserErrorType.MISSING_INFORMATION);
 
 		// Act
-		ResponseEntity<UserException> responseEntity = globalExceptionHandler.handleMyException(userException);
+		ResponseEntity<String> responseEntity = globalExceptionHandler.handleMyException(userException);
 
 		// Assert
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-		assertEquals(userException, responseEntity.getBody());
+		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
 	}
 
 //	@InjectMocks
