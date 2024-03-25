@@ -20,7 +20,7 @@ public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나
 		this.entityManager = entityManager;
 	}
 
-	public Optional<User> findByProperties(String userId, String name, String email) {
+	public Optional<User> findByProperties(String userId, String name, String phoneNum) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
 		Root<User> root = query.from(User.class);
@@ -36,8 +36,8 @@ public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나
 		if (name != null) {
 			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("name"), name));
 		}
-		if (email != null) {
-			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("email"), email));
+		if (phoneNum != null) {
+			predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("phoneNum"), phoneNum));
 		}
 
 		query.select(root).where(predicate);

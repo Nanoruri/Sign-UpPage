@@ -197,15 +197,15 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 *
 	 * @param userId 사용자 아이디
 	 * @param name   사용자 이름
-	 * @param email  사용자 이메일
+	 * @param phoneNum  사용자 이메일
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
 	 */
 
 	@PostMapping("/findPw")
-	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("email") String email, Model model) {
+	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("phoneNum") String phoneNum, Model model) {
 //		boolean validateUser = findService.validateUser(userId, name, email);
 
-		if (!findService.validateUser(userId, name, email)) {//실패로직..
+		if (!findService.validateUser(userId, name, phoneNum)) {//실패로직..
 			log.info("잘못된 입력입니다");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);//todo : USER_NOT_FOUND 공통 에러에 넣어도 될 듯
 		}
@@ -213,7 +213,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		User validateUsers = new User();
 		validateUsers.setUserId(userId);
 		validateUsers.setName(name);
-		validateUsers.setEmail(email);
+		validateUsers.setEmail(phoneNum);
 
 		model.addAttribute("passwordChangeUser", validateUsers);
 		return "finds/newPasswordPage";

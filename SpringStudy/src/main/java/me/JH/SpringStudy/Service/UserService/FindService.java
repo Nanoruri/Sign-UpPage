@@ -30,8 +30,8 @@ public class FindService {
 		return (user != null) ? user.getUserId() : null;//todo : 여기서 컨트롤러의 예외처리 해도 되나??
 	}
 
-	public boolean validateUser(String userId, String name, String email) {//todo : findBy properties, Criteria 사용
-		boolean isValid = userDao.findByProperties(userId, name, email).isPresent();
+	public boolean validateUser(String userId, String name, String phoneNum) {//todo : findBy properties, Criteria 사용
+		boolean isValid = userDao.findByProperties(userId, name, phoneNum).isPresent();
 		log.info(isValid ? "사용자를 찾았습니다" + userId : "사용자를 찾을 수 없습니다.");
 		return isValid;
 	}
