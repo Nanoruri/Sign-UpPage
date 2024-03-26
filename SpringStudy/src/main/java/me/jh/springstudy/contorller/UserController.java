@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 일반적인 작업을 처리하는 컨트롤러 클래스. 로그인 및 회원가입과 관련된 기능이 있음.
+ * 사용자 관련 요청을 처리하는 컨트롤러 클래스.
  */
 @Controller
 public class UserController {//todo : 컨트롤러 분리하기(분리 기준 생각하기)

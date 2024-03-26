@@ -13,6 +13,11 @@ public class GlobalExceptionHandler {
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
+	/**
+	 * UserException을 처리하는 메서드
+	 * @param userException 예외를 처리하는 Class
+	 * @return 에러타입에 따른  HttpStatus와 에러메세지 반환
+	 */
 	@ExceptionHandler(value = UserException.class)
 	public ResponseEntity<String> handleMyException(UserException userException) {
 		String errorMessage = userException.getExceptionType().getMessage();

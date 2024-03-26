@@ -11,6 +11,9 @@ import javax.persistence.criteria.Root;
 import java.util.Optional;
 
 
+/**
+ * 사용자 정보를 찾는 CustomDAO 구현 클래스.
+ */
 public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나..? DAO 인터페이스 있는데... Repository를 또 등록 해주는게 맞나...
 	//todo : 클래스명 한번 더 생각해서 짜기
 	@PersistenceContext

@@ -14,6 +14,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 
+/**
+ * Spring Security 설정 클래스.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -39,6 +42,7 @@ public class SecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {//보안상의 문제로 configure에서 filterChain으로 바뀜.

@@ -2,9 +2,16 @@ package me.jh.springstudy.exception.user;
 
 import org.springframework.http.HttpStatus;
 
+
+/**
+ * 사용자에러타입을 정의한 Enum 클래스.
+ */
 public enum UserErrorType {
 
-	//사용자에 관한 에러 (nullException은 front에서 한번 걸러짐.) == todo :front에서 걸러지는 것들은 필요한가
+	/**
+	 * 사용자 관련 에러타입.
+	 */
+	//== todo :front에서 걸러지는 것들은 필요한가??
 	ID_NULL("아이디를 입력해주세요.", HttpStatus.BAD_REQUEST),
 	NAME_NULL("이름을 입력해주세요.", HttpStatus.BAD_REQUEST),
 	EMAIL_NULL("이메일을 입력해주세요.", HttpStatus.BAD_REQUEST),
@@ -27,10 +34,20 @@ public enum UserErrorType {
 		this.httpStatus = httpStatus;
 	}
 
+	/**
+	 * 에러메세지를 반환하는 메서드.
+	 *
+	 * @return 에러메세지
+	 */
 	public String getMessage() {
 		return message;
 	}
 
+	/**
+	 * HttpStatus를 반환하는 메서드.
+	 *
+	 * @return HttpStatus
+	 */
 	public HttpStatus getHttpStatus() {
 		return httpStatus;
 	}
