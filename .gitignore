@@ -131,5 +131,6 @@ fabric.properties
 ReadMe
 
 #SpringStudy submodule Target
-/SpringStudy/target/
 .idea/workspace.xml
+springstudy/target
+springstudy/.idea/workspace.xml
