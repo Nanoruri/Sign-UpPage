@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{/css/login/login.css}">
+	<script th:src="@{/js/userValidate.js}"></script>
+	<title>로그인</title>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<h1>Welcome</h1>
+			<form method="post" class="form" th:action="@{/loginCheck}" onsubmit="return commonValidate();" th:object="${signin}">
+				<!--from태그 method = http의 Request method, action = 요청을 보낼 URL-->
+
+				<!--사용자 아이디-->
+				<label for="inputAdress">ID</label>
+				<input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="사용자 아이디">
+
+
+				<!--사용자 비밀번호-->
+				<label for="inputPassword">PW</label>
+				<input type="password" id="inputPassword" name="password" th:field="*{password}" placeholder="사용자 비밀번호">
+
+				<button type="submit" id="login-button">로그인</button>
+			</form>
+			<form method="get" th:action="@{/signup}"> <!--가입하기 버튼에 대한 signUp페이지로의 get 요청-->
+				<button type="submit">회원가입</button>
+			                                           <!-- <a href="/signup" class="btn btn-primary">가입하기</a> 앵커 태그 사용시.-->
+			</form>
+		</div>
+		<ul class="bg-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+</body>
+
+</html>

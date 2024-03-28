@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{/css/signup/signupSuccess.css}">
+	<title>회원가입 성공</title>
+</head>
+<body>
+	<form method="get" class="joinForm" th:action="@{/signUpSuccess}">
+		<h2>회원가입 성공!</h2>
+		<p>회원이 되신걸 축하드려요!.</p>
+	</form>
+
+	<form method="get" class="joinForm2" th:action="@{/}">
+		<button type="submit" class="btn">메인페이지로</button>
+	</form>
+
+</body>
+</html>

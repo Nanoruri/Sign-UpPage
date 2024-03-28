@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="veiwport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/index.css}">
+	<title>메인 타이틀</title>
+</head>
+<body class="d-flex flex-column align-items-center justify-content-center" style="height: 100vh;">
+	<div class="wrapper">
+		<div class="container">
+
+			<form method="get" th:action="@{/}" class="mb-3">
+				<h2>메인입니다!</h2>
+			</form>
+
+			<form method="get" th:action="@{/signup}" th:object="${user}" class="mb-3">
+				<!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
+				<button type="submit" class="btn btn-info border-2">가입하기</button>
+			</form>
+
+			<form method="get" th:action="@{/login}" th:object="${signin}" class="mb-3">
+				<!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
+				<button type="submit" class="btn btn-primary border-2">로그인</button>
+			</form>
+
+
+			<div class="btn-group mb-3" role="group" aria-label="아이디 및 비밀번호 찾기">
+				<form method="get" th:action="@{/findId}"><!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
+					<button type="submit" class="btn btn-outline-primary border-2">아이디 찾기</button>
+				</form>
+
+				<form method="get" th:action="@{/findPw}"><!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
+					<button type="submit" class="btn btn-outline-primary border-2">비밀번호 찾기</button>
+				</form>
+			</div>
+		</div>
+		<ul class="bg-bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+
+<!--		<script th:src="@{/webjar/bootstrap/5.3.2/js/bootstrap.min.js}"></script>-->
+</body>
+</html>
+
+<!-- 타임리프 사용 하려면 th:action ="@{/signup}"와 같이 문법 맞춰 줘야함 -->
+<!--th:object="${user}"는 get요청쓸 때의  model객체와 맞춰야 한다.-->
+
+<!--th:field="*{name}"와 같은 필드 값은 모델 객체와 엔티티 클래스의 필드와 연결하는 태그.
+ name 태그와 엔티티 클래스의 필드값에 맞추면 됨.-->
+
+<!--class="form-control"은 부트 스트랩에서 지원하는 기능-->
