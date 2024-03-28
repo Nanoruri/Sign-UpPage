@@ -1,13 +1,11 @@
 package me.jh.springstudy.repositorydao;
 
 import me.jh.springstudy.entitiy.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,23 +13,25 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 
+
+/**
+ * 동적 쿼리를 생성해 사용자 정보를 찾는 CustomDAO 테스트 클래스.
+ */
 @ExtendWith(MockitoExtension.class)
 public class CustomDaoTest {
 
+	private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomDaoTest.class);
 
 	@Mock
 	private EntityManager entityManager;
-	@Mock
-	private User user;
 	@Mock
 	private CriteriaBuilder criteriaBuilder;
 	@Mock
@@ -43,29 +43,14 @@ public class CustomDaoTest {
 	@Mock
 	private Predicate predicate;
 
-	@InjectMocks
-	private CustomDaoImpl customDao;
-
-	@BeforeEach
-	public void setUp() {
-		MockitoAnnotations.openMocks(this);
-	}
-
-
-	/**
-	 * 사용자 정보 조회 테스트
-	 * findByProperties 메서드를 호출하여 사용자 정보를 조회하고, 조회한 사용자 정보가 예상한 것과 일치하는지 확인한다.
-	 */
 
 	@Test
 	public void testFindByProperties() {
-
 		String userId = "test";
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
-
-		user = new User();
+		User user = new User();
 		user.setUserId(userId);
 		user.setName(name);
 		user.setPhoneNum(phoneNum);
@@ -78,16 +63,14 @@ public class CustomDaoTest {
 		when(criteriaBuilder.equal(root.get("name"), name)).thenReturn(predicate);
 		when(criteriaBuilder.equal(root.get("phoneNum"), phoneNum)).thenReturn(predicate);
 		when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
-		when(criteriaQuery.where(predicate)).thenReturn(criteriaQuery);
-
-		doReturn(criteriaQuery).when(criteriaQuery).where(predicate);
-
-
 		when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-		when(typedQuery.getSingleResult()).thenReturn(user);
+		when(typedQuery.getResultList()).thenReturn(List.of(user));
 
+//		when(criteriaQuery.where(any(Predicate.class))).thenReturn(criteriaQuery);
+//		when(criteriaQuery.from(User.class)).thenReturn(root);
+
+		CustomDaoImpl customDao = new CustomDaoImpl(entityManager);
 		Optional<User> foundUser = customDao.findByProperties(user.getUserId(), user.getName(), user.getPhoneNum());
-		//todo: NullPointException 발생함. 원인 찾기
 
 		assertTrue(foundUser.isPresent());
 		User optionalUser = foundUser.get();
@@ -97,10 +80,9 @@ public class CustomDaoTest {
 		assertEquals(phoneNum, optionalUser.getPhoneNum());
 
 
-
-
-
 	}
 
-
 }
+
+
+
