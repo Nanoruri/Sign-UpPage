@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,11 +25,11 @@ public class SpringApplicationTest {
 		user.setUserId("kaby1217");
 		user.setName("Lim");
 		user.setPassword("1217159");
-		user.setBirth(new Date(19961127));
+		user.setBirth(LocalDate.of(1996,11,27));
 		user.setPhoneNum("010-9525-6863");
 		user.setEmail("kaby1217@gmail.com");
-		user.setCreatedDate(new Date());
-		user.setUpdateDate(new Date());
+		user.setCreatedDate(LocalDateTime.now());
+		user.setUpdateDate(LocalDateTime.now());
 
 		userDao.save(user);
 	}

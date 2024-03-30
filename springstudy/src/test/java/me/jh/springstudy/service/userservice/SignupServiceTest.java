@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,8 +18,6 @@ public class SignupServiceTest {
 
 	@Autowired
 	private SignupService signupService;
-
-
 
 
 	@Test
@@ -50,9 +48,9 @@ public class SignupServiceTest {
 		testUser.setPassword("test");
 		testUser.setEmail("Signup@test.com");
 		testUser.setPhoneNum("010-1111-2222");
-		testUser.setBirth(new Date(1999, Calendar.JANUARY, 1));//todo : 권장하지 않는 방법이라는 듯. 대체제 찾아보기
-		testUser.setCreatedDate(new Date());
-		testUser.setUpdateDate(new Date());
+		testUser.setBirth(LocalDate.of(1999, 1, 1));//todo : 권장하지 않는 방법이라는 듯. 대체제 찾아보기
+		testUser.setCreatedDate(LocalDateTime.now());
+		testUser.setUpdateDate(LocalDateTime.now());
 		signupService.registerMember(testUser);
 
 		assertEquals("SignupTest", testUser.getUserId(), "회원가입 성공해야 함");

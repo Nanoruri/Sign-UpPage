@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -39,8 +40,8 @@ public class SignupService {
 		}//todo : 이렇게 처리 해도 되나??
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));// 비밀번호를 해시화하여 저장
-		user.setCreatedDate(new Date());
-		user.setUpdateDate(new Date());
+		user.setCreatedDate(LocalDateTime.now());
+		user.setUpdateDate(LocalDateTime.now());
 		userDao.save(user);// Member 엔티티를 데이터베이스에 저장
 	}
 

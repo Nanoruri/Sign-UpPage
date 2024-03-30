@@ -2,11 +2,17 @@ package me.jh.springstudy.entitiy;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+
+
+/**
+ * User 엔티티 클래스의 단위 테스트.
+ */
 
 public class UserTest {
 
@@ -16,10 +22,10 @@ public class UserTest {
 		String name = "John Doe";
 		String password = "password123";
 		String phoneNum = "010-1234-5678";
-		Date birth = new Date(1997, Calendar.FEBRUARY, 1);
+		LocalDate birth = LocalDate.of(1997, Calendar.FEBRUARY, 1);
 		String email = "test@example.com";
-		Date createdDate = new Date();
-		Date updateDate = new Date();
+		LocalDateTime createdDate = LocalDateTime.now();
+		LocalDateTime updateDate = LocalDateTime.now();
 
 		User user1 = new User(userId, name, password, phoneNum, birth, email, createdDate, updateDate);
 

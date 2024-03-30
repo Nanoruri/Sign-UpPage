@@ -5,6 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -34,21 +36,21 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "USER_BIRTH")
-	private Date birth;//YYYY-MM-DD
+	private LocalDate birth;//YYYY-MM-DD
 
 	@Column(name = "USER_EMAIL")
 	private String email;//XXX@XXXX.XXX
 
 	@Column(name = "CREATE_DATE")
-	private Date createdDate;//YYYY/MM/DD/HH/MM/SS
+	private LocalDateTime createdDate;//YYYY/MM/DD/HH/MM/SS
 
 	@Column(name = "UPDATE_DATE")
-	private Date updateDate;//YYYY/MM/DD/HH/MM/SS
+	private LocalDateTime updateDate;//YYYY/MM/DD/HH/MM/SS
 
 	public User() {
 	}//기본 생성자
 
-	public User(String userId, String name, String password, String phoneNum, Date birth, String email, Date createdDate, Date updateDate) {
+	public User(String userId, String name, String password, String phoneNum, LocalDate birth, String email, LocalDateTime createdDate, LocalDateTime updateDate) {
 		this.userId = userId;
 		this.name = name;
 		this.password = password;
@@ -99,11 +101,11 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 		this.phoneNum = phoneNum;
 	}
 
-	public Date getBirth() {
+	public LocalDate getBirth() {
 		return birth;
 	}
 
-	public void setBirth(Date birth) {
+	public void setBirth(LocalDate birth) {
 		this.birth = birth;
 	}
 
@@ -115,19 +117,19 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 		this.email = email;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public Date getUpdateDate() {
+	public LocalDateTime getUpdateDate() {
 		return updateDate;
 	}
 
-	public void setUpdateDate(Date updateDate) {
+	public void setUpdateDate(LocalDateTime updateDate) {
 		this.updateDate = updateDate;
 	}
 

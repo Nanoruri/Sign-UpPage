@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -105,10 +107,10 @@ public class UserControllerTest {
 		String name = "test";
 		String password = "test1234";
 		String phoneNum = "010-1212-1212";
-		Date birth = new Date(1999 - 11 - 11);
+		LocalDate birth = LocalDate.of(1999,  11,  11);
 		String email = "test1234@test.com";
 
-		User user = new User(userId, name, password, phoneNum, birth, email, new Date(), new Date());
+		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now());
 
 		Mockito.doNothing().when(signupService).registerMember(user);
 
