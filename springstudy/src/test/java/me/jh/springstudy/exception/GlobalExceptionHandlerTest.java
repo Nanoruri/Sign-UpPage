@@ -35,7 +35,7 @@ public class GlobalExceptionHandlerTest {
 
 		// Assert
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
+		assertEquals(userException.getMessage(), responseEntity.getBody());
 //		verify(logger).error("MyException: {}", userException.getExceptionType().getMessage());
 		//todo : 테스트 대상 클래스에 static으로 선언된 logger를 mock으로 만들어서 verify를 할 수 없다.
 		//fuckfuckfuckfuck
@@ -51,7 +51,7 @@ public class GlobalExceptionHandlerTest {
 
 		// Assert
 		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
+		assertEquals(userException.getMessage(), responseEntity.getBody());
 	}
 
 	@Test// ID_OR_PASSWORD_WRONG 에러가 발생 시 403 상태 코드와 함께 UserException을 반환하는지 확인
@@ -64,7 +64,7 @@ public class GlobalExceptionHandlerTest {
 
 		// Assert
 		assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
-		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
+		assertEquals(userException.getMessage(), responseEntity.getBody());
 	}
 
 	@Test// MISSING_INFORMATION 에러가 발생 시 400 상태 코드와 함께 UserException을 반환하는지 확인
@@ -77,41 +77,9 @@ public class GlobalExceptionHandlerTest {
 
 		// Assert
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-		assertEquals(userException.getExceptionType().getMessage(), responseEntity.getBody());
+		assertEquals(userException.getMessage(), responseEntity.getBody());
 	}
-
-//	@InjectMocks
-//	private GlobalExceptionHandler globalExceptionHandler;
-//
-//	@BeforeEach
-//	public void setUp() {
-//		MockitoAnnotations.openMocks(this);
-//	}
-//
-//	@Test
-//	public void testHandleMyException() {
-//		// Mocking the UserException
-//		UserException userException = mock(UserException.class);
-//		when(userException.getExceptionType()).thenReturn(UserErrorType.ID_ALREADY_EXIST);
-//		when(userException.getExceptionType().getMessage()).thenReturn("User ID already exists");
-//		when(userException.getExceptionType().getHttpStatus()).thenReturn(HttpStatus.BAD_REQUEST);
-//
-//		// Mocking the logger
-//		Logger logger = mock(Logger.class);
-//
-//		// Invoking the handleMyException method
-//		ResponseEntity<UserException> responseEntity = globalExceptionHandler.handleMyException(userException);
-//
-//		// Verifying that logger.error is called with the correct error message
-//		verify(logger, times(1)).error("MyException: {}", "User ID already exists");
-//
-//		// Asserting the response status code and body
-//		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//		assertEquals("User ID already exists", Objects.requireNonNull(responseEntity.getBody()).getExceptionType().getMessage());
-//	}
-
-
-	}
+}
 
 
 
