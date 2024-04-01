@@ -31,13 +31,13 @@ public class LoginServiceTest {
 	@Mock
 	PasswordEncoder passwordEncoder;
 	@Mock
-	private User user;
+	private User validTestUser;
+	@Mock
+	private User invalidTestUser;
 
 	@InjectMocks
 	private LoginService loginService;
 
-	private User validTestUser;
-	private User invalidTestUser;
 
 	@BeforeEach
 	public void setUp() {
