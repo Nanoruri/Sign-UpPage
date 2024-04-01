@@ -1,78 +1,87 @@
 package me.jh.springstudy.service.userservice;
 
-import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.entitiy.User;
-import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.repositorydao.UserDao;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = MySpringBootApplication.class)
+@ExtendWith(MockitoExtension.class)
 public class SignupServiceTest {
 
-	@Autowired
-	private SignupService signupService;
+
+	@Mock
+	private UserDao userDao;
+	@Mock
+	private User successTestUser;
+	@Mock
+	private User failTestUser;;
+	@Mock
+	private PasswordEncoder passwordEncoder;
+
+	@InjectMocks
+	SignupService signupService;
 
 
-	@Test
-	public void isDuplicateIdTest() {
-		//중복검사에 관한 테스트
-		String userId = "test";
-		boolean result = signupService.isDuplicateId(userId);
-		assertTrue(result, "중복된 아이디가 있어야 함");
+
+	@BeforeEach
+	public void setUp() {
+		successTestUser = new User("test", "testName", "hashedPassword", "010-1234-5678",
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+
+		failTestUser = new User("test", "testName", "unHashedPassword", "010-1234-5678",
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
 	}
 
-	@Test
-	public void isNotDuplicateIdTest() {
-		//중복검사에 관한 테스트
-		String userId = "Unknown";
-		boolean result = signupService.isDuplicateId(userId);
-		assertFalse(result, "중복된 아이디가 없어야 함");
-	}
-
-
+	/**
+	 * 회원가입 성공 테스트
+	 */
 	//회원가입에 관한 테스트
 	@Test
 	public void signupServiceSuccesseTest() {
 
-		User testUser;
-		testUser = new User();
-		testUser.setUserId("SignupTest");
-		testUser.setName("test");
-		testUser.setPassword("test");
-		testUser.setEmail("Signup@test.com");
-		testUser.setPhoneNum("010-1111-2222");
-		testUser.setBirth(LocalDate.of(1999, 1, 1));//todo : 권장하지 않는 방법이라는 듯. 대체제 찾아보기
-		testUser.setCreatedDate(LocalDateTime.now());
-		testUser.setUpdateDate(LocalDateTime.now());
-		signupService.registerMember(testUser);
+		when(signupService.isDuplicateId(successTestUser.getUserId())).thenReturn(false);
+		when(passwordEncoder.encode(successTestUser.getPassword())).thenReturn("hashedPassword");
 
-		assertEquals("SignupTest", testUser.getUserId(), "회원가입 성공해야 함");
+		signupService.registerMember(successTestUser);
 
+		assertEquals("test", successTestUser.getUserId(), "회원가입 성공해야합니다.");
+
+//		verify(signupService,times(1)).isDuplicateId(successTestUser.getUserId());
+		verify(passwordEncoder, times(1)).encode(successTestUser.getPassword());
+		verify(userDao, times(1)).save(successTestUser);
 	}
 
+
+	/**
+	 * 아이디가 중복인상태로 가입 시도시 예외를 발생 시키는지에 대한 테스트
+	 */
 	@Test
 	public void signupServiceExceptionTest() {
-		User testUser;
-		testUser = new User();
-		testUser.setUserId("SignupTest");
 
 		// 중복검사를 통과하지 못하면 예외를 던져야 함
 		// when
+		when(signupService.isDuplicateId(failTestUser.getUserId())).thenReturn(true);
+
 		try {
-			signupService.registerMember(testUser);
 			// 예외가 발생하지 않았으므로 테스트 실패
+			signupService.registerMember(failTestUser);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			// then
 			// 예외가 발생하여 테스트 성공
-			assertEquals(UserErrorType.ID_ALREADY_EXIST, e.getExceptionType());
+			assertEquals("이미 존재하는 아이디입니다.", e.getMessage());
 
 //			assertThrows(UserException.class, () -> {
 //				signupService.registerMember(testUser);
@@ -80,4 +89,39 @@ public class SignupServiceTest {
 
 		}
 	}
+
+	/**
+	 * 아이디 중복검사 (중복O)
+	 */
+	@Test
+	public void isDuplicateIdTest() {
+		//중복검사에 관한 테스트
+		String userId = "test";
+
+		when(userDao.existsById(userId)).thenReturn(true);
+
+		boolean result = signupService.isDuplicateId(userId);
+		assertTrue(result);
+
+		verify(userDao, times(1)).existsById(userId);
+	}
+
+	/**
+	 * 아이디 중복검사 (중복X)
+	 */
+	@Test
+	public void isNotDuplicateIdTest() {
+		//중복검사에 관한 테스트
+		String userId = "testingUser";
+
+		when(userDao.existsById(userId)).thenReturn(false);
+
+		boolean result = signupService.isDuplicateId(userId);
+		assertFalse(result, "중복된 아이디가 없어야 함");
+
+		verify(userDao, times(1)).existsById(userId);
+	}
+
+
 }
+

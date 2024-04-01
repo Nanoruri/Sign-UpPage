@@ -4,77 +4,134 @@ package me.jh.springstudy.service.userservice;
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.repositorydao.UserDao;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 
-@SpringBootTest(classes = MySpringBootApplication.class)
+@ExtendWith(MockitoExtension.class)
 public class FindServiceTest {
 
 
-	@Autowired
+	@Mock
+	private UserDao userDao;
+	@Mock
+	private PasswordEncoder passwordEncoder;
+	@Mock
+	private User changePasswordUser;
+
+	@InjectMocks
 	private FindService findService;
 
-	private UserDao userDao;
+	@BeforeEach
+	public void setUp() {
+		changePasswordUser = new User("test", "testName", "hashedPassword", "010-1234-5678",
+				LocalDate.of(1990, 1, 1), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+	}
 
 
-
-
-	//FindIdService에 관한 테스트
+	/**
+	 * 아이디 찾기 성공 테스트
+	 */
 	@Test
 	public void findIdSuccesseTest() {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
+		when(userDao.findByNameAndPhoneNum(name, phoneNum)).thenReturn(changePasswordUser);
+
 		String result = findService.findId(name, phoneNum);
-		assertEquals("kaby121", result, "아이디 찾기 성공해야 함");
+		assertEquals("test", result);
+
+		verify(userDao, times(1)).findByNameAndPhoneNum(name, phoneNum);
 	}
 
+	/**
+	 * 아이디 찾기 실패 테스트
+	 */
 	@Test
 	public void findIdFailedTest() {
 		String name = "Unknown";
 		String phoneNum = "010-0000-0000";
 
+		when(userDao.findByNameAndPhoneNum(name, phoneNum)).thenReturn(null);
+
 		String result = findService.findId(name, phoneNum);
 		assertNull(result, "아이디 찾기 실패해야함");
+
+		verify(userDao, times(1)).findByNameAndPhoneNum(name, phoneNum);
 	}
 
 
-	@Test// 비밀번호 변경에 관한 테스트
+	/**
+	 * 사용자 정보 조회 성공 테스트
+	 */
+	@Test
 	public void ValidateUserTest() {
 		String userId = "test";
 		String name = "test";
-		String email = "test@test.com";
-		boolean validateUser = findService.validateUser(userId, name, email);
+		String phoneNum = "010-1234-5678";
 
-		assertTrue(validateUser, "사용자를 찾았습니다.");
+		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(changePasswordUser));
+
+		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(changePasswordUser));
+
+		boolean validUser = findService.validateUser(userId, name, phoneNum);
+		assertTrue(validUser, "사용자를 찾았습니다.");
+
+		verify(userDao, times(1)).findByProperties(userId, name, phoneNum);
 	}
 
+	/**
+	 * 사용자 정보 조회 실패 테스트
+	 */
 	@Test
-			public void changePasswordSuccessTest() {
+	public void ValidateUserFailedTest() {
+		String userId = "Unknown";
+		String name = "test";
+		String phoneNum = "010-1234-5678";
 
-		User changePasswordUser;
-		changePasswordUser = new User();
-		changePasswordUser.setUserId("test");
-		changePasswordUser.setName("test");
-		changePasswordUser.setEmail("test@test.com");
-		String newPassword = "12345678";
+		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(null));
 
+		boolean validUser = findService.validateUser(userId, name, phoneNum);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
 
+		verify(userDao, times(1)).findByProperties(userId, name, phoneNum);
+	}
 
-		if (findService.validateUser(changePasswordUser.getUserId(),
-				changePasswordUser.getName(), changePasswordUser.getEmail()))
-		{
-			findService.changePassword(changePasswordUser, newPassword);
-			changePasswordUser.setPassword(newPassword);
-		};// 새로운 비밀번호로 업데이트
+	/**
+	 * 비밀번호 변경 성공 테스트
+	 */
+	@Test
+	public void changePasswordSuccessTest() {
+		String userId = "test";
+		String name = "testName";
+		String phoneNum = "010-1234-5678";
 
+		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(changePasswordUser));
 
-		assertTrue(true, "저장에 성공하였습니다.");
+		String newPassword = "changedPassword";
+
+		boolean result = findService.changePassword(changePasswordUser, newPassword);
+
+		assertTrue(result, "비밀번호 변경 성공해야함");
+		verify(userDao, times(1)).save(changePasswordUser);
+		verify(passwordEncoder, times(1)).encode(newPassword);
 	}
 
 }
+
