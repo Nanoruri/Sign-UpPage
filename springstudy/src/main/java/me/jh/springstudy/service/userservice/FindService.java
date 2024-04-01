@@ -65,7 +65,7 @@ public class FindService {
 	public boolean changePassword(User changePasswordUser, String newPassword) {
 		Optional<User> optionalUser = userDao.findByProperties(changePasswordUser.getUserId(),
 				changePasswordUser.getName(),
-				changePasswordUser.getEmail());
+				changePasswordUser.getPhoneNum());
 
 		if (optionalUser.isEmpty()) {
 			log.info("사용자에 대한 정보가 없습니다.");
