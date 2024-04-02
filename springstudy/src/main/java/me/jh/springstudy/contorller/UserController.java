@@ -115,7 +115,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
 		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");//중복O
+			throw new UserException(UserErrorType.ID_ALREADY_EXIST);//중복O
 			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.
 		}
 		log.info("ID 중복검사 성공");
