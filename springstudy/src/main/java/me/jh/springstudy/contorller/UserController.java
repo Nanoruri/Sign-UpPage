@@ -242,12 +242,15 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public String resetPassword(@ModelAttribute("passwordChangeUser") User changePasswordUser,
 	                            @RequestParam("newPassword") String newPassword
 	) {
-		if (!findService.changePassword(changePasswordUser, newPassword)) {
-			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
-			return "redirect:/findPw";//todo : validateUser에서 한번 거르니까 여기서는 필요없지 않나?
-		} else if (newPassword == null) {//todo : 프론트에서 Null 체크 함
-			throw new UserException(UserErrorType.PASSWORD_NULL);
-		}
+
+		findService.changePassword(changePasswordUser, newPassword);
+
+//		if (!findService.changePassword(changePasswordUser, newPassword)) {
+//			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
+//			return "redirect:/findPw";//todo : validateUser에서 한번 거르니까 여기서는 필요없지 않나?
+//		} else if (newPassword == null) {//todo : 프론트에서 Null 체크 함
+//			throw new UserException(UserErrorType.PASSWORD_NULL);
+//		}
 		return "redirect:/passwordChangeSuccess";
 	}
 
