@@ -67,14 +67,21 @@ public class FindService {
 				changePasswordUser.getName(),
 				changePasswordUser.getPhoneNum());
 
+
 		if (optionalUser.isEmpty()) {
 			log.info("사용자에 대한 정보가 없습니다.");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
-		}
+		}// todo : validateUser에서 한번 체크하는데 예외가 필요할까..
 		User user = optionalUser.get();
+
+		log.info("사용자를 찾았습니다");
+		log.info("사용자 ID :" + user.getUserId());
+		log.info("사용자 이름 :" + user.getName());
+		log.info("사용자 전화번호 :" + user.getPhoneNum());
 
 		// 새로운 비밀번호로 업데이트
 		user.setPassword(passwordEncoder.encode(newPassword));
+		log.info("새로운 비밀번호로 변경되었습니다");
 		// 업데이트된 사용자 정보 저장
 		userDao.save(user);
 		return true;
