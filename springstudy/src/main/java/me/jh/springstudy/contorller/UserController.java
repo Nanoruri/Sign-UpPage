@@ -213,7 +213,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		User validateUsers = new User();
 		validateUsers.setUserId(userId);
 		validateUsers.setName(name);
-		validateUsers.setEmail(phoneNum);
+		validateUsers.setPhoneNum(phoneNum);
 
 		model.addAttribute("passwordChangeUser", validateUsers);
 		return "finds/newPasswordPage";
