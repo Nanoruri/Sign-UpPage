@@ -1,19 +1,23 @@
-document.addEventListener('DOMContentLoaded', function() {
-
-
-document.getElementById('inputAdress').addEventListener('input', checkDuplicate);
-
+document.addEventListener('DOMContentLoaded', function () {
+    var userIdInput = document.getElementById('inputAdress');
+    var emailInput = document.getElementById('inputEmail');
+ 
+    userIdInput.addEventListener('input', checkDuplicate);
+    emailInput.addEventListener('input', checkDuplicateEmail);
 });
 
-
-
-function checkDuplicate() {//todo : 일관성을 위해 함수형이 아닌 객체지향형으로 짜는 것도 고민해보기
-
-    var userId = document.getElementById('inputAdress').value;
-    var duplicateMessage = document.getElementById('duplicateMessage');
+function checkDuplicate() {
+    var userIdInput = document.getElementById('inputAdress');
+    var userId = userIdInput.value.trim(); // 입력값의 앞뒤 공백 제거
+    var duplicateIdMessage = document.getElementById('duplicateIdMessage');
     var signupButton = document.getElementById('button');
 
-    // fetch를 사용하여 POST 요청 보내기() todo: ajax로도 써보셈. 제이쿼리 라이브러리 로드 문제는 클라이언트의 부담.
+    // 사용자가 입력하지 않은 경우 처리
+    if (userId === "") {
+        duplicateIdMessage.innerText = '';
+        return; // 중복 확인을 수행하지 않고 함수 종료
+    }
+
     fetch('/study/idCheck', {
         method: 'POST',
         headers: {
@@ -21,20 +25,64 @@ function checkDuplicate() {//todo : 일관성을 위해 함수형이 아닌 객�
         },
         body: 'userId=' + encodeURIComponent(userId),
     })
+    .then(function (response) {
+        if (response.status === 409) {
+            duplicateIdMessage.innerText = '중복된 ID입니다. 다른 ID를 사용해주세요.';
+            duplicateIdMessage.style.color = 'red';
+            signupButton.disabled = true;
+        } else if (response.ok) {
+            duplicateIdMessage.innerText = '사용가능한 ID입니다.';
+            duplicateIdMessage.style.color = 'blue';
+            updateButtonState();
+        }
+    })
+    .catch(function (error) {
+        console.error('중복 검사 중 오류 발생:', error);
+    });
+}
 
-        .then(function (response) {
+function checkDuplicateEmail() {
+    var emailInput = document.getElementById('inputEmail');
+    var email = emailInput.value.trim(); // 입력값의 앞뒤 공백 제거
+    var duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
+    var signupButton = document.getElementById('button');
 
-            if (response.status === 409) { 
-                duplicateMessage.innerText = '중복된 ID입니다. 다른 ID를 사용해주세요.';
-                duplicateMessage.style.color = 'red'
-                signupButton.disabled = true;
-            } else if (response.ok){
-                duplicateMessage.innerText = '사용가능한 ID입니다.';
-                duplicateMessage.style.color = 'blue'
-                signupButton.disabled = false;
-            }
-        })
-        .catch(function (error) {
-            console.error('중복 검사 중 오류 발생:', error);
-        });
+    // 사용자가 입력하지 않은 경우 처리
+    if (email === "") {
+        duplicateEmailMessage.innerText = '';
+        return; // 중복 확인을 수행하지 않고 함수 종료
+    }
+
+    fetch('/study/emailCheck', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'email=' + encodeURIComponent(email)
+    })
+    .then(function (response) {
+        if (response.status === 409) {
+            duplicateEmailMessage.innerText = '중복된 Email입니다. 다른 Email을 사용해주세요.';
+            duplicateEmailMessage.style.color = 'red';
+            signupButton.disabled = true;
+        } else if (response.ok) {
+            duplicateEmailMessage.innerText = '사용가능한 Email입니다.';
+            duplicateEmailMessage.style.color = 'blue';
+            updateButtonState();
+        }
+    })
+    .catch(function (error) {
+        console.error('중복 검사 중 오류 발생:', error);
+    });
+}
+function updateButtonState() {
+    var signupButton = document.getElementById('button');
+    var duplicateIdMessage = document.getElementById('duplicateIdMessage');
+    var duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
+
+    if (!duplicateIdMessage.style.color === 'blue' && !duplicateEmailMessage.color === 'blue') {
+        signupButton.disabled = false;
+    } else {
+        signupButton.disabled = true;
+    }
 }
