@@ -1,20 +1,24 @@
 package me.jh.springstudy.contorller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;
 import me.jh.springstudy.service.userservice.SignupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * 사용자 관련 요청을 처리하는 컨트롤러 클래스.
@@ -113,13 +117,24 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@PostMapping("/idCheck")
 	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
-		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
+		if (signupService.isDuplicate(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.ID_ALREADY_EXIST);//중복O
 			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.
 		}
 		log.info("ID 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
+	}
+
+	@PostMapping("/emailCheck")
+	@ResponseBody
+	public ResponseEntity<String> checkDuplicateEmail(@RequestParam("email") String email) {
+		if (signupService.isDuplicate(email)) {
+			log.info("중복된 Email 발견.DB 확인 요망");
+			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;
+		}
+		log.info("Email 중복검사 성공");
+		return ResponseEntity.ok("사용가능한 이메일입니다.");
 	}
 
 

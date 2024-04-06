@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -107,7 +106,7 @@ public class UserControllerTest {
 		String name = "test";
 		String password = "test1234";
 		String phoneNum = "010-1212-1212";
-		LocalDate birth = LocalDate.of(1999,  11,  11);
+		LocalDate birth = LocalDate.of(1999, 11, 11);
 		String email = "test1234@test.com";
 
 		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now());
@@ -126,7 +125,7 @@ public class UserControllerTest {
 	public void testIdCheck() throws Exception {
 		String userId = "test1234";
 
-		Mockito.when(signupService.isDuplicateId(userId)).thenReturn(false);
+		Mockito.when(signupService.isDuplicate(userId)).thenReturn(false);
 		//실제 메서드의 return값은 true라서 테스트 코드에는 false로 설정해야 중복x가 나옴
 
 		mockMvc.perform(post("/idCheck")
@@ -134,19 +133,46 @@ public class UserControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 ID입니다."));
 
-		Mockito.verify(signupService, Mockito.times(1)).isDuplicateId(userId);
+		Mockito.verify(signupService, Mockito.times(1)).isDuplicate(userId);
 	}
 
 	@Test
 	public void testIdCheckConflict() throws Exception {
 		String userId = "test123";
 
-		Mockito.when(signupService.isDuplicateId(userId)).thenReturn(true);
+		Mockito.when(signupService.isDuplicate(userId)).thenReturn(true);
 
 		mockMvc.perform(post("/idCheck")
 						.param("userId", userId))
 				.andExpect(status().isConflict())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("이미 존재하는 아이디입니다."));
+		Mockito.verify(signupService, Mockito.times(1)).isDuplicate(userId);
+	}
+
+	@Test
+	public void testEmailCheck() throws Exception {
+		String email = "test@test.com";
+
+		Mockito.when(signupService.isDuplicate(email)).thenReturn(false);
+
+		mockMvc.perform(post("/emailCheck")
+						.param("email", email))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 이메일입니다."));
+		Mockito.verify(signupService, Mockito.times(1)).isDuplicate(email);
+	}
+
+	@Test
+	public void testEmailCheckConflict() throws Exception {
+		String email = "testfaild@test.com";
+
+		Mockito.when(signupService.isDuplicate(email)).thenReturn(true);
+
+		mockMvc.perform(post("/emailCheck")
+						.param("email", email))
+				.andExpect(status().isConflict())
+				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
+		Mockito.verify(signupService, Mockito.times(1)).isDuplicate(email);
 	}
 
 	@Test

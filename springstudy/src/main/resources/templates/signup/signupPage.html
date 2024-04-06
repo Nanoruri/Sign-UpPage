@@ -21,7 +21,7 @@
 			<input type="text" id="inputAdress" name="userId" th:field="*{userId}" placeholder="아이디" >
 			<span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
 
-			<div id="duplicateMessage"></div>
+			<div id="duplicateIdMessage"></div>
 		</div>
 
 
@@ -54,6 +54,8 @@
 			<label for="inputEmail">이메일</label>
 			<input type="text" id="inputEmail" name="email" th:field="*{email}" placeholder="ex) abcd127@gmail.com">
 			<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+			<div id="duplicateEmailMessage"></div>
 		</div>
 
 		<div class="textForm"><!--사용자 전화번호-->

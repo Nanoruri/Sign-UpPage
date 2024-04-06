@@ -18,6 +18,7 @@ public interface UserDao extends JpaRepository<User, String>, CustomDao {//이�
 
 	//
 	User findByNameAndPhoneNum(String name, String phoneNum);
+	boolean existsByEmail(String email);
 
 	//찾기 서비스
 //    User findByUserIdAndNameAndEmail(String userId, String name, String email);

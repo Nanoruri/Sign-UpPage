@@ -26,13 +26,13 @@ public class SignupServiceTest {
 	@Mock
 	private User successTestUser;
 	@Mock
-	private User failTestUser;;
+	private User failTestUser;
+	;
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
 	SignupService signupService;
-
 
 
 	@BeforeEach
@@ -51,7 +51,8 @@ public class SignupServiceTest {
 	@Test
 	public void signupServiceSuccesseTest() {
 
-		when(signupService.isDuplicateId(successTestUser.getUserId())).thenReturn(false);
+		when(signupService.isDuplicate(successTestUser.getUserId())).thenReturn(false);
+		when(signupService.isDuplicate(successTestUser.getEmail())).thenReturn(false);
 		when(passwordEncoder.encode(successTestUser.getPassword())).thenReturn("hashedPassword");
 
 		signupService.registerMember(successTestUser);
@@ -72,7 +73,7 @@ public class SignupServiceTest {
 
 		// 중복검사를 통과하지 못하면 예외를 던져야 함
 		// when
-		when(signupService.isDuplicateId(failTestUser.getUserId())).thenReturn(true);
+		when(signupService.isDuplicate(failTestUser.getUserId())).thenReturn(true);
 
 		try {
 			// 예외가 발생하지 않았으므로 테스트 실패
@@ -91,6 +92,25 @@ public class SignupServiceTest {
 	}
 
 	/**
+	 * 이메일이 중복인 상태로 가입 시도시 예외를 발생 시키는지에 대한 테스트
+	 */
+	@Test
+	public void isDuplicateEmail() {
+		//중복검사에 관한 테스트
+		when(signupService.isDuplicate(failTestUser.getEmail())).thenReturn(true);
+
+		try {
+			// 예외가 발생하지 않았으므로 테스트 실패
+			signupService.registerMember(failTestUser);
+			fail("예외 발생 실패..");
+		} catch (UserException e) {
+			// then
+			// 예외가 발생하여 테스트 성공
+			assertEquals("해당정보로 가입한 사용자가 이미 있습니다.", e.getMessage());
+		}
+	}
+
+	/**
 	 * 아이디 중복검사 (중복O)
 	 */
 	@Test
@@ -100,7 +120,7 @@ public class SignupServiceTest {
 
 		when(userDao.existsById(userId)).thenReturn(true);
 
-		boolean result = signupService.isDuplicateId(userId);
+		boolean result = signupService.isDuplicate(userId);
 		assertTrue(result);
 
 		verify(userDao, times(1)).existsById(userId);
@@ -116,10 +136,38 @@ public class SignupServiceTest {
 
 		when(userDao.existsById(userId)).thenReturn(false);
 
-		boolean result = signupService.isDuplicateId(userId);
+		boolean result = signupService.isDuplicate(userId);
 		assertFalse(result, "중복된 아이디가 없어야 함");
 
 		verify(userDao, times(1)).existsById(userId);
+	}
+
+
+	/**
+	 * 이메일 중복검사 (중복O)
+	 */
+	@Test
+	public void isDuplicateEmailTest() {
+		//중복검사에 관한 테스트
+		when(signupService.isDuplicate(failTestUser.getEmail())).thenReturn(true);
+
+		boolean result = signupService.isDuplicate(failTestUser.getEmail());
+		assertTrue(result);
+
+		verify(userDao, times(1)).existsByEmail(failTestUser.getEmail());
+	}
+	/**
+	 * 이메일 중복검사 (중복X)
+	 */
+	@Test
+	public void isNotDuplicateEmailTest() {
+		//중복검사에 관한 테스트
+		when(signupService.isDuplicate(failTestUser.getEmail())).thenReturn(true);
+
+		boolean result = signupService.isDuplicate(failTestUser.getEmail());
+		assertTrue(result);
+
+		verify(userDao, times(1)).existsByEmail(failTestUser.getEmail());
 	}
 
 
