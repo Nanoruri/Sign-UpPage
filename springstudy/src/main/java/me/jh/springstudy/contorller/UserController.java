@@ -117,7 +117,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@PostMapping("/idCheck")
 	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
 	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
-		if (signupService.isDuplicate(userId)) {//ID 중복검사 로직
+		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.ID_ALREADY_EXIST);//중복O
 			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.
@@ -129,7 +129,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@PostMapping("/emailCheck")
 	@ResponseBody
 	public ResponseEntity<String> checkDuplicateEmail(@RequestParam("email") String email) {
-		if (signupService.isDuplicate(email)) {
+		if (signupService.isDuplicateEmail(email)) {
 			log.info("중복된 Email 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;
 		}
