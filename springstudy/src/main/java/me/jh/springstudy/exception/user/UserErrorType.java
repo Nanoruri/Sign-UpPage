@@ -21,8 +21,7 @@ public enum UserErrorType {
 	USER_ALREADY_EXIST("해당정보로 가입한 사용자가 이미 있습니다.", HttpStatus.CONFLICT),
 	ID_ALREADY_EXIST("이미 존재하는 아이디입니다.", HttpStatus.CONFLICT),
 	USER_NOT_FOUND("해당 사용자 정보가 없습니다", HttpStatus.NOT_FOUND),
-
-
+	PATTERN_NOT_MATCHED("입력된 값이 정규식과 일치하지 않습니다", HttpStatus.BAD_REQUEST)
 	;
 
 
