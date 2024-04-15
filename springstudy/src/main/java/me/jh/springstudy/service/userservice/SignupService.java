@@ -28,7 +28,6 @@ public class SignupService {
 
 	/**
 	 * 회원가입을 처리하는 메서드.
-	 *
 	 * @param user 회원가입 정보를 담은 Member 객체
 	 */
 	public void registerMember(User user) {//로그인 할때에도 한번더 중복 검사 하게 끔하고 예외가 나오면 Catch하도록
@@ -43,7 +42,7 @@ public class SignupService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));// 비밀번호를 해시화하여 저장
 		user.setCreatedDate(LocalDateTime.now());
 		user.setUpdateDate(LocalDateTime.now());
-		userDao.save(user);// Member 엔티티를 데이터베이스에 저장
+		userDao.save(user);// 사용자 엔티티를 데이터베이스에 저장
 	}
 
 	/**
@@ -67,8 +66,24 @@ public class SignupService {
 		return userDao.existsByEmail(email);
 	}
 
-	private boolean isEmail(String identifier) {
-		return identifier.contains("@") && identifier.contains(".");
+	/**
+	 * 아이디 패턴을 확인하는 메서드
+	 * @param identifier 아이디 문자열
+	 * @return 아이디패턴과 일치하면 true, 일치하지 않으면 false
+	 */
+	private boolean assureIdPattern(String identifier) {
+		String idRegex = "^[a-zA-Z0-9]{4,20}$";
+		return !identifier.matches(idRegex);
+	}
+
+	/**
+	 * 이메일 패턴을 확인하는 메서드
+	 * @param identifier 이메일 문자열
+	 * @return 이메일 패턴과 일치하면 true, 일치하지 않으면 false
+	 */
+	private boolean assureEmailPattern(String identifier) {
+		String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+		return identifier.matches(emailRegex);
 	}
 
 }
