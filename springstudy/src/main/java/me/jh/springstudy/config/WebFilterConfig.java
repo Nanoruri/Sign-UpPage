@@ -1,6 +1,7 @@
 package me.jh.springstudy.config;
 
 
+import me.jh.springstudy.filter.RequestHeaderFilter;
 import me.jh.springstudy.filter.LoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,17 @@ public class WebFilterConfig {
 		registrationBean.setFilter(new LoggingFilter());//등록할 필터 클래스 지정
 		registrationBean.setOrder(0);//필터 순서 설정
 		registrationBean.addUrlPatterns("/*"); // 필터가 적용될 URL 설정. 필터를 모든 URL 패턴에 적용
+
+		return registrationBean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<RequestHeaderFilter> headerFilter() {
+
+		FilterRegistrationBean<RequestHeaderFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new RequestHeaderFilter());
+		registrationBean.setOrder(1);
+		registrationBean.addUrlPatterns("/*");
 
 		return registrationBean;
 	}
