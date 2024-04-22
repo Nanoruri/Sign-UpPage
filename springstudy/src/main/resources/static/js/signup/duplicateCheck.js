@@ -22,6 +22,7 @@ function checkDuplicate() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'Study': 'signupProject'//todo :이건 되네;;
         },
         body: 'userId=' + encodeURIComponent(userId),
     })
@@ -57,6 +58,7 @@ function checkDuplicateEmail() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'Study': 'signupProject'
         },
         body: 'email=' + encodeURIComponent(email)
     })

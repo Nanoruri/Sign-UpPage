@@ -8,6 +8,7 @@ function doFindId() {// todo : 모달로 아이디 보여주기
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'Study': 'signupProject'
         },
         body: 'name=' + encodeURIComponent(name) + '&phoneNum=' + encodeURIComponent(phoneNum),
     })
