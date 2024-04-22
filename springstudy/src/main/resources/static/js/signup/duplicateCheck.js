@@ -81,8 +81,8 @@ function updateButtonState() {
     var duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
 
     if (!duplicateIdMessage.style.color === 'blue' && !duplicateEmailMessage.color === 'blue') {
-        signupButton.disabled = false;
-    } else {
         signupButton.disabled = true;
+    } else {
+        signupButton.disabled = false;
     }
 }
