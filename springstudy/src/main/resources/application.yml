@@ -13,7 +13,7 @@ logging:
 
 #스프링 설정
 spring:
-  thymeleat:
+  thymeleaf:
     check-template-location: true
 
   # 접속 DB 설정
