@@ -10,8 +10,6 @@ import java.io.IOException;
 
 public class RequestHeaderFilter implements Filter {
 
-	private static final String REQUIRED_HEADER = "Study";
-	private static final String REQUIRED_VALUE = "signupProject";
 	private static final Logger logger = LoggerFactory.getLogger(RequestHeaderFilter.class);
 
 	@Override
@@ -25,14 +23,21 @@ public class RequestHeaderFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		String headerValue = httpRequest.getHeader(REQUIRED_HEADER);
 
+		String customHeader = httpRequest.getHeader("Study");
+		logger.info("customHeader : {}", customHeader);
 
-		if (REQUIRED_VALUE.equals(headerValue)) {
+		if(httpRequest.getMethod().equals("GET")) {
+			chain.doFilter(request, response);
+			return;//todo : 임시조치
+		}
+
+		if ("signupProject".equals(customHeader) && httpRequest.getMethod().equals("POST")) {
 			chain.doFilter(request, response);
 		} else {
+			logger.info(customHeader);
 			logger.info("필수 헤더가 누락되었습니다.");
-			httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN,"필수 헤더가 누락되었습니다.");
+			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
 		}
 
 	}
