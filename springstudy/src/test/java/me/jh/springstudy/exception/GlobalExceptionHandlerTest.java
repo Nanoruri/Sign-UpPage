@@ -76,7 +76,7 @@ public class GlobalExceptionHandlerTest {
 		ResponseEntity<String> responseEntity = globalExceptionHandler.handleMyException(userException);
 
 		// Assert
-		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 		assertEquals(userException.getMessage(), responseEntity.getBody());
 	}
 }
