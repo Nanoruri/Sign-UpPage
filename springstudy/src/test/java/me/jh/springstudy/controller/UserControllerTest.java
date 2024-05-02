@@ -286,5 +286,13 @@ public class UserControllerTest {
 
 		Mockito.verify(findService, Mockito.times(1)).changePassword(user, newPassword);
 	}
+
+	@Test
+	public void testSignupSuccessPage() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/signupSuccess"))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("signup/signupSuccessPage"));
+	}
+
 }
 // todo : 빠진부분 없는지 확인하기

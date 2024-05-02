@@ -3,12 +3,17 @@ import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.repositorydao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest(classes = MySpringBootApplication.class)
@@ -17,6 +22,17 @@ public class SpringApplicationTest {
 	@Autowired
 	private UserDao userDao;
 	private PasswordEncoder passwordEncoder;
+	private ApplicationContext context;
+
+
+
+
+	@Test // 애플리케이션 로드 테스트
+	public void applicationContextLoadsTest() {
+		String[] args = {}; // 테스트를 위한 빈 args 배열을 생성
+		ConfigurableApplicationContext context = SpringApplication.run(MySpringBootApplication.class, args);
+		assertNotNull(context); // 컨텍스트의 null체크.
+	}
 
 	@Test
 	public void testMariaDbConnection() {

@@ -123,6 +123,51 @@ public class SignupServiceTest {
 		}
 	}
 
+	@Test
+	public void registMemberPattrnNotMatchTest(){
+		//given
+		//아이디 패턴이 일치하지 않는 상태로 설정
+		failTestUser.setUserId("tex");
+
+		//when
+		//회원가입 메서드 실행
+		try {
+			signupService.registerMember(failTestUser);
+			fail("예외 발생 실패..");
+		} catch (UserException e) {
+			//then
+			//예외가 발생하여 테스트 성공
+			assertEquals("입력된 값이 정규식과 일치하지 않습니다", e.getMessage());
+		}
+		//verify
+		//예외가 잘 던져졌는지에대한 검증;
+		verify(userDao, times(0)).save(failTestUser);
+	}
+
+	@Test
+	public void registMemberEmailPattrnNotMatchTest(){
+		//given
+		//이메일 패턴이 일치하지 않는 상태로 설정
+		failTestUser.setEmail("test.com");
+
+		//when
+		//회원가입 메서드 실행
+		try {
+			signupService.registerMember(failTestUser);
+			fail("예외 발생 실패..");
+		} catch (UserException e) {
+			//then
+			//예외가 발생하여 테스트 성공
+			assertEquals("입력된 값이 정규식과 일치하지 않습니다", e.getMessage());
+		}
+		//verify
+		//예외가 잘 던져졌는지에대한 검증;
+		verify(userDao, times(0)).save(failTestUser);
+	}
+
+
+
+
 	/**
 	 * 아이디 중복검사 (중복O)
 	 */
@@ -168,6 +213,31 @@ public class SignupServiceTest {
 		verify(userDao, times(1)).existsById(userId);
 	}
 
+	/**
+	 * 아이디 패턴이 일치하지 않을 경우 예외를 발생시키는지에 대한 테스트
+	 */
+	@Test
+	public void IdPattrnNotMatchTest() {
+		//given
+		//아이디를 4자 이하로 설정
+		String userId = "tex";
+
+		//when
+		//아이디 중복검사 메서드 실행
+		try {
+			signupService.isDuplicateId(userId);
+			fail("예외 발생 실패..");
+		} catch (UserException e) {
+			//then
+			//예외가 발생하여 테스트 성공
+			assertEquals("입력된 값이 정규식과 일치하지 않습니다", e.getMessage());
+		}
+		//verify
+		//예외가 잘 던져졌는지에대한 검증;
+		verify(userDao, times(0)).existsById(userId);
+	}
+
+
 
 	/**
 	 * 이메일 중복검사 (중복O)
@@ -209,6 +279,31 @@ public class SignupServiceTest {
 		verify(userDao, times(1)).existsByEmail(failTestUser.getEmail());
 	}
 
+
+	/**
+	 * 이메일 패턴이 일치하지 않을 경우 예외를 발생시키는지에 대한 테스트
+	 */
+	@Test
+	public void emailPatternNotMatchTest() {
+		//given
+		//이메일 패턴이 일치하지 않는 상태로 설정
+		String email = "test.com";
+
+		//when
+		//이메일 패턴 확인 메서드 실행
+		try {
+			signupService.isDuplicateEmail(email);
+			fail("예외 발생 실패..");
+		} catch (UserException e) {
+			//then
+			//예외가 발생하여 테스트 성공
+			assertEquals("입력된 값이 정규식과 일치하지 않습니다", e.getMessage());
+		}
+
+		//verify
+		//예외가 잘 던져졌는지에대한 검증;
+		verify(userDao, times(0)).existsByEmail(email);
+	}
 
 }
 

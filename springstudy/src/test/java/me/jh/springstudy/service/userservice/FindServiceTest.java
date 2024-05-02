@@ -1,7 +1,6 @@
 package me.jh.springstudy.service.userservice;
 
 
-import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.repositorydao.UserDao;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -19,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 
@@ -131,6 +127,34 @@ public class FindServiceTest {
 		assertTrue(result, "비밀번호 변경 성공해야함");
 		verify(userDao, times(1)).save(changePasswordUser);
 		verify(passwordEncoder, times(1)).encode(newPassword);
+	}
+
+	/**
+	 * 비밀번호 변경 예외 테스트
+	 */
+	@Test
+	public void changePasswordFailedTest() {
+
+		//given
+		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패해야함
+		when(userDao.findByProperties(changePasswordUser.getUserId(),
+				changePasswordUser.getName(),
+				changePasswordUser.getPhoneNum())).thenReturn(Optional.empty());
+
+		// Act & Assert
+		try {
+			findService.changePassword(changePasswordUser, "changedPassword");
+			fail("비밀번호 변경이 실패해야함");
+		} catch (Exception e) {
+			assertEquals("해당 사용자 정보가 없습니다", e.getMessage());
+		}
+
+		// Verify
+		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패하고 해당 예외가 발생하는지 확인
+		verify(userDao, times(1)).findByProperties(changePasswordUser.getUserId(),
+				changePasswordUser.getName(),
+				changePasswordUser.getPhoneNum());
+		verifyNoMoreInteractions(userDao);
 	}
 
 }
