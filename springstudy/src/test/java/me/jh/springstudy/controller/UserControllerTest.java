@@ -294,5 +294,11 @@ public class UserControllerTest {
 				.andExpect(MockMvcResultMatchers.view().name("signup/signupSuccessPage"));
 	}
 
+	@Test
+	public void testPasswordChangeSuccessPage() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChangeSuccess"))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("finds/passwordChangeSuccessPage"));
+	}
 }
 // todo : 빠진부분 없는지 확인하기

@@ -1,25 +1,20 @@
 package me.jh.springstudy.service.userservice;
 
-import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.repositorydao.UserDao;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -84,4 +79,26 @@ public class LoginServiceTest {
 		verify(userDao,times(2)).findById(userId);
 	}
 
+
+	/**
+	 * 로그인 실패 테스트(사용자 없음)
+	 */
+	@Test
+	public void loginServiceExceptionTest() {
+		String userId = "NotExistedUser";
+		String password = "HolyMoly";
+
+		//사용자 정보가 없을 때
+		when(userDao.findById(userId)).thenReturn(Optional.empty());
+
+		//예외 발생 확인
+		try {
+			loginService.loginCheck(userId, password);
+		} catch (Exception e) {
+			assertEquals("해당 사용자 정보가 없습니다", e.getMessage());
+		}
+
+		//사용자 정보 조회가 한 번만 일어났는지 확인
+		verify(userDao, times(1)).findById(userId);
+	}
 }
