@@ -36,11 +36,11 @@ public class LoginServiceTest {
 
 	@BeforeEach
 	public void setUp() {
-		validTestUser = new User("test","testName", "validPassword", "010-1234-5678",
-				LocalDate.of(1990,11,21), "test@test.com", LocalDateTime.now(),LocalDateTime.now());
+		validTestUser = new User("test", "testName", "validPassword", "010-1234-5678",
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
 
-		invalidTestUser = new User("test","testName", "invalidPassword", "010-1234-5678",
-				LocalDate.of(1990,11,21), "test@test.com", LocalDateTime.now(),LocalDateTime.now());
+		invalidTestUser = new User("test", "testName", "invalidPassword", "010-1234-5678",
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
 	}
 
 
@@ -59,11 +59,11 @@ public class LoginServiceTest {
 		boolean result = loginService.loginCheck(userId, password);
 		assertTrue(result, "로그인 성공해야 함");
 
-		verify(userDao,times(1)).findById(userId);
+		verify(userDao, times(1)).findById(userId);
 	}
 
 	/**
-	 * 로그인 실패 테스트
+	 * 로그인 실패 테스트(비밀번호 불일치)
 	 */
 	@Test
 	public void loginServiceFailedTest() {
@@ -76,7 +76,7 @@ public class LoginServiceTest {
 
 		boolean result = loginService.loginCheck(userId, password);
 		assertFalse(result, "로그인 실패해야함");
-		verify(userDao,times(2)).findById(userId);
+		verify(userDao, times(2)).findById(userId);
 	}
 
 
