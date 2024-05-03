@@ -71,7 +71,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
 			log.info("로그인 실패");
 			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
-			// SigninException으로 예외 투척
+			// UserException으로 예외 투척
 		}// todo : loginService.loginCheck(userId, password) 하고 서비스 클래스의 loginCheck는 void로..?
 		log.info("로그인 성공");
 		return "redirect:/";//로그인 성공시 메인페이지로 리다이렉트
@@ -234,17 +234,19 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "finds/newPasswordPage";
 	}
 
-	/**
-	 * 비밀번호 변경하는 페이지
-	 *
-	 * @param model newpassword 이름으로 새로운 User객체 생성
-	 * @return 새 패스워드 설정 뷰 반환
-	 */
-	@GetMapping("/passwordChange")
-	public String resetPassword(Model model) {
-		model.addAttribute("passwordChange", new User());//
-		return "finds/newPasswordPage";
-	}
+
+		/**
+		 * 비밀번호 변경하는 페이지
+		 *
+		 * @param model newpassword 이름으로 새로운 User객체 생성
+		 * @return 새 패스워드 설정 뷰 반환
+		 */
+//		@GetMapping("/passwordChange")
+//		public String resetPassword(Model model) {
+//
+//			model.addAttribute("passwordChange", new User());//
+//			return "finds/newPasswordPage";
+//		}
 
 	/**
 	 * 비밀번호 변경로직
