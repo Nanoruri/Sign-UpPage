@@ -7,11 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
@@ -19,6 +15,8 @@ import me.jh.springstudy.exception.user.UserException;
 import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;
 import me.jh.springstudy.service.userservice.SignupService;
+
+import java.util.Map;
 
 /**
  * 사용자 관련 요청을 처리하는 컨트롤러 클래스.
@@ -111,12 +109,14 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	/**
 	 * 사용자 ID가 중복인지 확인하는 POST 요청 메서드.
 	 *
-	 * @param userId 중복 여부를 확인할 사용자 ID
+	 * @param reqData 중복 여부를 확인할 사용자 ID
 	 * @return 중복 여부에 따른 ResponseEntity. 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환합니다.
 	 */
 	@PostMapping("/idCheck")
 	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
-	public ResponseEntity<String> checkDuplicateUserId(@RequestParam("userId") String userId) {
+	public ResponseEntity<String> checkDuplicateUserId(@RequestBody Map<String, String> reqData) {
+		String userId = reqData.get("userId");
+
 		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
 			log.info("중복된 ID 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.ID_ALREADY_EXIST);//중복O
@@ -128,7 +128,9 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 	@PostMapping("/emailCheck")
 	@ResponseBody
-	public ResponseEntity<String> checkDuplicateEmail(@RequestParam("email") String email) {
+	public ResponseEntity<String> checkDuplicateEmail(@RequestBody Map<String, String> reqData) {
+		String email = reqData.get("email");
+
 		if (signupService.isDuplicateEmail(email)) {
 			log.info("중복된 Email 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;
@@ -178,7 +180,9 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	// todo : findId email부분 ->전화번호로 변경하기 / service에서도 변경하기 / Userdao에서도 변경하기
 	@PostMapping("/findId")
 	@ResponseBody
-	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("phoneNum") String phoneNum) {
+	public ResponseEntity<String> findId(@RequestBody Map<String, String> reqData) {
+		String name = reqData.get("name");
+		String phoneNum = reqData.get("phoneNum");
 
 		if (findService.findId(name, phoneNum) == null) {
 			log.info("아이디 찾기 실패");
@@ -210,15 +214,16 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	/**
 	 * 비밀번호 찾는 페이지에 대한 유저 인증 로직
 	 *
-	 * @param userId 사용자 아이디
-	 * @param name   사용자 이름
-	 * @param phoneNum  사용자 이메일
+	 * @param reqData 사용자 아이디, 이름, 전화번호
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
 	 */
 
 	@PostMapping("/findPw")
-	public String findPassword(@RequestParam("userId") String userId, @RequestParam("name") String name, @RequestParam("phoneNum") String phoneNum, Model model) {
+	public String findPassword(@RequestBody Map<String,String> reqData, Model model) {
 //		boolean validateUser = findService.validateUser(userId, name, email);
+		String userId = reqData.get("userId");
+		String name = reqData.get("name");
+		String phoneNum = reqData.get("phoneNum");
 
 		if (!findService.validateUser(userId, name, phoneNum)) {//실패로직..
 			log.info("잘못된 입력입니다");
@@ -251,15 +256,16 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	/**
 	 * 비밀번호 변경로직
 	 *
-	 * @param newPassword 새로운 비밀번호
+	 * @param changePasswordUser 비밀번호 변경할 사용자
+	 * @param reqData 새로운 비밀번호
 	 * @return 비밀번호변경 성공 시 성공 메세지 페이지로 반환 후 구현한 로그인 버튼으로 로그인 페이지로 돌아감.
 	 */
 
 	@PostMapping("/passwordChange")
 	public String resetPassword(@ModelAttribute("passwordChangeUser") User changePasswordUser,
-	                            @RequestParam("newPassword") String newPassword
-	) {
+	                            @RequestBody Map<String, String> reqData) {
 
+		String newPassword = reqData.get("newPassword");
 		findService.changePassword(changePasswordUser, newPassword);
 
 //		if (!findService.changePassword(changePasswordUser, newPassword)) {

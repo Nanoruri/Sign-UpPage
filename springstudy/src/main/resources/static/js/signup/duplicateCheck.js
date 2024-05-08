@@ -21,9 +21,11 @@ function checkDuplicate() {
     fetch('/study/idCheck', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
-        body: 'userId=' + encodeURIComponent(userId),
+        body: JSON.stringify({
+            userId: userId
+        }),
     })
     .then(function (response) {
         if (response.status === 409) {
@@ -56,9 +58,11 @@ function checkDuplicateEmail() {
     fetch('/study/emailCheck', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
-        body: 'email=' + encodeURIComponent(email)
+        body: JSON.stringify({
+            email: email
+        }),
     })
     .then(function (response) {
         if (response.status === 409) {

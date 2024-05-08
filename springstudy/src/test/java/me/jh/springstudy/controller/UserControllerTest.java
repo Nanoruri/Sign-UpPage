@@ -129,7 +129,8 @@ public class UserControllerTest {
 		//실제 메서드의 return값은 true라서 테스트 코드에는 false로 설정해야 중복x가 나옴
 
 		mockMvc.perform(post("/idCheck")
-						.param("userId", userId))
+						.contentType("application/json")
+						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 ID입니다."));
 
@@ -143,7 +144,8 @@ public class UserControllerTest {
 		Mockito.when(signupService.isDuplicateId(userId)).thenReturn(true);
 
 		mockMvc.perform(post("/idCheck")
-						.param("userId", userId))
+						.contentType("application/json")
+						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isConflict())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("이미 존재하는 아이디입니다."));
 		Mockito.verify(signupService, Mockito.times(1)).isDuplicateId(userId);
@@ -156,7 +158,8 @@ public class UserControllerTest {
 		Mockito.when(signupService.isDuplicateEmail(email)).thenReturn(false);
 
 		mockMvc.perform(post("/emailCheck")
-						.param("email", email))
+						.contentType("application/json")
+						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 이메일입니다."));
 		Mockito.verify(signupService, Mockito.times(1)).isDuplicateEmail(email);
@@ -169,7 +172,8 @@ public class UserControllerTest {
 		Mockito.when(signupService.isDuplicateEmail(email)).thenReturn(true);
 
 		mockMvc.perform(post("/emailCheck")
-						.param("email", email))
+						.contentType("application/json")
+						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isConflict())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
 		Mockito.verify(signupService, Mockito.times(1)).isDuplicateEmail(email);
@@ -193,8 +197,8 @@ public class UserControllerTest {
 		Mockito.when(findService.findId(name, phoneNum)).thenReturn(userId);
 
 		mockMvc.perform(post("/findId")
-						.param("name", name)
-						.param("phoneNum", phoneNum))
+						.contentType("application/json")
+						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디는" + userId + "입니다."));
 
@@ -209,8 +213,8 @@ public class UserControllerTest {
 		Mockito.when(findService.findId(name, phoneNum)).thenReturn(null);
 
 		mockMvc.perform(post("/findId")
-						.param("name", name)
-						.param("phoneNum", phoneNum))
+						.contentType("application/json")
+						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
 		Mockito.verify(findService, Mockito.times(1)).findId(name, phoneNum);
@@ -234,9 +238,8 @@ public class UserControllerTest {
 		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
 
 		mockMvc.perform(post("/findPw")
-						.param("userId", userId)
-						.param("name", name)
-						.param("phoneNum", phoneNum))
+						.contentType("application/json")
+						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/newPasswordPage"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("passwordChangeUser"));
@@ -253,9 +256,8 @@ public class UserControllerTest {
 		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(false);
 
 		mockMvc.perform(post("/findPw")
-						.param("userId", userId)
-						.param("name", name)
-						.param("phoneNum", phoneNum))
+						.contentType("application/json")
+						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
 
@@ -279,7 +281,8 @@ public class UserControllerTest {
 
 
 		mockMvc.perform(post("/passwordChange")
-						.param("newPassword", newPassword)
+						.contentType("application/json")
+						.content("{\"newPassword\":\"" + newPassword + "\"}")
 						.flashAttr("passwordChangeUser", user))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/passwordChangeSuccess"));

@@ -7,16 +7,20 @@ function doFindId() {// todo : 모달로 아이디 보여주기
     fetch('/study/findId', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
-        body: 'name=' + encodeURIComponent(name) + '&phoneNum=' + encodeURIComponent(phoneNum),
+        body: JSON.stringify({
+            name: name,
+            phoneNum: phoneNum
+
+        }),
     })
         .then(function (response) {
             if (response.status === 404) {
                 displayModal('해당 정보로 가입한 가입자가 없습니다!');
                 throw new Error('사용자가 없습니다.')
             } else {
-                return response.text();
+                return response.json();
             }
         })
         .then(function (userId) {
