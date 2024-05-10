@@ -1,6 +1,11 @@
 package me.jh.springstudy.repositorydto;
 
 import javax.validation.constraints.NotBlank;
+
+/**
+ * @deprecated This class is deprecated and will be removed in the future.
+ *This class is deprecated because it is not used in the project.
+ */
 @Deprecated
 public class LoginDto {
 
