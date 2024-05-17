@@ -3,6 +3,7 @@ package me.jh.springstudy.config;
 
 import me.jh.springstudy.filter.RequestHeaderFilter;
 import me.jh.springstudy.filter.LoggingFilter;
+import me.jh.springstudy.filter.CreateCookieFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,23 @@ public class WebFilterConfig {
 	}
 
 	@Bean
+	public FilterRegistrationBean<CreateCookieFilter> CreateCookieFilter() {
+
+		FilterRegistrationBean<CreateCookieFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new CreateCookieFilter());
+		registrationBean.setOrder(1);
+		registrationBean.addUrlPatterns("/*");
+
+		return registrationBean;
+	}
+
+
+	@Bean
 	public FilterRegistrationBean<RequestHeaderFilter> headerFilter() {
 
 		FilterRegistrationBean<RequestHeaderFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new RequestHeaderFilter());
-		registrationBean.setOrder(1);
+		registrationBean.setOrder(2);
 		registrationBean.addUrlPatterns("/*");
 
 		return registrationBean;
