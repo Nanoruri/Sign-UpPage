@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,23 +25,66 @@ public class RequestHeaderFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
 
-		String customHeader = httpRequest.getHeader("Study");
-		logger.info("customHeader : {}", customHeader);
+//		Cookie cookie = new Cookie("customHeaderMissing", "true");
+//		logger.info("쿠키 생성");
+//		cookie.setMaxAge(60 * 60 * 24);
+//		cookie.setPath("/");
+//		httpResponse.addHeader("Study", "signupProject");
+//		httpResponse.addCookie(cookie);
 
-		if(httpRequest.getMethod().equals("GET")) {
-			chain.doFilter(request, response);
-			return;//todo : 임시조치
+
+//		String customHeader = httpRequest.getHeader("Study");
+//		logger.info("customHeader : {}", customHeader);
+
+//		if(httpRequest.getMethod().equals("GET")) {
+//			chain.doFilter(request, response);
+//			return;//todo : 임시조치
+//		}
+
+//		if ("signupProject".equals(customHeader) && httpRequest.getMethod().equals("POST")) {
+//			chain.doFilter(request, response);
+//		} else {
+//			logger.info(customHeader);
+//			logger.info("필수 헤더가 누락되었습니다.");
+//			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
+//		}
+
+//		if (customHeader == null || customHeader.isEmpty()) {
+//			logger.info(customHeader);
+//			logger.info("필수 헤더가 누락되었습니다.");
+//			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
+//
+//			return;
+//		}
+
+//		chain.doFilter(request, response);
+
+
+
+
+		String customHeader = null;
+		Cookie[] cookies = httpRequest.getCookies();
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("Study".equals(cookie.getName())) {
+					customHeader = cookie.getValue();
+					break;
+				}
+			}
 		}
 
-		if ("signupProject".equals(customHeader) && httpRequest.getMethod().equals("POST")) {
+		logger.info("customHeader : {}", customHeader);
+
+
+		if ("signupProject".equals(customHeader)) {
 			chain.doFilter(request, response);
 		} else {
-			logger.info(customHeader);
 			logger.info("필수 헤더가 누락되었습니다.");
 			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
 		}
-
 	}
+
 
 	@Override
 	public void destroy() {
