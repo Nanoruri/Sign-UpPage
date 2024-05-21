@@ -1,4 +1,4 @@
-package me.jh.springstudy.repositorydao;
+package me.jh.springstudy.dao;
 
 import me.jh.springstudy.entitiy.User;
 import org.springframework.stereotype.Repository;

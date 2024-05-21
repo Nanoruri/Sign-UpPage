@@ -1,4 +1,4 @@
-package me.jh.springstudy.repositorydto;
+package me.jh.springstudy.dto;
 
 import java.time.LocalDateTime;
 @Deprecated

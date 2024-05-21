@@ -1,4 +1,4 @@
-package me.jh.springstudy.contorller;
+package me.jh.springstudy.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -181,7 +181,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	public ResponseEntity<String> findId(@RequestParam("name") String name, @RequestParam("phoneNum") String phoneNum) {
 
 		if (findService.findId(name, phoneNum) == null) {
-			log.info("아이디 찾기 실패");
+			log.error("아이디 찾기 실패");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 //		} else if (name.isBlank()) {
