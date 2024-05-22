@@ -26,7 +26,7 @@ public class WebFilterConfig {
 	}
 
 	@Bean
-	public FilterRegistrationBean<CreateCookieFilter> CreateCookieFilter() {
+	public FilterRegistrationBean<CreateCookieFilter> createCookieFilter() {
 
 		FilterRegistrationBean<CreateCookieFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new CreateCookieFilter());
