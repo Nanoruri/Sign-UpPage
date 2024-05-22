@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * 쿠키를 생성하는 필터 클래스.
  */
-public class CreateCookieFilter implements Filter {
+public class CookieCreateFilter implements Filter {
 
 
-	private static final Logger logger = LoggerFactory.getLogger(CreateCookieFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(CookieCreateFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {

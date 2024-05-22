@@ -4,14 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class RequestHeaderFilter implements Filter {
+public class CookieCheckFilter implements Filter {
 
-	private static final Logger logger = LoggerFactory.getLogger(RequestHeaderFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(CookieCheckFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {

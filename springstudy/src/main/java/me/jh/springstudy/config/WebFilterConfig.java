@@ -1,9 +1,9 @@
 package me.jh.springstudy.config;
 
 
-import me.jh.springstudy.filter.RequestHeaderFilter;
+import me.jh.springstudy.filter.CookieCheckFilter;
 import me.jh.springstudy.filter.LoggingFilter;
-import me.jh.springstudy.filter.CreateCookieFilter;
+import me.jh.springstudy.filter.CookieCreateFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +26,10 @@ public class WebFilterConfig {
 	}
 
 	@Bean
-	public FilterRegistrationBean<CreateCookieFilter> createCookieFilter() {
+	public FilterRegistrationBean<CookieCreateFilter> createCookieFilter() {
 
-		FilterRegistrationBean<CreateCookieFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new CreateCookieFilter());
+		FilterRegistrationBean<CookieCreateFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new CookieCreateFilter());
 		registrationBean.setOrder(1);
 		registrationBean.addUrlPatterns("/*");
 
@@ -38,10 +38,10 @@ public class WebFilterConfig {
 
 
 	@Bean
-	public FilterRegistrationBean<RequestHeaderFilter> headerFilter() {
+	public FilterRegistrationBean<CookieCheckFilter> cookieCheckFilter() {
 
-		FilterRegistrationBean<RequestHeaderFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new RequestHeaderFilter());
+		FilterRegistrationBean<CookieCheckFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new CookieCheckFilter());
 		registrationBean.setOrder(2);
 		registrationBean.addUrlPatterns("/*");
 
