@@ -62,22 +62,13 @@ public class RequestHeaderFilter implements Filter {
 
 
 
-		String customHeader = null;
-		Cookie[] cookies = httpRequest.getCookies();
+		String cookieHeader = httpRequest.getHeader("Cookie");
+		String cookieValue = "Study=signupProject";
 
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if ("Study".equals(cookie.getName())) {
-					customHeader = cookie.getValue();
-					break;
-				}
-			}
-		}
-
-		logger.info("customHeader : {}", customHeader);
+		logger.info("customHeader : {}", cookieHeader);
 
 
-		if ("signupProject".equals(customHeader)) {
+		if (cookieValue.equals(cookieHeader)) {
 			chain.doFilter(request, response);
 		} else {
 			logger.info("필수 헤더가 누락되었습니다.");
