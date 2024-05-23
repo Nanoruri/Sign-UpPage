@@ -11,17 +11,22 @@ async function checkCookieAndRequest() {
 }
 
 // 서버로 요청을 보내는 함수
+// todo : 기본 fetch 함수 override 하여 적용하기
+
 async function sendRequest() {
     try {
         const response = await fetch("http://localhost:8082/study/", {
             method: "GET",
+             headers: {
+                 "Study": "signupProject"
+             },
             credentials: "include" // 쿠키를 포함하여 요청을 보냄
         });
 
         if (response.ok) {
             const responseText = await response.text();
         } else {
-            alert("에러: " + response.status);
+            alert("에러: " + response.status);// todo : alert말고  에러페이지 반환하게 변경
         }
     } catch (error) {
         console.error("요청 중 오류 발생:", error);
