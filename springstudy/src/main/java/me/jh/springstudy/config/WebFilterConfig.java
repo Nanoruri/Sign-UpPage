@@ -4,6 +4,7 @@ package me.jh.springstudy.config;
 import me.jh.springstudy.filter.CookieCheckFilter;
 import me.jh.springstudy.filter.LoggingFilter;
 import me.jh.springstudy.filter.CookieCreateFilter;
+import me.jh.springstudy.filter.CustomHeaderCheckFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +44,17 @@ public class WebFilterConfig {
 		FilterRegistrationBean<CookieCheckFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new CookieCheckFilter());
 		registrationBean.setOrder(2);
+		registrationBean.addUrlPatterns("/*");
+
+		return registrationBean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<CustomHeaderCheckFilter> customHeaderCheckFilter () {
+
+		FilterRegistrationBean<CustomHeaderCheckFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new CustomHeaderCheckFilter());
+		registrationBean.setOrder(3);
 		registrationBean.addUrlPatterns("/*");
 
 		return registrationBean;
