@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 쿠키를 확인하고 없다면 에러를 반환하는 필터 클래스.
+ */
+
 public class CookieCheckFilter implements Filter {
 
 	private static final Logger logger = LoggerFactory.getLogger(CookieCheckFilter.class);
@@ -70,8 +74,8 @@ public class CookieCheckFilter implements Filter {
 		if (cookieValue.equals(cookieHeader)) {
 			chain.doFilter(request, response);
 		} else {
-			logger.info("필수 헤더가 누락되었습니다.");
-			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
+			logger.info("필수 쿠키가 누락되었습니다.");
+			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 쿠키가 누락되었습니다.");
 		}
 	}
 
