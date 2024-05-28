@@ -59,9 +59,11 @@ public class CustomHeaderCheckFilter implements Filter {
 	private  void  customHeaderCheck(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException {
 		//Study라는 이름의 헤더를 가져와 customHeader변수로 초기화
 		String customHeader = httpRequest.getHeader("Study");
+		logger.info(customHeader);
 
 		//헤더가 null이거나 없을 시 로그메세지를 남기고 400BadRequest응답을 발생
-		if (customHeader == null || customHeader.isEmpty()) {
+		if (customHeader == null || customHeader.isEmpty() || !"signupProject".equals(customHeader)) {
+			//todo : index페이지에서 /study/webjars/bootstrap/5.3.2/css/bootstrap.min.css.map이 이걸 탐... 디버그해보기
 			logger.error("필수 헤더가 누락되었습니다");
 			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
