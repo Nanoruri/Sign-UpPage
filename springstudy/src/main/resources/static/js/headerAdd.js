@@ -1,22 +1,28 @@
 
-export default class CustomFetch {//todo : 리팩토링 필요
+
+export default class CustomFetch {// todo : JS일관성을 위해 함수형으로 변경하기
   constructor(defaultHeaders = {}) {
     this.defaultHeaders = defaultHeaders;
   }
 
+  // 헤더를 포함한 fetch 요청을 보내는 함수
   async fetchWithHeaders(url, options = {}) {
-    // 기존 옵션에서 헤더를 가져오거나 빈 객체를 생성
-    options.headers = options.headers || {};
+    
+    // 추가하려는 헤더 설정
+    const customHeader = {
+      'Study': 'signupProject'
+    };
 
-    // 기본 헤더를 기존 헤더에 병합
-    options.headers = { ...this.defaultHeaders, ...options.headers };
+    // 기본 헤더, 옵션 헤더, 커스텀 헤더를 병합
+    const headers = {
+      ...this.defaultHeaders,
+      ...options.headers,
+      ...customHeader
+    };
 
-    //헤더 추가
-    options.headers['Study'] = 'signupProject';
 
-
-    // fetch 함수 호출
-    const response = await fetch(url, options);
+    // 지정된 URL, 옵션 및 헤더로 fetch 요청 수행
+    const response = await fetch(url, { ...options, headers });
 
     // 응답 반환
     return response;
