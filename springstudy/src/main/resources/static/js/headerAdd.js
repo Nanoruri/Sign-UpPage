@@ -1,21 +1,25 @@
-function fetchWithHeaders(url, options = {}) {
-  // 기본 헤더 설정
-  const defaultHeaders = {
-    'Study': 'signupProject',
-    'Authorization': 'Bearer your_token_here'
-  };
 
-  // 사용자 정의 헤더와 기본 헤더를 병합
-  const headers = new Headers(options.headers || {});
-  Object.entries(defaultHeaders).forEach(([key, value]) => {
-    headers.append(key, value);
-  });
+export default class CustomFetch {//todo : 리팩토링 필요
+  constructor(defaultHeaders = {}) {
+    this.defaultHeaders = defaultHeaders;
+  }
 
-  // 수정된 옵션으로 fetch 호출
-  return fetch(url, {...options, headers});
+  async fetchWithHeaders(url, options = {}) {
+    // 기존 옵션에서 헤더를 가져오거나 빈 객체를 생성
+    options.headers = options.headers || {};
+
+    // 기본 헤더를 기존 헤더에 병합
+    options.headers = { ...this.defaultHeaders, ...options.headers };
+
+    //헤더 추가
+    options.headers['Study'] = 'signupProject';
+
+
+    // fetch 함수 호출
+    const response = await fetch(url, options);
+
+    // 응답 반환
+    return response;
+  }
 }
 
-// 사용 예
-fetchWithHeaders('/study/')
-  .then(response => response.json())
-  .then(data => console.log(data));
