@@ -15,7 +15,7 @@ async function checkCookieAndRequest() {
 async function sendRequest() {
     
     try {
-        const response = await fetchWithHeaders("http://localhost:8082/study/", {
+        const response = await fetchWithHeaders("/study/", {
             method: "GET",
             credentials: "include" // 쿠키를 포함하여 요청을 보냄
         });
