@@ -37,10 +37,8 @@ public class CustomHeaderCheckFilter implements Filter {
 		//리소스의 헤더가 empty일 경우 CustomHeaderCheck 메서드 호출
 		if ("empty".equals(resourceHeader)) {
 			customHeaderCheck(httpRequest, httpResponse);
-			} else {// 나머지는 다음필터로 넘어감
-			chain.doFilter(request, response);
+			} chain.doFilter(request,response);
 		}
-	}
 
 	@Override
 	public void destroy() {
@@ -66,6 +64,7 @@ public class CustomHeaderCheckFilter implements Filter {
 			//todo : index페이지에서 /study/webjars/bootstrap/5.3.2/css/bootstrap.min.css.map이 이걸 탐... 디버그해보기
 			logger.error("필수 헤더가 누락되었습니다");
 			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			throw new IOException("필수 헤더가 누락되었습니다");
 		}
 
 	}
