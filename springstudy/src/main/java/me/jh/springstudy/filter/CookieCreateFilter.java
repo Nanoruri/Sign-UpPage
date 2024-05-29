@@ -51,7 +51,6 @@ public class CookieCreateFilter implements Filter {
 			cookie.setPath("/");// 쿠키의 경로 설정
 			httpResponse.addCookie(cookie);// 응답에 쿠키를 추가
 			logger.info("쿠키 생성");
-			return;
 		} else {
 			logger.info("쿠키가 이미 존재합니다.");
 		}
