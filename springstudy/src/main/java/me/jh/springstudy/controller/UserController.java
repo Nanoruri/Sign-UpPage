@@ -153,9 +153,9 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 *
 	 * @return 에러페이지 뷰 반환
 	 */
-	@GetMapping("/signupError")
+	@GetMapping("/error")
 	public String signupError() {
-		return "errors/signupError";
+		return "errors/error400";
 	}
 
 	/**

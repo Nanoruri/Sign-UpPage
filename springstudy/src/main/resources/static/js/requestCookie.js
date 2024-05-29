@@ -23,7 +23,8 @@ async function sendRequest() {
         if (response.ok) {
             const responseText = await response.text();
         } else {
-            alert("에러: " + response.status);// todo : alert말고  에러페이지 반환하게 변경
+            console.error("서버 응답 오류:", response.status);
+            window.location.href = "/study/error";
         }
     } catch (error) {
         console.error("요청 중 오류 발생:", error);
