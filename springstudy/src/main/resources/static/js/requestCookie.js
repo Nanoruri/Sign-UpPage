@@ -1,4 +1,4 @@
-import CustomFetch  from "./headerAdd.js";
+import fetchWithHeaders  from "./headerAdd.js";
 
 // 페이지 로드 시 쿠키 확인 및 서버 요청 함수
 async function checkCookieAndRequest() {
@@ -10,12 +10,12 @@ async function checkCookieAndRequest() {
     }
 }
 
-const customFetch = new CustomFetch();
+
 // 서버로 요청을 보내는 함수
 async function sendRequest() {
     
     try {
-        const response = await customFetch.fetchWithHeaders("http://localhost:8082/study/", {
+        const response = await fetchWithHeaders("http://localhost:8082/study/", {
             method: "GET",
             credentials: "include" // 쿠키를 포함하여 요청을 보냄
         });
