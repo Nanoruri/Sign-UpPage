@@ -14,9 +14,8 @@ import java.util.Optional;
 
 
 @Deprecated
-@Repository//todo : 여기부터
-public class MemberDaoEntityManager { //todo : 이 위치가..맞나..? DAO 인터페이스 있는데... Repository를 또 등록 해주는게 맞나...
-//todo : 클래스명 한번 더 생각해서 짜기
+@Repository
+public class MemberDaoEntityManager {
 	@PersistenceContext
 	private final EntityManager entityManager;
 
@@ -48,14 +47,13 @@ public class MemberDaoEntityManager { //todo : 이 위치가..맞나..? DAO 인�
 		//CriteriaQuery에 검색 조건 설정
 
 		//쿼리 실행 및 결과 반환
-		User user = entityManager.createQuery(query).getResultList().stream().findFirst().orElse(null);//todo : 람다식을 사용한 코드. 람다식 공부하기
-
+		User user = entityManager.createQuery(query).getResultList().stream().findFirst().orElse(null);
 		// 동적으로 생성된 검색 조건에 맞는 사용자 반환
 		return Optional.ofNullable(user);
 
 
 //		Session session = entityManager.unwrap(Session.class);
-//		Criteria criteria = session.createCriteria(User.class);//todo : createCriteria에서 JPA criteria로 변경
+//		Criteria criteria = session.createCriteria(User.class);
 //		// 동적으로 생성된 검색 조건 추가
 //		if (userId != null) {
 //			criteria.add(Restrictions.eq("userId", userId));

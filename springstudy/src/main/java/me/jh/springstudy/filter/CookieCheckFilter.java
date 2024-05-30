@@ -41,7 +41,7 @@ public class CookieCheckFilter implements Filter {
 
 //		if(httpRequest.getMethod().equals("GET")) {
 //			chain.doFilter(request, response);
-//			return;//todo : 임시조치
+//			return;
 //		}
 
 //		if ("signupProject".equals(customHeader) && httpRequest.getMethod().equals("POST")) {

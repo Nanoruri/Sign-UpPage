@@ -6,7 +6,7 @@ package me.jh.springstudy.exception.finds;
  * Use {@link me.jh.springstudy.exception.user.UserException} instead.
  */
 @Deprecated
-public class FindPwException extends RuntimeException {//todo : 이 클래스는 findPw 전반에 걸쳐 쓰임
+public class FindPwException extends RuntimeException {
 	private final FindPwExceptionType findPwExceptionType;
 
 	public FindPwException(FindPwExceptionType findPwExceptionType) {

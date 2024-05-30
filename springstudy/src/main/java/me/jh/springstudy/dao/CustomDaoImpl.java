@@ -14,8 +14,7 @@ import java.util.Optional;
 /**
  * 사용자 정보를 찾는 CustomDAO 구현 클래스.//
  */
-public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나..? DAO 인터페이스 있는데... Repository를 또 등록 해주는게 맞나...
-	//todo : 클래스명 한번 더 생각해서 짜기
+public class CustomDaoImpl implements CustomDao { //todo : CustomDao 인터페이스 이름 변경한다면 클래스명 변경하기
 	@PersistenceContext
 	private final EntityManager entityManager;
 
@@ -55,7 +54,7 @@ public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나
 
 
 //		Session session = entityManager.unwrap(Session.class);
-//		Criteria criteria = session.createCriteria(User.class);//todo : createCriteria에서 JPA criteria로 변경
+//		Criteria criteria = session.createCriteria(User.class);
 //		// 동적으로 생성된 검색 조건 추가
 //		if (userId != null) {
 //			criteria.add(Restrictions.eq("userId", userId));

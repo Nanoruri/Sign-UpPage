@@ -37,8 +37,8 @@ public class FindService {
 	 * @return 찾은 아이디 or null
 	 */
 	public String findId(String name, String phoneNum) {
-		User user = userDao.findByNameAndPhoneNum(name, phoneNum);// TODO : 이름과 이메일이 같으면 500에러 발생, 이메일 말고 다른걸로 받게 하기
-		return (user != null) ? user.getUserId() : null;//todo : 여기서 컨트롤러의 예외처리 해도 되나??
+		User user = userDao.findByNameAndPhoneNum(name, phoneNum);
+		return (user != null) ? user.getUserId() : null;
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class FindService {
 	 * @param phoneNum 사용자의 전화번호
 	 * @return 찾은 비밀번호 or null
 	 */
-	public boolean validateUser(String userId, String name, String phoneNum) {//todo : findBy properties, Criteria 사용
+	public boolean validateUser(String userId, String name, String phoneNum) {
 		boolean isValid = userDao.findByProperties(userId, name, phoneNum).isPresent();
 		log.info(isValid ? "사용자를 찾았습니다" + userId : "사용자를 찾을 수 없습니다.");
 		return isValid;
@@ -71,7 +71,7 @@ public class FindService {
 		if (optionalUser.isEmpty()) {
 			log.info("사용자에 대한 정보가 없습니다.");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
-		}// todo : validateUser에서 한번 체크하는데 예외가 필요할까..
+		}
 		User user = optionalUser.get();
 
 		log.info("사용자를 찾았습니다");

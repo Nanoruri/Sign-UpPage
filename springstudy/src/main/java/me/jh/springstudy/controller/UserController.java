@@ -70,7 +70,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 			log.info("로그인 실패");
 			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
 			// UserException으로 예외 투척
-		}// todo : loginService.loginCheck(userId, password) 하고 서비스 클래스의 loginCheck는 void로..?
+		}
 		log.info("로그인 성공");
 		return "redirect:/";//로그인 성공시 메인페이지로 리다이렉트
 	}
@@ -270,8 +270,8 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 //		if (!findService.changePassword(changePasswordUser, newPassword)) {
 //			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
-//			return "redirect:/findPw";//todo : validateUser에서 한번 거르니까 여기서는 필요없지 않나?
-//		} else if (newPassword == null) {//todo : 프론트에서 Null 체크 함
+//			return "redirect:/findPw";//해당 내용은 validateUser에서 필터링하기 때문에 주석처리함
+//		} else if (newPassword == null) {
 //			throw new UserException(UserErrorType.PASSWORD_NULL);
 //		}
 		return "redirect:/passwordChangeSuccess";

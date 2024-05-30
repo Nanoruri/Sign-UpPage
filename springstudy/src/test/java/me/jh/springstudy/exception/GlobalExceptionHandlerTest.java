@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class GlobalExceptionHandlerTest {
 
-	@Mock//todo : powermock을 사용하면 static 메서드를 mock할 수 있다. 근데 권장되지 않는다.
+	@Mock//powermock을 사용하면 static 메서드를 mock할 수 있다. 근데 권장되지 않는다.
 	private Logger logger;
 	private UserException userException;
 
@@ -37,7 +37,7 @@ public class GlobalExceptionHandlerTest {
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 		assertEquals(userException.getMessage(), responseEntity.getBody());
 //		verify(logger).error("MyException: {}", userException.getExceptionType().getMessage());
-		//todo : 테스트 대상 클래스에 static으로 선언된 logger를 mock으로 만들어서 verify를 할 수 없다.
+		//테스트 대상 클래스에 static으로 선언된 logger를 mock으로 만들어서 verify를 할 수 없다.
 		//fuckfuckfuckfuck
 	}
 

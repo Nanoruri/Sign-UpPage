@@ -113,7 +113,7 @@ public class UserControllerTest {
 		Mockito.doNothing().when(signupService).registerMember(user);
 
 		mockMvc.perform(post("/signup")
-						.flashAttr("user", user))//todo : flashAttr이 뭔지 알아보기
+						.flashAttr("user", user))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/signupSuccess"));
 

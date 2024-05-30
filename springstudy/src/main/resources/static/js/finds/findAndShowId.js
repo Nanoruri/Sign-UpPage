@@ -1,4 +1,4 @@
-function doFindId() {// todo : 모달로 아이디 보여주기
+function doFindId() {
 
     var name = document.getElementById('inputName').value;
     var phoneNum = document.getElementById('inputPhoneNum').value;
