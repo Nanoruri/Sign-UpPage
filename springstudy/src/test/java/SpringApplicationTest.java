@@ -1,6 +1,6 @@
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.MySpringBootApplication;
-import me.jh.springstudy.repositorydao.UserDao;
+import me.jh.springstudy.dao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

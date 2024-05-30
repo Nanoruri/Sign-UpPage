@@ -1,4 +1,4 @@
-package me.jh.springstudy.contorller;
+package me.jh.springstudy.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,9 +155,9 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 *
 	 * @return 에러페이지 뷰 반환
 	 */
-	@GetMapping("/signupError")
+	@GetMapping("/error")
 	public String signupError() {
-		return "errors/signupError";
+		return "errors/error400";
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		String phoneNum = reqData.get("phoneNum");
 
 		if (findService.findId(name, phoneNum) == null) {
-			log.info("아이디 찾기 실패");
+			log.error("아이디 찾기 실패");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 //		} else if (name.isBlank()) {

@@ -2,7 +2,6 @@ package me.jh.springstudy.controller;
 
 
 import me.jh.springstudy.config.SecurityConfig;
-import me.jh.springstudy.contorller.UserController;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;

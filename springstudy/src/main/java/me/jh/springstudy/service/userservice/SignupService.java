@@ -3,7 +3,7 @@ package me.jh.springstudy.service.userservice;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
-import me.jh.springstudy.repositorydao.UserDao;
+import me.jh.springstudy.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

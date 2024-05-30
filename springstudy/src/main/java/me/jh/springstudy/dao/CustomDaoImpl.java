@@ -1,4 +1,4 @@
-package me.jh.springstudy.repositorydao;
+package me.jh.springstudy.dao;
 
 import me.jh.springstudy.entitiy.User;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 /**
- * 사용자 정보를 찾는 CustomDAO 구현 클래스.
+ * 사용자 정보를 찾는 CustomDAO 구현 클래스.//
  */
 public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나..? DAO 인터페이스 있는데... Repository를 또 등록 해주는게 맞나...
 	//todo : 클래스명 한번 더 생각해서 짜기
@@ -47,7 +47,8 @@ public class CustomDaoImpl implements CustomDao { //todo : 이 위치가..맞나
 		//CriteriaQuery에 검색 조건 설정
 
 		//쿼리 실행 및 결과 반환
-		User user = entityManager.createQuery(query).getResultList().stream().findFirst().orElse(null);//todo :메서드 체이닝,  스트림 공부
+		User user = entityManager.createQuery(query).getResultList().stream().findFirst().orElse(null);
+		//todo :메서드 체이닝,  스트림 공부, getSingleResult()공부하기
 
 		// 동적으로 생성된 검색 조건에 맞는 사용자 반환
 		return Optional.ofNullable(user);
