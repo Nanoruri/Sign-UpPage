@@ -24,8 +24,8 @@ function doFindId() {
                 return response.json();
             }
         })
-        .then(function (userId) {
-            displayModal(userId);
+        .then(function (data) {
+            displayModal("아이디는" + data.userId +"입니다.");
         })
         .catch(function (error) {
             console.error('아이디를 찾는 중 오류 발생:', error);

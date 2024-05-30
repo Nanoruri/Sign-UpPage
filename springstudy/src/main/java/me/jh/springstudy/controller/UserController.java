@@ -16,6 +16,7 @@ import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;
 import me.jh.springstudy.service.userservice.SignupService;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -176,11 +177,15 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "finds/findIdPage";
 	}
 
-
-	// todo : findId email부분 ->전화번호로 변경하기 / service에서도 변경하기 / Userdao에서도 변경하기
+	/**
+	 * 이름과 전화번호를 기준으로 아이디를 찾아주는 API
+	 *
+	 * @param reqData Json형식의 데이터로 이름과 전화번호 값을 들고옴
+	 * @return http상태코드 200과 함께 Json형식의 데이터로 아이디를 반환함.
+	 */
 	@PostMapping("/findId")
 	@ResponseBody
-	public ResponseEntity<String> findId(@RequestBody Map<String, String> reqData) {
+	public ResponseEntity<Map<String,String>> findId(@RequestBody Map<String, String> reqData) {
 		String name = reqData.get("name");
 		String phoneNum = reqData.get("phoneNum");
 
@@ -196,7 +201,10 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 		log.info("아이디 찾기 성공");
 
-		return ResponseEntity.ok("아이디는" + findService.findId(name, phoneNum) + "입니다.");//todo : 더 줄일 수 있지 않나
+		Map<String, String> response = new HashMap<>();
+		response.put("userId",findService.findId(name, phoneNum));
+
+		return ResponseEntity.ok(response);
 	}
 
 	/**
