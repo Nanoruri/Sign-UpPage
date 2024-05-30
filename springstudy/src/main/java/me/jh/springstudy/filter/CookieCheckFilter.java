@@ -68,7 +68,7 @@ public class CookieCheckFilter implements Filter {
 		String cookieHeader = httpRequest.getHeader("Cookie");
 		String cookieValue = "Study=signupProject";
 
-		logger.info("customHeader : {}", cookieHeader);
+		logger.info("cookieHeader : {}", cookieHeader);
 
 
 		if (cookieValue.equals(cookieHeader)) {
