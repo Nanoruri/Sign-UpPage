@@ -213,10 +213,10 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 * @param model findUserPw라는 이름으로 새로윤 User객체 생성
 	 * @return 비밀번호 찾기에 대한 인증페이지 뷰 반환
 	 */
-	@GetMapping("/findPw")
-	public String findPw(Model model) {
-		model.addAttribute("findUserPw", new User());
-		return "finds/findPwPage";
+	@GetMapping("/findPassword")
+	public String findPassword(Model model) {
+		model.addAttribute("findUserPassword", new User());
+		return "finds/findPasswordPage";
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
 	 */
 
-	@PostMapping("/findPw")
+	@PostMapping("/findPassword")
 	public String findPassword(@RequestBody Map<String,String> reqData, Model model) {
 //		boolean validateUser = findService.validateUser(userId, name, email);
 		String userId = reqData.get("userId");

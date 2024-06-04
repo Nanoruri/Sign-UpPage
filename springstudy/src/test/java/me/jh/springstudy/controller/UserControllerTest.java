@@ -220,12 +220,12 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testFindPwForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/findPw"))
+	public void testFindPasswordForm() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/findPassword"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/findPwPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserPw"))
-				.andExpect(MockMvcResultMatchers.model().attribute("findUserPw", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserPasword"))
+				.andExpect(MockMvcResultMatchers.model().attribute("findUserPassword", Matchers.instanceOf(User.class)));
 	}
 
 	@Test
@@ -236,7 +236,7 @@ public class UserControllerTest {
 
 		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
 
-		mockMvc.perform(post("/findPw")
+		mockMvc.perform(post("/findPassword")
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
@@ -254,7 +254,7 @@ public class UserControllerTest {
 
 		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(false);
 
-		mockMvc.perform(post("/findPw")
+		mockMvc.perform(post("/findPassword")
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
