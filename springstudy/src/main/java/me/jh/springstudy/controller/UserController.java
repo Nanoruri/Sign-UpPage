@@ -248,12 +248,12 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 
-		/**
-		 * 비밀번호 변경하는 페이지
-		 *
-		 * @param model newpassword 이름으로 새로운 User객체 생성
-		 * @return 새 패스워드 설정 뷰 반환
-		 */
+//		/**
+//		 * 비밀번호 변경하는 페이지
+//		 *
+//		 * @param model newpassword 이름으로 새로운 User객체 생성
+//		 * @return 새 패스워드 설정 뷰 반환
+//		 */
 //		@GetMapping("/passwordChange")
 //		public String resetPassword(Model model) {
 //
