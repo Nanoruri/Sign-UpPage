@@ -4,6 +4,8 @@ import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import me.jh.springstudy.dao.UserDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class SignupService {
 
 	private final UserDao userDao;
 	private final PasswordEncoder passwordEncoder;
+	private static final Logger log = LoggerFactory.getLogger(SignupService.class);
 
 
 	@Autowired
@@ -32,12 +35,15 @@ public class SignupService {
 	 */
 	public void registerMember(User user) {//로그인 할때에도 한번더 중복 검사 하게 끔하고 예외가 나오면 Catch하도록
 		if (!assureIdPattern(user.getUserId())) {//user데이터를 가져오기 전에 패턴을 확인하여 예외를 던짐
+			log.warn("아이디 패턴이 일치하지 않습니다.");
 			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);
 		}else if (isDuplicateEmail(user.getEmail())) {
+			log.warn("이메일이 이미 존재합니다");
 			throw new UserException(UserErrorType.USER_ALREADY_EXIST);
 		}
 
 		if (userDao.findById(user.getUserId()).isPresent()) {
+			log.warn("이미 가입한 사용자가 있습니다.");
 			throw new UserException(UserErrorType.ID_ALREADY_EXIST);// todo : 이미 duplicatId의 매개변수가 pk인데 이 부분이 필요한가??
 //		} else if (isDuplicateId(user.getUserId())) {
 //			throw new UserException(UserErrorType.ID_ALREADY_EXIST);
@@ -73,8 +79,9 @@ public class SignupService {
 	 */
 	public boolean isDuplicateId(String userId) {
 		if(!assureIdPattern(userId)){
+			log.warn("아이디 패턴 불일치");
 			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);
-		};
+		}
 		return userDao.existsById(userId);//아이디 중복 검사 하는 메서드
 	}
 
@@ -86,8 +93,9 @@ public class SignupService {
 	 */
 	public boolean isDuplicateEmail(String email) {
 		if(!assureEmailPattern(email)){
+			log.warn("이메일 패턴 불일치");
 			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);
-		};
+		}
 		return userDao.existsByEmail(email);
 	}
 
