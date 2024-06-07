@@ -199,7 +199,7 @@ public class UserControllerTest {
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디는" + userId + "입니다."));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId));
 
 		Mockito.verify(findService, Mockito.times(2)).findId(name, phoneNum);//findId메서드가 왜 두번 호출 되었는지 확인
 	}
@@ -224,7 +224,7 @@ public class UserControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findPassword"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserPasword"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserPassword"))
 				.andExpect(MockMvcResultMatchers.model().attribute("findUserPassword", Matchers.instanceOf(User.class)));
 	}
 
