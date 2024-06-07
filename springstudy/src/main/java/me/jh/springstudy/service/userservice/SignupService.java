@@ -31,7 +31,7 @@ public class SignupService {
 	 * @param user 회원가입 정보를 담은 Member 객체
 	 */
 	public void registerMember(User user) {//로그인 할때에도 한번더 중복 검사 하게 끔하고 예외가 나오면 Catch하도록
-		if (assureIdPattern(user.getUserId())) {//user데이터를 가져오기 전에 패턴을 확인하여 예외를 던짐
+		if (!assureIdPattern(user.getUserId())) {//user데이터를 가져오기 전에 패턴을 확인하여 예외를 던짐
 			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);
 		}else if (isDuplicateEmail(user.getEmail())) {
 			throw new UserException(UserErrorType.USER_ALREADY_EXIST);
@@ -72,7 +72,7 @@ public class SignupService {
 	 * @return 검사를 통과한 ID문자열을 가지고 DB에서 사용자 조회
 	 */
 	public boolean isDuplicateId(String userId) {
-		if(assureIdPattern(userId)){
+		if(!assureIdPattern(userId)){
 			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);
 		};
 		return userDao.existsById(userId);//아이디 중복 검사 하는 메서드
@@ -98,7 +98,7 @@ public class SignupService {
 	 */
 	private boolean assureIdPattern(String identifier) {
 		String idRegex = "^[a-zA-Z0-9]{4,20}$";
-		return !identifier.matches(idRegex);
+		return identifier.matches(idRegex);
 	}
 
 	/**
