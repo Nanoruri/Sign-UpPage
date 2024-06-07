@@ -68,7 +68,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
 	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
 		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
-			log.info("로그인 실패");
+			log.warn("로그인 실패");
 			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
 			// UserException으로 예외 투척
 		}
@@ -119,7 +119,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		String userId = reqData.get("userId");
 
 		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
-			log.info("중복된 ID 발견.DB 확인 요망");
+			log.warn("중복된 ID 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.ID_ALREADY_EXIST);//중복O
 			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.
 		}
@@ -133,7 +133,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		String email = reqData.get("email");
 
 		if (signupService.isDuplicateEmail(email)) {
-			log.info("중복된 Email 발견.DB 확인 요망");
+			log.warn("중복된 Email 발견.DB 확인 요망");
 			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;
 		}
 		log.info("Email 중복검사 성공");
@@ -190,7 +190,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		String phoneNum = reqData.get("phoneNum");
 
 		if (findService.findId(name, phoneNum) == null) {
-			log.error("아이디 찾기 실패");
+			log.warn("아이디 찾기 실패");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 //		} else if (name.isBlank()) {
@@ -234,7 +234,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		String phoneNum = reqData.get("phoneNum");
 
 		if (!findService.validateUser(userId, name, phoneNum)) {//실패로직..
-			log.info("잘못된 입력입니다");
+			log.warn("잘못된 입력입니다");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 

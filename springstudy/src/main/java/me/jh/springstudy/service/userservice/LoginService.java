@@ -42,7 +42,7 @@ public class LoginService {
 		// 아이디 중복 검사로 해결
 
 		if (user.isEmpty()) {//로그인 실패 시 예외처리
-			log.info("로그인 실패");
+			log.warn("로그인 실패");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 

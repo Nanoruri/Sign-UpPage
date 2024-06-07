@@ -69,15 +69,15 @@ public class FindService {
 
 
 		if (optionalUser.isEmpty()) {
-			log.info("사용자에 대한 정보가 없습니다.");
+			log.warn("사용자에 대한 정보가 없습니다.");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 		User user = optionalUser.get();
 
 		log.info("사용자를 찾았습니다");
-		log.info("사용자 ID :" + user.getUserId());
-		log.info("사용자 이름 :" + user.getName());
-		log.info("사용자 전화번호 :" + user.getPhoneNum());
+		log.info("사용자 ID :{}", user.getUserId());
+		log.info("사용자 이름 :{}", user.getName());
+		log.info("사용자 전화번호 :{}", user.getPhoneNum());
 
 		// 새로운 비밀번호로 업데이트
 		user.setPassword(passwordEncoder.encode(newPassword));
