@@ -81,17 +81,18 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency><!-- 로그 -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.32</version>
-        </dependency>
+        <!--스프링 부트에서는 slf4j와 로그백을 기본적으로 제공함-->
+<!--        <dependency> &lt;!&ndash; 로그 &ndash;&gt;-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>slf4j-api</artifactId>-->
+<!--            <version>1.7.32</version>-->
+<!--        </dependency>-->
 
-        <dependency><!-- 로그 구현체 -->
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.9</version>
-        </dependency>
+<!--        <dependency>&lt;!&ndash; 로그 구현체 &ndash;&gt;-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-classic</artifactId>-->
+<!--            <version>1.2.9</version>-->
+<!--        </dependency>-->
 
 
         <dependency><!--타임리프-->
