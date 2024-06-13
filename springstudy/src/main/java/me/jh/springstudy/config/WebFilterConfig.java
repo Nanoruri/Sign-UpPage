@@ -1,10 +1,10 @@
 package me.jh.springstudy.config;
 
 
-import me.jh.springstudy.filter.CookieCheckFilter;
-import me.jh.springstudy.filter.LoggingFilter;
-import me.jh.springstudy.filter.CookieCreateFilter;
 import me.jh.springstudy.filter.CustomHeaderCheckFilter;
+import me.jh.springstudy.filter.LoggingFilter;
+import me.jh.springstudy.filter.SessionCheckFilter;
+import me.jh.springstudy.filter.SessionCreateFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +27,10 @@ public class WebFilterConfig {
 	}
 
 	@Bean
-	public FilterRegistrationBean<CookieCreateFilter> createCookieFilter() {
+	public FilterRegistrationBean<SessionCreateFilter> sessionCreateFilter() {
 
-		FilterRegistrationBean<CookieCreateFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new CookieCreateFilter());
+		FilterRegistrationBean<SessionCreateFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new SessionCreateFilter());
 		registrationBean.setOrder(1);
 		registrationBean.addUrlPatterns("/*");
 
@@ -39,10 +39,10 @@ public class WebFilterConfig {
 
 
 	@Bean
-	public FilterRegistrationBean<CookieCheckFilter> cookieCheckFilter() {
+	public FilterRegistrationBean<SessionCheckFilter> sessionCheckFilter() {
 
-		FilterRegistrationBean<CookieCheckFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new CookieCheckFilter());
+		FilterRegistrationBean<SessionCheckFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new SessionCheckFilter());
 		registrationBean.setOrder(2);
 		registrationBean.addUrlPatterns("/*");
 
@@ -50,7 +50,7 @@ public class WebFilterConfig {
 	}
 
 	@Bean
-	public FilterRegistrationBean<CustomHeaderCheckFilter> customHeaderCheckFilter () {
+	public FilterRegistrationBean<CustomHeaderCheckFilter> customHeaderCheckFilter() {
 
 		FilterRegistrationBean<CustomHeaderCheckFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new CustomHeaderCheckFilter());

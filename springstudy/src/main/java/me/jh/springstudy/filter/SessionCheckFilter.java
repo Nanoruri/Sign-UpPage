@@ -6,15 +6,16 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
  * 쿠키를 확인하고 없다면 에러를 반환하는 필터 클래스.
  */
 
-public class CookieCheckFilter implements Filter {
+public class SessionCheckFilter implements Filter {
 
-	private static final Logger logger = LoggerFactory.getLogger(CookieCheckFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(SessionCheckFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -63,20 +64,36 @@ public class CookieCheckFilter implements Filter {
 //		chain.doFilter(request, response);
 
 
+//
+//		String cookieHeader = httpRequest.getHeader("Cookie");
+//		String cookieValue = "Study=signupProject";
+//
+//		logger.info("cookieHeader : {}", cookieHeader);
+//
+//
+//		if (cookieValue.equals(cookieHeader)) {
+//			chain.doFilter(request, response);
+//		} else {
+//			logger.warn("필수 쿠키가 누락되었습니다.");
+//			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 쿠키가 누락되었습니다.");
+//		}
 
+		HttpSession session = httpRequest.getSession(); // 세션이 없을 때 새로 생성하지 않도록 설정
 
-		String cookieHeader = httpRequest.getHeader("Cookie");
-		String cookieValue = "Study=signupProject";
+		String sessionAttribute = (session != null) ? (String) session.getAttribute("Study") : null;
+		String requiredValue = "signupProject";
 
-		logger.info("cookieHeader : {}", cookieHeader);
+		logger.info("sessionAttribute : {}", sessionAttribute);
 
-
-		if (cookieValue.equals(cookieHeader)) {
+		if (requiredValue.equals(sessionAttribute)) {
+			logger.info("세션 속성이 존재합니다. 다음 필터를 호출합니다.");
 			chain.doFilter(request, response);
 		} else {
-			logger.info("필수 쿠키가 누락되었습니다.");
-			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 쿠키가 누락되었습니다.");
+			logger.warn("필수 세션 속성이 누락되었습니다.");
+			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 세션 속성이 누락되었습니다.");
 		}
+
+
 	}
 
 
