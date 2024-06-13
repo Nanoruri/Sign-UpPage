@@ -21,6 +21,7 @@ import java.util.Map;
 
 /**
  * 사용자 관련 요청을 처리하는 컨트롤러 클래스.
+ * 회원가입, 로그인, 아이디/비밀번호 찾기 등의 기능을 제공.
  */
 @Controller
 public class UserController {//todo : 컨트롤러 분리하기(분리 기준 생각하기)
@@ -28,7 +29,6 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	private final static Logger log = LoggerFactory.getLogger(UserController.class);// Log 찍는 내용
 	private final SignupService signupService;
 	private final LoginService loginService;
-
 	private final FindService findService;
 
 	/**
@@ -47,7 +47,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 
 	/**
-	 * 로그인 페이지를 처리하는 GET 요청 메서드
+	 * 로그인 페이지를 보여주는 API
 	 *
 	 * @param model 뷰 렌더링을 위해 속성을 추가하는 모델
 	 * @return 로그인 페이지 뷰 반환
@@ -59,11 +59,13 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 로그인을 위한 로그인 체크 POST 요청 메서드.
+	 * 로그인 서비스를 호출하는 API
+	 * 사용자가 입력한 ID와 Password를 받아 로그인 서비스를 호출
 	 *
 	 * @param userId   로그인에 사용될 ID HTML 파라미터
 	 * @param password 로그인에 사용될 Password HTML 파라미터
 	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
+	 * @throws UserException 로그인 실패시 아이디 및 패스워드 오류 메세지를 반환
 	 */
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
 	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
@@ -79,7 +81,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
 	/**
-	 * 회원가입 페이지를 처리하는 GET 요청 메서드
+	 * 회원가입 페이지를 보여주는 API
 	 *
 	 * @param model member란 속성이름으로 새로운 User객체 생성
 	 * @return 회원가입 페이지 뷰 반환
@@ -91,11 +93,13 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "signup/signupPage";
 	}
 
-	/**
-	 * 회원가입을 위한 POST 요청 메서드.
+	/**.
+	 * 회원가입 서비스를 호출하는 API.
+	 * 회원가입 성공시 Success페이지로 리다이렉트
 	 *
-	 * @param user 회원가입에 필요한 정보를 포함한 Entity
+	 * @param user 사용자가 입력한 정보를 전달받아 회원가입에 필요한 정보를 담은 객체
 	 * @return 회원가입 성공시 Success페이지로 리다이렉트, 실패하면 signupError페이지로 리다이렉트
+	 * @implNote 이 메서드는 {@link SignupService#registerMember(User)}를 사용하여 회원가입을 수행. 예외처리는 서비스 클래스에서 수행.
 	 */
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute("user") @Validated User user) {
@@ -108,10 +112,13 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 사용자 ID가 중복인지 확인하는 POST 요청 메서드.
+	 * 사용자 ID가 중복인지 확인하는 API.
+	 * 사용자 ID가 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환.
 	 *
 	 * @param reqData 중복 여부를 확인할 사용자 ID
 	 * @return 중복 여부에 따른 ResponseEntity. 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환합니다.
+	 * @throws UserException 사용자 ID가 중복될 경우 아이디 중복 오류 메세지를 반환
+	 * @implNote 이 메서드는 {@link SignupService#isDuplicateId(String)}를 사용하여 사용자 ID 중복 여부를 확인.
 	 */
 	@PostMapping("/idCheck")
 	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
@@ -127,6 +134,14 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
 	}
 
+	/**
+	 * 사용자 Email이 중복인지 확인하는 API.
+	 * 사용자 Email이 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환.
+	 * @param reqData 중복 여부를 확인할 사용자 Email
+	 * @return 중복 여부에 따른 ResponseEntity. 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환합니다.
+	 * @throws UserException 사용자 Email이 중복될 경우 이메일 중복 오류 메세지를 반환
+	 * @implNote 이 메서드는 {@link SignupService#isDuplicateEmail(String)}를 사용하여 사용자 Email 중복 여부를 확인.
+	 */
 	@PostMapping("/emailCheck")
 	@ResponseBody
 	public ResponseEntity<String> checkDuplicateEmail(@RequestBody Map<String, String> reqData) {
@@ -134,7 +149,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 		if (signupService.isDuplicateEmail(email)) {
 			log.warn("중복된 Email 발견.DB 확인 요망");
-			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;
+			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;//todo: Email용 에러코드 만들어야함?
 		}
 		log.info("Email 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 이메일입니다.");
@@ -142,7 +157,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 
 	/**
-	 * 회원가입 성공시 Success페이지를 보여주는 GET 요청 메서드
+	 * 회원가입 성공시 Success페이지를 보여주는 API
 	 *
 	 * @return 회원가입 성공 페이지  뷰 반환
 	 */
@@ -152,7 +167,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 에러페이지를 보여주는 GET 요청 메서드
+	 * 에러페이지를 보여주는 API
 	 *
 	 * @return 에러페이지 뷰 반환
 	 */
@@ -162,15 +177,22 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 메인페이지를 보여주는 GET 요청 메서드
+	 * 메인페이지를 보여주는 API
 	 *
-	 * @return 메인페이지 뷰 반환(로그인 성공 여부용 임시 페이지)
+	 * @return 메인페이지 뷰 반환
 	 */
 	@GetMapping("/")
 	public String index() {
 		return "index";
 	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
 
+
+	/**
+	 * 아이디 찾기 페이지를 보여주는 API
+	 *
+	 * @param model findUserId라는 이름으로 새로운 User객체 생성
+	 * @return 아이디 찾기에 대한 인증페이지 뷰 반환
+	 */
 	@GetMapping("/findId")
 	public String findId(Model model) {
 		model.addAttribute("findUserId", new User());
@@ -182,12 +204,15 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 *
 	 * @param reqData Json형식의 데이터로 이름과 전화번호 값을 들고옴
 	 * @return http상태코드 200과 함께 Json형식의 데이터로 아이디를 반환함.
+	 * @throws UserException 사용자 이름과 전화번호가 일치하지 않을 경우 사용자를 찾을 수 없다는 메세지를 반환
+	 * @implNote 이 메서드는 {@link FindService#findId(String, String)}를 사용하여 사용자를 조회.
 	 */
 	@PostMapping("/findId")
 	@ResponseBody
 	public ResponseEntity<Map<String,String>> findId(@RequestBody Map<String, String> reqData) {
 		String name = reqData.get("name");
 		String phoneNum = reqData.get("phoneNum");
+
 
 		if (findService.findId(name, phoneNum) == null) {
 			log.warn("아이디 찾기 실패");
@@ -208,7 +233,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 비밀번호 찾는 페이지
+	 * 비밀번호 찾는 페이지를 보여주는 API
 	 *
 	 * @param model findUserPw라는 이름으로 새로윤 User객체 생성
 	 * @return 비밀번호 찾기에 대한 인증페이지 뷰 반환
@@ -220,10 +245,14 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 비밀번호 찾는 페이지에 대한 유저 인증 로직
+	 * 비밀번호 찾는 페이지에 대한 유저 인증하는 API
+	 * 사용자가 입력한 이름과 전화번호로 사용자를 찾아서 비밀번호 변경 페이지로 이동
+	 * 사용자가 없을 경우 사용자를 찾을 수 없다는 메세지를 반환
 	 *
 	 * @param reqData 사용자 아이디, 이름, 전화번호
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
+	 * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 찾기에 실패할 경우 사용자를 찾을 수 없다는 메세지를 반환
+	 * @implNote 이 메서드는 {@link FindService#validateUser(String, String, String)}를 사용하여 사용자를 조회.
 	 */
 
 	@PostMapping("/findPassword")
@@ -262,11 +291,13 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //		}
 
 	/**
-	 * 비밀번호 변경로직
+	 * 비밀번호 변경서비스를 호출하는 API
+	 * 사용자가 입력한 새로운 비밀번호로 비밀번호를 변경
 	 *
 	 * @param changePasswordUser 비밀번호 변경할 사용자
 	 * @param reqData 새로운 비밀번호
 	 * @return 비밀번호변경 성공 시 성공 메세지 페이지로 반환 후 구현한 로그인 버튼으로 로그인 페이지로 돌아감.
+	 * @implNote 이 메서드는 {@link FindService#changePassword(User, String)}를 사용하여 사용자를 조회. 예외처리는 서비스 클래스에서 수행.
 	 */
 
 	@PostMapping("/passwordChange")
