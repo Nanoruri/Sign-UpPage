@@ -38,4 +38,4 @@ function getCookie(name) {
 }
 
 // 페이지 로드 시 checkCookieAndRequest 함수 실행
-window.onload = checkCookieAndRequest;
+document.addEventListener('DOMContentLoaded', checkCookieAndRequest);
