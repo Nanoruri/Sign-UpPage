@@ -2,9 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<meta name="veiwport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
 	<script type="module" th:src="@{/js/requestCookie.js}"></script>
+	<script th:src="@{/js/checkLogout.js}"></script>
 	<link rel="stylesheet" th:href="@{/css/index.css}">
 	<title>메인 타이틀</title>
 </head>
@@ -21,10 +22,14 @@
 				<button type="submit" class="btn btn-info border-2">가입하기</button>
 			</form>
 
-			<form method="get" th:action="@{/login}" th:object="${signin}" class="mb-3">
-				<!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
-				<button type="submit" class="btn btn-primary border-2">로그인</button>
-			</form>
+<!--			<form method="get" th:action="@{/login}" th:object="${signin}" class="mb-3">-->
+<!--				&lt;!&ndash;메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청&ndash;&gt;-->
+<!--				<button type="submit" class="btn btn-primary border-2">로그인</button>-->
+<!--			</form>-->
+
+			<div id="loginLogoutButton" class="mb-3">
+				<!-- JavaScript로 로그인 상태에 따라 버튼을 동적으로 변경 -->
+			</div>
 
 
 			<div class="btn-group mb-3" role="group" aria-label="아이디 및 비밀번호 찾기">
@@ -36,6 +41,7 @@
 					<button type="submit" class="btn btn-outline-primary border-2">비밀번호 찾기</button>
 				</form>
 			</div>
+
 
 		</div>
 		<ul class="bg-bubbles">
@@ -51,6 +57,11 @@
 			<li></li>
 		</ul>
 	</div>
+
+
+	<script th:inline="javascript">
+		var isLoggedIn = /*[[${LoggedIn}]]*/ false;
+    </script>
 <!--		<script th:src="@{/webjar/bootstrap/5.3.2/js/bootstrap.min.js}"></script>-->
 </body>
 </html>

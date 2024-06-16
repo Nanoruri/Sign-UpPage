@@ -16,6 +16,7 @@ import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;
 import me.jh.springstudy.service.userservice.SignupService;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,14 +69,21 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 * @throws UserException 로그인 실패시 아이디 및 패스워드 오류 메세지를 반환
 	 */
 	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
-	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password) {
+	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password, HttpSession session) {
 		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
 			log.warn("로그인 실패");
 			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
 			// UserException으로 예외 투척
 		}
 		log.info("로그인 성공");
+		session.setAttribute("userId", userId);//세션에 userId 저장
 		return "redirect:/";//로그인 성공시 메인페이지로 리다이렉트
+	}
+
+	@PostMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
 	}
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -182,7 +190,12 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 * @return 메인페이지 뷰 반환
 	 */
 	@GetMapping("/")
-	public String index() {
+	public String index(Model model, HttpSession session)
+	{if (session.getAttribute("userId") != null) {
+		model.addAttribute("LoggedIn",true);
+	}else {
+		model.addAttribute("LoggedIn",false);
+	}
 		return "index";
 	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
 
