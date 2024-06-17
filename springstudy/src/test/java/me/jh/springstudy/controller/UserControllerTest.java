@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -43,6 +44,8 @@ public class UserControllerTest {
 	private LoginService loginService;
 	@MockBean
 	private FindService findService;
+	@MockBean
+	private HttpSession session;
 
 
 	@Test
@@ -50,6 +53,28 @@ public class UserControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("index"));
+	}
+
+	@Test
+	public void testIndexFormWhenLogin() throws Exception {
+
+		when(session.getAttribute("userId")).thenReturn("testUser");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/")
+						.sessionAttr("userId", "testUser"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("index"))
+				.andExpect(model().attribute("LoggedIn", true))
+				.andExpect(request().sessionAttribute("userId", "testUser"));
+	}
+
+	@Test
+	public void testIndexFormWhenLogout() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("index"))
+				.andExpect(model().attribute("LoggedIn", false))
+				.andExpect(request().sessionAttributeDoesNotExist("userId"));
 	}
 
 
