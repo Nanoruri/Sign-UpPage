@@ -23,9 +23,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @WebMvcTest(controllers = UserController.class) // YourController는 실제 컨트롤러 클래스명으로 대체해야 합니다.
@@ -67,7 +67,7 @@ public class UserControllerTest {
 		String userId = "test123";
 		String password = "test123";
 
-		Mockito.when(loginService.loginCheck(userId, password)).thenReturn(true);
+		when(loginService.loginCheck(userId, password)).thenReturn(true);
 
 		mockMvc.perform(post("/loginCheck")
 						.param("userId", userId)
@@ -81,7 +81,7 @@ public class UserControllerTest {
 		String userId = "test123";
 		String password = "test";
 
-		Mockito.when(loginService.loginCheck(userId, password)).thenReturn(false);
+		when(loginService.loginCheck(userId, password)).thenReturn(false);
 
 		mockMvc.perform(post("/loginCheck")
 						.param("userId", userId)
@@ -124,7 +124,7 @@ public class UserControllerTest {
 	public void testIdCheck() throws Exception {
 		String userId = "test1234";
 
-		Mockito.when(signupService.isDuplicateId(userId)).thenReturn(false);
+		when(signupService.isDuplicateId(userId)).thenReturn(false);
 		//실제 메서드의 return값은 true라서 테스트 코드에는 false로 설정해야 중복x가 나옴
 
 		mockMvc.perform(post("/idCheck")
@@ -140,7 +140,7 @@ public class UserControllerTest {
 	public void testIdCheckConflict() throws Exception {
 		String userId = "test123";
 
-		Mockito.when(signupService.isDuplicateId(userId)).thenReturn(true);
+		when(signupService.isDuplicateId(userId)).thenReturn(true);
 
 		mockMvc.perform(post("/idCheck")
 						.contentType("application/json")
@@ -154,7 +154,7 @@ public class UserControllerTest {
 	public void testEmailCheck() throws Exception {
 		String email = "test@test.com";
 
-		Mockito.when(signupService.isDuplicateEmail(email)).thenReturn(false);
+		when(signupService.isDuplicateEmail(email)).thenReturn(false);
 
 		mockMvc.perform(post("/emailCheck")
 						.contentType("application/json")
@@ -168,7 +168,7 @@ public class UserControllerTest {
 	public void testEmailCheckConflict() throws Exception {
 		String email = "testfaild@test.com";
 
-		Mockito.when(signupService.isDuplicateEmail(email)).thenReturn(true);
+		when(signupService.isDuplicateEmail(email)).thenReturn(true);
 
 		mockMvc.perform(post("/emailCheck")
 						.contentType("application/json")
@@ -193,7 +193,7 @@ public class UserControllerTest {
 		String phoneNum = "010-1234-5678";
 		String userId = "test1234";
 
-		Mockito.when(findService.findId(name, phoneNum)).thenReturn(userId);
+		when(findService.findId(name, phoneNum)).thenReturn(userId);
 
 		mockMvc.perform(post("/findId")
 						.contentType("application/json")
@@ -209,7 +209,7 @@ public class UserControllerTest {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
-		Mockito.when(findService.findId(name, phoneNum)).thenReturn(null);
+		when(findService.findId(name, phoneNum)).thenReturn(null);
 
 		mockMvc.perform(post("/findId")
 						.contentType("application/json")
@@ -234,7 +234,7 @@ public class UserControllerTest {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
-		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
+		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
 
 		mockMvc.perform(post("/findPassword")
 						.contentType("application/json")
@@ -252,7 +252,7 @@ public class UserControllerTest {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
-		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(false);
+		when(findService.validateUser(userId, name, phoneNum)).thenReturn(false);
 
 		mockMvc.perform(post("/findPassword")
 						.contentType("application/json")
@@ -275,8 +275,8 @@ public class UserControllerTest {
 		user.setName(name);
 		user.setEmail(phoneNum);
 
-		Mockito.when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
-		Mockito.when(findService.changePassword(user, newPassword)).thenReturn(true);
+		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
+		when(findService.changePassword(user, newPassword)).thenReturn(true);
 
 
 		mockMvc.perform(post("/passwordChange")
