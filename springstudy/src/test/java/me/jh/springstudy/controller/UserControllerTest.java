@@ -116,6 +116,14 @@ public class UserControllerTest {
 	}
 
 	@Test
+	public void testLogout() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/logout"))
+				.andExpect(status().isFound())
+				.andExpect(redirectedUrl("/"))
+				.andExpect(request().sessionAttributeDoesNotExist("userId"));
+	}
+
+	@Test
 	public void testSignupForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/signup"))
 				.andExpect(status().isOk())
