@@ -1,5 +1,6 @@
 package me.jh.springstudy.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -50,7 +53,7 @@ public class SecurityConfig {
 				// 요즘은 CSRF만 방어하기 보단 JWT 쓴다고 함. 혹은 같이 쓰거나...
 
 				.authorizeRequests()//권한 설정
-				.antMatchers("/", "/signup", "/signupSuccess", "/login", "/idCheck")//해당 페이지에 관해
+				.antMatchers("/", "/signup", "/signupSuccess", "/login", "/idCheck", "/logout")//해당 페이지에 관해
 				.permitAll()//모든 접근 혀용
 				.anyRequest()//다른 모든 요청에 대해서는
 				.permitAll()// 원래는 .authenticated()였다. 로그인 페이지의302 문제 해결해야함.
@@ -72,8 +75,16 @@ public class SecurityConfig {
 
 				.and()
 				.logout()
-				.permitAll();
-
+				.logoutUrl("/logout")//로그아웃 URL 설정, 해당 설정은 기본값이므로 생략 가능
+				//로그아웃 핸들러 추가
+				.addLogoutHandler((request, response, authentication) -> { // 핸들러 설정을 하지 않으면 기본 로그아웃 핸들러가 동작
+					HttpSession session = request.getSession();
+					if (session != null) {
+						session.removeAttribute("userId"); // 로그인시 사용했던 userId 세션 속성을 제거
+					}
+				})  // 로그아웃 성공핸들러 설정
+				.logoutSuccessUrl("/")
+				.invalidateHttpSession(false);//세션을 무효화 시킬지 여부를 설정, 기본값은 true/ 세션을 다른곳에서도 사용하고 있으니 false로 설정
 		return http.build();
 	}
 
