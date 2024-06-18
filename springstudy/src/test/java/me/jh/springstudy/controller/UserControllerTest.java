@@ -98,6 +98,7 @@ public class UserControllerTest {
 						.param("userId", userId)
 						.param("password", password))
 				.andExpect(status().isFound())
+				.andExpect(request().sessionAttribute("userId", userId))
 				.andExpect(redirectedUrl("/"));
 	}
 
@@ -112,6 +113,7 @@ public class UserControllerTest {
 						.param("userId", userId)
 						.param("password", password))
 				.andExpect(status().isForbidden())
+				.andExpect(request().sessionAttributeDoesNotExist("userId"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디 혹은 비밀번호가 잘못되었습니다."));
 	}
 
