@@ -255,7 +255,8 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 */
 
 	@PostMapping("/findPassword")
-	public String findPassword(@RequestBody Map<String,String> reqData, Model model) {
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> findPassword(@RequestBody Map<String, String> reqData, Model model, HttpSession session) {
 //		boolean validateUser = findService.validateUser(userId, name, email);
 		String userId = reqData.get("userId");
 		String name = reqData.get("name");
@@ -266,44 +267,63 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}
 
-		User validateUsers = new User();
-		validateUsers.setUserId(userId);
-		validateUsers.setName(name);
-		validateUsers.setPhoneNum(phoneNum);
+		session.setAttribute("PasswordChangeUserId", userId);
+		session.setAttribute("PasswordChangeUserName", name);
+		session.setAttribute("PasswordChangeUserPhoneNum", phoneNum);
 
-		model.addAttribute("passwordChangeUser", validateUsers);
-		return "finds/newPasswordPage";
+
+		// User validateUsers = new User();
+		// validateUsers.setUserId(userId);
+		// validateUsers.setName(name);
+		// validateUsers.setPhoneNum(phoneNum);
+		Map<String, String> responseData = new HashMap<>();
+		responseData.put("userId", userId);
+		responseData.put("name", name);
+		responseData.put("phoneNum", phoneNum);
+
+		return ResponseEntity.ok(responseData);
+
+		// model.addAttribute("passwordChangeUser", validateUsers);
+		// return "finds/newPasswordPage";
 	}
 
 
-//		/**
-//		 * 비밀번호 변경하는 페이지
-//		 *
-//		 * @param model newpassword 이름으로 새로운 User객체 생성
-//		 * @return 새 패스워드 설정 뷰 반환
-//		 */
-//		@GetMapping("/passwordChange")
-//		public String resetPassword(Model model) {
-//
-//			model.addAttribute("passwordChange", new User());//
-//			return "finds/newPasswordPage";
-//		}
+	/**
+	 * 비밀번호 변경하는 페이지
+	 *
+	 * @param model newpassword 이름으로 새로운 User객체 생성
+	 * @return 새 패스워드 설정 뷰 반환
+	 */
+	@GetMapping("/passwordChange")
+	public String resetPassword(Model model, HttpSession session) {
+		String userId = (String) session.getAttribute("PasswordChangeUserId");
+		String name = (String) session.getAttribute("PasswordChangeUserName");
+		String phoneNum = (String) session.getAttribute("PasswordChangeUserPhoneNum");
+
+
+		model.addAttribute("passwordChangeUser", new User(userId, name, null, phoneNum, null, null, null, null));//
+		return "finds/newPasswordPage";
+	}
 
 	/**
 	 * 비밀번호 변경서비스를 호출하는 API
 	 * 사용자가 입력한 새로운 비밀번호로 비밀번호를 변경
 	 *
-	 * @param changePasswordUser 비밀번호 변경할 사용자
-	 * @param reqData 새로운 비밀번호
+	 * @param reqData            새로운 비밀번호
 	 * @return 비밀번호변경 성공 시 성공 메세지 페이지로 반환 후 구현한 로그인 버튼으로 로그인 페이지로 돌아감.
 	 * @implNote 이 메서드는 {@link FindService#changePassword(User, String)}를 사용하여 사용자를 조회. 예외처리는 서비스 클래스에서 수행.
 	 */
 
 	@PostMapping("/passwordChange")
-	public String resetPassword(@ModelAttribute("passwordChangeUser") User changePasswordUser,
-	                            @RequestBody Map<String, String> reqData) {
+	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, HttpSession session) {
 
+		String userId = reqData.get("userId");
+		String name = reqData.get("name");
+		String phoneNum = reqData.get("phoneNum");
 		String newPassword = reqData.get("newPassword");
+
+		User changePasswordUser = new User(userId, name, null, phoneNum, null, null, null, null);
+
 		findService.changePassword(changePasswordUser, newPassword);
 
 //		if (!findService.changePassword(changePasswordUser, newPassword)) {
@@ -312,8 +332,15 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //		} else if (newPassword == null) {
 //			throw new UserException(UserErrorType.PASSWORD_NULL);
 //		}
-		return "redirect:/passwordChangeSuccess";
-	}
+
+		session.removeAttribute("PasswordChangeUserId");
+		session.removeAttribute("PasswordChangeUserName");
+		session.removeAttribute("PasswordChangeUserPhoneNum");
+
+		Map<String, String> responseData = new HashMap<>();
+		responseData.put("messege", "비밀번호 변경 성공");
+		return ResponseEntity.ok(responseData);
+	}// TODO : 로직 다듬기, 성공시 메세지 출력, 실패시 메세지 출력, 실패시 다시 입력창으로 돌아가기, 테스트 코드 수정하기
 
 //	@PostMapping("/passwordChange")
 //	public String resetPassword(@ModelAttribute("passwordChange")@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
