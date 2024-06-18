@@ -185,21 +185,6 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "errors/error400";
 	}
 
-	/**
-	 * 메인페이지를 보여주는 API
-	 *
-	 * @return 메인페이지 뷰 반환
-	 */
-	@GetMapping("/")
-	public String index(Model model, HttpSession session)
-	{if (session.getAttribute("userId") != null) {
-		model.addAttribute("LoggedIn",true);
-	}else {
-		model.addAttribute("LoggedIn",false);
-	}
-		return "index";
-	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
-
 
 	/**
 	 * 아이디 찾기 페이지를 보여주는 API
