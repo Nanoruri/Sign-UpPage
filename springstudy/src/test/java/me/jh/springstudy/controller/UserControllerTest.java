@@ -234,38 +234,64 @@ public class UserControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attribute("findUserPassword", Matchers.instanceOf(User.class)));
 	}
 
-	@Test
+	@Test//비밀번호 찾기 성공
 	public void testFindPwSuccess() throws Exception {
+		// 입력값 설정
 		String userId = "test1234";
 		String name = "test";
 		String phoneNum = "010-1234-5678";
+		String passwordChanger = "fixed-uuid-for-testing";  // 테스트용 UUID
 
+		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
 		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
+
+		//TODO : UUID 생성 과정에서 테스트 통과하게끔 하기(UUID.randomUUID()이 static 메서드라서 테스트가 어려움)
+
+		// UUID.randomUUID()를 고정된 UUID로 변경
+//		try (MockedStatic<UUID> mockedUUID = mockStatic(UUID.class)) {
+//			mockedUUID.when(UUID::randomUUID).thenReturn(UUID.fromString(passwordChanger));
+//		}
+		// 세션에 사용자 정보를 저장
+//		session.setAttribute("passwordChangeUser" + passwordChanger, testUser);
+
 
 		mockMvc.perform(post("/findPassword")
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/newPasswordPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("passwordChangeUser"));
+				.andExpect(jsonPath("$.userId").value(userId))
+				.andExpect(jsonPath("$.name").value(name))
+				.andExpect(jsonPath("$.phoneNum").value(phoneNum))
+				.andExpect(cookie().exists("passwordChanger"));//쿠키가 생성되었는지 확인
 
 		Mockito.verify(findService, Mockito.times(1)).validateUser(userId, name, phoneNum);
+//		assertInstanceOf(User.class, session.getAttribute("passwordChangeUser" + passwordChanger));
+//
+//		User sessionUser = (User) mockSession.getAttribute("passwordChangeUser" + passwordChanger);
+//		assertNotNull(sessionUser);
+//		assertEquals(testUser.getUserId(), sessionUser.getUserId());
+//		assertEquals(testUser.getName(), sessionUser.getName());
+//		assertEquals(testUser.getPhoneNum(), sessionUser.getPhoneNum());
+
 	}
 
-	@Test
-	public void testFindPwFail() throws Exception {
+	@Test//비밀번호 찾기 실패
+	public void testFindPwFailure() throws Exception {
 		String userId = "test1234";
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
+		// 사용자 정보가 없을 때
 		when(findService.validateUser(userId, name, phoneNum)).thenReturn(false);
 
+		// 사용자 정보가 없을 때의 요청을 수행
 		mockMvc.perform(post("/findPassword")
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
 
+		// 메서드가 실행되었는지 확인
 		Mockito.verify(findService, Mockito.times(1)).validateUser(userId, name, phoneNum);
 	}
 

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch('/study/findPassword', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Study': 'signupProject'
