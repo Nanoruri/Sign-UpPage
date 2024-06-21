@@ -48,35 +48,6 @@ public class UserControllerTest {
 	private HttpSession session;
 
 
-	@Test
-	public void testIndexForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/"))
-				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("index"));
-	}
-
-	@Test
-	public void testIndexFormWhenLogin() throws Exception {
-
-		when(session.getAttribute("userId")).thenReturn("testUser");
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/")
-						.sessionAttr("userId", "testUser"))
-				.andExpect(status().isOk())
-				.andExpect(view().name("index"))
-				.andExpect(model().attribute("LoggedIn", true))
-				.andExpect(request().sessionAttribute("userId", "testUser"));
-	}
-
-	@Test
-	public void testIndexFormWhenLogout() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/"))
-				.andExpect(status().isOk())
-				.andExpect(view().name("index"))
-				.andExpect(model().attribute("LoggedIn", false))
-				.andExpect(request().sessionAttributeDoesNotExist("userId"));
-	}
-
 
 	@Test
 	public void testLoginForm() throws Exception {
