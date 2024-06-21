@@ -304,19 +304,36 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 
 	/**
-	 * 비밀번호 변경하는 페이지
+	 * 비밀번호 변경 페이지를 보여주는 API
 	 *
-	 * @param model newpassword 이름으로 새로운 User객체 생성
-	 * @return 새 패스워드 설정 뷰 반환
+	 * @param model   뷰 렌더링을 위해 속성을 추가하는 모델
+	 * @param session 세션에 저장된 사용자 정보를 가져오기 위해 사용
+	 * @param passwordChanger 쿠키를 사용 하여 고유ID를 가져오기 위해 사용
+	 * @return 비밀번호 변경 페이지 뷰 반환
+	 * @implNote 이 메서드는 /findPassword 세션에 저장된 비밀번호 변경하려는 사용자 정보를 가져와 새 비밀번호를 입력받는 페이지로 이동
 	 */
 	@GetMapping("/passwordChange")
-	public String resetPassword(Model model, HttpSession session) {
-		String userId = (String) session.getAttribute("PasswordChangeUserId");
-		String name = (String) session.getAttribute("PasswordChangeUserName");
-		String phoneNum = (String) session.getAttribute("PasswordChangeUserPhoneNum");
+	public String resetPassword(Model model, HttpSession session, @CookieValue("passwordChanger") String passwordChanger) {
+//		String userId = (String) session.getAttribute("PasswordChangeUserId");
+//		String name = (String) session.getAttribute("PasswordChangeUserName");
+//		String phoneNum = (String) session.getAttribute("PasswordChangeUserPhoneNum");
 
+		//세션에 저장된 고유ID를 포함한 사용자 정보를 가져옴
+		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
 
-		model.addAttribute("passwordChangeUser", new User(userId, name, null, phoneNum, null, null, null, null));//
+		//세션에 저장된 사용자 정보가 없을 경우 비밀번호 찾기 페이지로 리다이렉트
+		if (passwordChangeUser == null) {
+			log.warn("세션에 저장된 값이 없습니다.");
+			return "redirect:/findPassword";
+		}
+//
+//		User user = new User();
+//		user.setUserId(userId);
+//		user.setName(name);
+//		user.setPhoneNum(phoneNum);
+
+		//모델에 사용자 정보를 추가
+		model.addAttribute("passwordChangeUser", passwordChangeUser);
 		return "finds/newPasswordPage";
 	}
 
