@@ -337,28 +337,41 @@ public class UserControllerTest {
 				.andExpect(status().is3xxRedirection()) // 3xx 리다이렉션 상태 코드 확인
 				.andExpect(redirectedUrl("/findPassword")); // 리다이렉트된 URL 확인
 	}
+
+	@Test//새 비밀번호로 변경 성공
+	public void testNewPasswordChangeSuccess() throws Exception {
 		String userId = "test1234";
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 		String newPassword = "test1234";
 
-		User user = new User();
-		user.setUserId(userId);
-		user.setName(name);
-		user.setEmail(phoneNum);
+		//세션에 저장된 사용자 정보
+		String passwordChangeUser = UUID.randomUUID().toString();
+		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
 
+		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
+
+		//세션에 저장된 사용자 정보를 가져오는 메서드
+		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
+
+		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
 		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
-		when(findService.changePassword(user, newPassword)).thenReturn(true);
+		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
 
 
-		mockMvc.perform(post("/passwordChange")
+		//post요청을 보내는 부분
+		mockMvc.perform(post("/passwordChange").cookie(new Cookie("passwordChanger", passwordChangeUser))
+						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
 						.contentType("application/json")
+						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
 						.content("{\"newPassword\":\"" + newPassword + "\"}")
-						.flashAttr("passwordChangeUser", user))
-				.andExpect(status().isFound())
-				.andExpect(redirectedUrl("/passwordChangeSuccess"));
+						.flashAttr("passwordChangeUser", testUser))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.messege").value("비밀번호 변경 성공"));
 
-		Mockito.verify(findService, Mockito.times(1)).changePassword(user, newPassword);
+		//메서드가 실행되었는지 확인
+		Mockito.verify(findService, Mockito.times(1)).changePassword(testUser, newPassword);
+		assertNull(session.getAttribute("passwordChangeUser123"));//세션에 저장된 사용자 정보가 삭제되었는지 확인
 	}
 
 	@Test

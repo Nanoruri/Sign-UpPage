@@ -338,25 +338,28 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 	/**
-	 * 비밀번호 변경서비스를 호출하는 API
-	 * 사용자가 입력한 새로운 비밀번호로 비밀번호를 변경
+	 * 비밀번호 변경 서비스를 호출하는 API
+	 * 사용자가 입력한 새 비밀번호를 받아 비밀번호 변경 서비스를 호출
 	 *
-	 * @param reqData            새로운 비밀번호
-	 * @return 비밀번호변경 성공 시 성공 메세지 페이지로 반환 후 구현한 로그인 버튼으로 로그인 페이지로 돌아감.
-	 * @implNote 이 메서드는 {@link FindService#changePassword(User, String)}를 사용하여 사용자를 조회. 예외처리는 서비스 클래스에서 수행.
+	 * @param reqData          사용자가 입력한 새 비밀번호
+	 * @param passwordChanger 쿠키를 사용하여 고유ID를 가져오기 위해 사용
+	 * @param session          세션에 저장된 사용자 정보를 가져오기 위해 사용
+	 * @return 비밀번호 변경 성공시 비밀번호 변경 성공 페이지로 리다이렉트
+	 * @throws UserException 비밀번호가 null일 경우 비밀번호가 null이라는 메세지를 반환
+	 * @implNote 이 메서드는 {@link FindService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
 	 */
-
 	@PostMapping("/passwordChange")
-	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, HttpSession session) {
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, @CookieValue("passwordChanger") String passwordChanger, HttpSession session) {
 
-		String userId = reqData.get("userId");
-		String name = reqData.get("name");
-		String phoneNum = reqData.get("phoneNum");
+		//세션에 저장된 고유ID를 포함한 사용자 정보를 가져옴
+		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
+
+		//사용자가 입력한 새 비밀번호를 받아옴
 		String newPassword = reqData.get("newPassword");
 
-		User changePasswordUser = new User(userId, name, null, phoneNum, null, null, null, null);
-
-		findService.changePassword(changePasswordUser, newPassword);
+		//비밀번호 변경 서비스 호출
+		findService.changePassword(passwordChangeUser, newPassword);
 
 //		if (!findService.changePassword(changePasswordUser, newPassword)) {
 //			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
@@ -365,9 +368,11 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //			throw new UserException(UserErrorType.PASSWORD_NULL);
 //		}
 
-		session.removeAttribute("PasswordChangeUserId");
-		session.removeAttribute("PasswordChangeUserName");
-		session.removeAttribute("PasswordChangeUserPhoneNum");
+//		session.removeAttribute("PasswordChangeUserId");
+//		session.removeAttribute("PasswordChangeUserName");
+//		session.removeAttribute("PasswordChangeUserPhoneNum");
+		session.removeAttribute("PasswordChangeUser");// password사용된 세션은 제거해준다.
+		log.info("PasswordChangeUser 세션 제거 성공");
 
 		Map<String, String> responseData = new HashMap<>();
 		responseData.put("messege", "비밀번호 변경 성공");
