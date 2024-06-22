@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('passwordChangeForm').addEventListener('submit', function (event) {
         event.preventDefault();
 
+
+        if (commonValidate() && checkPasswordMatch()) {
         var userId = document.getElementById('userId').value;
         var name = document.getElementById('name').value;
         var phoneNum = document.getElementById('phoneNum').value;
@@ -34,5 +36,5 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('비밀번호 변경 중 오류 발생:', error);
             alert('비밀번호 변경에 실패했습니다.');
         });
-    });
+    }});
 });

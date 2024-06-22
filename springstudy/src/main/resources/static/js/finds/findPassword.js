@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('findPasswordForm').addEventListener('submit', function (event) {
         event.preventDefault();
+
+
+        if (commonValidate()) { //동일한 html에 있는 js파일의 내용을 가져다 쓸 수 있음.
         var userId = document.getElementById('inputAdress').value;
         var name = document.getElementById('inputName').value;
         var phoneNum = document.getElementById('inputPhoneNum').value;
@@ -36,5 +39,5 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(function (error) {
                 console.error('사용자를 찾는 중 오류 발생:', error);
             })
-    });
+    }});
 });
