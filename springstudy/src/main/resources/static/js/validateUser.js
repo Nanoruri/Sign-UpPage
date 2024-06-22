@@ -53,6 +53,7 @@ function commonValidate() {
     } else if (phoneNum !== null && !phoneNumRegex.test(phoneNum)) {
         console.debug('전화번호 검증 실행 됨')
         alert('전화번호는 11자리 숫자로 입력해주세요')
+        return false;
     }
     console.debug('commonValidate함수 종료')
     return true;
