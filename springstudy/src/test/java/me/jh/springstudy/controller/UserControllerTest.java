@@ -20,10 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,7 +49,6 @@ public class UserControllerTest {
 	private FindService findService;
 	@MockBean
 	private HttpSession session;
-
 
 
 	@Test
@@ -184,7 +186,7 @@ public class UserControllerTest {
 		Mockito.verify(signupService, Mockito.times(1)).isDuplicateEmail(email);
 	}
 
-	@Test
+	@Test//아이디 찾기 폼
 	public void testFindIdForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findId"))
 				.andExpect(status().isOk())
@@ -193,7 +195,7 @@ public class UserControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attribute("findUserId", Matchers.instanceOf(User.class)));
 	}
 
-	@Test
+	@Test//아이디 찾기 성공
 	public void testFindIdSuccess() throws Exception {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
@@ -210,7 +212,7 @@ public class UserControllerTest {
 		Mockito.verify(findService, Mockito.times(2)).findId(name, phoneNum);//findId메서드가 왜 두번 호출 되었는지 확인
 	}
 
-	@Test
+	@Test//아이디 찾기 실패
 	public void testFindIdFail() throws Exception {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
@@ -225,7 +227,7 @@ public class UserControllerTest {
 		Mockito.verify(findService, Mockito.times(1)).findId(name, phoneNum);
 	}
 
-	@Test
+	@Test// 비밀번호 찾기 폼
 	public void testFindPasswordForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findPassword"))
 				.andExpect(status().isOk())

@@ -1,5 +1,11 @@
 package me.jh.springstudy.controller;
 
+import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.user.UserErrorType;
+import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.userservice.FindService;
+import me.jh.springstudy.service.userservice.LoginService;
+import me.jh.springstudy.service.userservice.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import me.jh.springstudy.entitiy.User;
-import me.jh.springstudy.exception.user.UserErrorType;
-import me.jh.springstudy.exception.user.UserException;
-import me.jh.springstudy.service.userservice.FindService;
-import me.jh.springstudy.service.userservice.LoginService;
-import me.jh.springstudy.service.userservice.SignupService;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 사용자 관련 요청을 처리하는 컨트롤러 클래스.
@@ -102,7 +103,8 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return "signup/signupPage";
 	}
 
-	/**.
+	/**
+	 * .
 	 * 회원가입 서비스를 호출하는 API.
 	 * 회원가입 성공시 Success페이지로 리다이렉트
 	 *
@@ -146,6 +148,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	/**
 	 * 사용자 Email이 중복인지 확인하는 API.
 	 * 사용자 Email이 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환.
+	 *
 	 * @param reqData 중복 여부를 확인할 사용자 Email
 	 * @return 중복 여부에 따른 ResponseEntity. 중복되면 CONFLICT 상태와 메시지를 반환하고, 중복이 아니면 OK 상태와 메시지를 반환합니다.
 	 * @throws UserException 사용자 Email이 중복될 경우 이메일 중복 오류 메세지를 반환
@@ -208,7 +211,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 */
 	@PostMapping("/findId")
 	@ResponseBody
-	public ResponseEntity<Map<String,String>> findId(@RequestBody Map<String, String> reqData) {
+	public ResponseEntity<Map<String, String>> findId(@RequestBody Map<String, String> reqData) {
 		String name = reqData.get("name");
 		String phoneNum = reqData.get("phoneNum");
 
@@ -226,7 +229,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		log.info("아이디 찾기 성공");
 
 		Map<String, String> response = new HashMap<>();
-		response.put("userId",findService.findId(name, phoneNum));
+		response.put("userId", findService.findId(name, phoneNum));
 
 		return ResponseEntity.ok(response);
 	}
@@ -306,8 +309,8 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	/**
 	 * 비밀번호 변경 페이지를 보여주는 API
 	 *
-	 * @param model   뷰 렌더링을 위해 속성을 추가하는 모델
-	 * @param session 세션에 저장된 사용자 정보를 가져오기 위해 사용
+	 * @param model           뷰 렌더링을 위해 속성을 추가하는 모델
+	 * @param session         세션에 저장된 사용자 정보를 가져오기 위해 사용
 	 * @param passwordChanger 쿠키를 사용 하여 고유ID를 가져오기 위해 사용
 	 * @return 비밀번호 변경 페이지 뷰 반환
 	 * @implNote 이 메서드는 /findPassword 세션에 저장된 비밀번호 변경하려는 사용자 정보를 가져와 새 비밀번호를 입력받는 페이지로 이동
@@ -341,9 +344,9 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 * 비밀번호 변경 서비스를 호출하는 API
 	 * 사용자가 입력한 새 비밀번호를 받아 비밀번호 변경 서비스를 호출
 	 *
-	 * @param reqData          사용자가 입력한 새 비밀번호
+	 * @param reqData         사용자가 입력한 새 비밀번호
 	 * @param passwordChanger 쿠키를 사용하여 고유ID를 가져오기 위해 사용
-	 * @param session          세션에 저장된 사용자 정보를 가져오기 위해 사용
+	 * @param session         세션에 저장된 사용자 정보를 가져오기 위해 사용
 	 * @return 비밀번호 변경 성공시 비밀번호 변경 성공 페이지로 리다이렉트
 	 * @throws UserException 비밀번호가 null일 경우 비밀번호가 null이라는 메세지를 반환
 	 * @implNote 이 메서드는 {@link FindService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
