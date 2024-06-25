@@ -2,7 +2,9 @@ package me.jh.springstudy.controller;
 
 
 import me.jh.springstudy.config.SecurityConfig;
+import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.service.userservice.CustomUserDetailsService;
 import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;
 import me.jh.springstudy.service.userservice.SignupService;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,8 +30,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -40,6 +46,8 @@ public class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@MockBean
 	private SignupService signupService;
@@ -49,6 +57,12 @@ public class UserControllerTest {
 	private FindService findService;
 	@MockBean
 	private HttpSession session;
+	@MockBean
+	private CustomUserDetailsService customUserDetailsService;
+	@MockBean
+	private Authentication authentication;
+	@MockBean
+	private UserDao userDao;
 
 
 	@Test
@@ -65,14 +79,25 @@ public class UserControllerTest {
 		String userId = "test123";
 		String password = "test123";
 
-		when(loginService.loginCheck(userId, password)).thenReturn(true);
+//		when(loginService.loginCheck(userId, password)).thenReturn(true);
+
+		//사용자 정보가 있을 때
+		when(customUserDetailsService.loadUserByUsername(userId)).
+				thenReturn(org.springframework.security.core.userdetails.User.builder()
+						.username(userId)
+						.password(passwordEncoder.encode(password))
+						.roles("USER")
+						.build());
 
 		mockMvc.perform(post("/loginCheck")
 						.param("userId", userId)
 						.param("password", password))
-				.andExpect(status().isFound())
-				.andExpect(request().sessionAttribute("userId", userId))
-				.andExpect(redirectedUrl("/"));
+				.andExpect(status().isFound())//로그인에 성공하면 시큐리티는 302 리다이렉트를 반환
+				.andExpect(redirectedUrl("/"))//로그인에 성공하면 메인 페이지로 리다이렉트
+				.andExpect(request().sessionAttribute("SPRING_SECURITY_CONTEXT", notNullValue()))
+				.andExpect(authenticated()
+						.withAuthenticationName(userId)//  인증된 사용자 이름이 userId인지 확인
+						.withRoles("USER"));//  인증된 사용자 권한이 ROLE_USER인지 확인
 	}
 
 	@Test
@@ -80,14 +105,17 @@ public class UserControllerTest {
 		String userId = "test123";
 		String password = "test";
 
-		when(loginService.loginCheck(userId, password)).thenReturn(false);
+		//사용자 정보가 없을 때
+		when(customUserDetailsService.loadUserByUsername(userId)).
+				thenReturn(null);
 
 		mockMvc.perform(post("/loginCheck")
 						.param("userId", userId)
 						.param("password", password))
-				.andExpect(status().isForbidden())
-				.andExpect(request().sessionAttributeDoesNotExist("userId"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디 혹은 비밀번호가 잘못되었습니다."));
+				.andExpect(status().isFound())//로그인에 실패하면 시큐리티는 302 리다이렉트를 반환
+				.andExpect(redirectedUrl("/login"))//로그인에 실패하면 로그인 페이지로 리다이렉트
+				.andExpect(request().sessionAttributeDoesNotExist("SPRING_SECURITY_CONTEXT"));
+//				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디 혹은 비밀번호가 잘못되었습니다."));//
 	}
 
 	@Test
