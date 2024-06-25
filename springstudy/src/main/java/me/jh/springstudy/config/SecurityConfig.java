@@ -77,13 +77,12 @@ public class SecurityConfig {
 				.logout()
 				.logoutUrl("/logout")//로그아웃 URL 설정, 해당 설정은 기본값이므로 생략 가능
 				//로그아웃 핸들러 추가
-				.addLogoutHandler((request, response, authentication) -> { // 핸들러 설정을 하지 않으면 기본 로그아웃 핸들러가 동작
-					HttpSession session = request.getSession();
-					if (session != null) {
-						session.removeAttribute("userId"); // 로그인시 사용했던 userId 세션 속성을 제거
-					}
-				})  // 로그아웃 성공핸들러 설정
-				.logoutSuccessUrl("/")
+//				.addLogoutHandler((request, response, authentication) -> { // 핸들러 설정을 하지 않으면 기본 로그아웃 핸들러가 동작
+//					HttpSession session = request.getSession();
+//					if (session != null) {
+//						session.removeAttribute("userId"); // 로그인시 사용했던 userId 세션 속성을 제거
+//					}
+//				})  // 로그아웃 성공핸들러 설정
 				.logoutSuccessUrl("/")//로그아웃 성공 후 리다이렉트 URL 설정
 				.invalidateHttpSession(false);//세션을 무효화 시킬지 여부를 설정, 기본값은 true/ 세션을 다른곳에서도 사용하고 있으니 false로 설정
 		return http.build();
