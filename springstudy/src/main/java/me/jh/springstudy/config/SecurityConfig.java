@@ -62,7 +62,7 @@ public class SecurityConfig {
 
 				.formLogin()//위에 기입된 사이트 들은 로그인이 필요하다..
 				.loginPage("/login")//로그인 페이지 URL 지정
-//                        .loginProcessingUrl("/loginCheck") //이거 cotroller에서 구현함.로그인 Form 처리 Url, 여기를 통해 post요청이 들어감.
+				.loginProcessingUrl("/loginCheck") // 설정한 엔드포인트로 로그인 요청이 들어오면 스프링 시큐리티가 가로채어 처리.
 				.usernameParameter("userId") // 아이디 파라미터명 설정
 				.passwordParameter("password") // 패스워드 파라미터명 설정
 				.defaultSuccessUrl("/") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/main페이지로 리다이렉트
@@ -70,8 +70,8 @@ public class SecurityConfig {
 				.permitAll() //로그인 페이지 접속하는것에 대해 권한 X
 
 				.and()
-				.sessionManagement()//시큐리티는 세션 형식을 사용하기에 JWT토큰을 위해 세션 형식을 꺼준다.
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
 
 				.and()
 				.logout()
@@ -84,6 +84,7 @@ public class SecurityConfig {
 					}
 				})  // 로그아웃 성공핸들러 설정
 				.logoutSuccessUrl("/")
+				.logoutSuccessUrl("/")//로그아웃 성공 후 리다이렉트 URL 설정
 				.invalidateHttpSession(false);//세션을 무효화 시킬지 여부를 설정, 기본값은 true/ 세션을 다른곳에서도 사용하고 있으니 false로 설정
 		return http.build();
 	}
