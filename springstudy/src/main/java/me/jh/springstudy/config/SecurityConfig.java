@@ -1,17 +1,14 @@
 package me.jh.springstudy.config;
 
+import me.jh.springstudy.service.userservice.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.servlet.http.HttpSession;
@@ -24,22 +21,27 @@ import javax.servlet.http.HttpSession;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Bean
-	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-		UserDetails user = User.builder()
-				.username("kaby1217")
-				.password(passwordEncoder.encode("1217159"))
-				.roles("USER")
-				.build();
+// todo : 어드민 추가할 방법 고민해봐
+//	@Bean //UserDetailsService를 등록하면 이방식은 기본적으로 등록 안됨
+//	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//		UserDetails user = User.builder()
+//				.username("kaby1217")
+//				.password(passwordEncoder.encode("1217159"))
+//				.roles("USER")
+//				.build();
+//
+//		UserDetails admin = User.builder()
+//				.username("admin")
+//				.password(passwordEncoder.encode("admin"))
+//				.roles("ADMIN")
+//				.build();
+//
+//		return new InMemoryUserDetailsManager(user, admin);
+//	}
 
-		UserDetails admin = User.builder()
-				.username("admin")
-				.password(passwordEncoder.encode("admin"))
-				.roles("ADMIN")
-				.build();
 
-		return new InMemoryUserDetailsManager(user, admin);
-	}
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -66,10 +68,11 @@ public class SecurityConfig {
 				.usernameParameter("userId") // 아이디 파라미터명 설정
 				.passwordParameter("password") // 패스워드 파라미터명 설정
 				.defaultSuccessUrl("/") // 로그인 성공 후의 리다이렉션 URL 설정, 여기선/main페이지로 리다이렉트
-				.failureForwardUrl("/signupError")
+				.failureUrl("/login")//로그인 실패시 리다이렉트 URL 설정
 				.permitAll() //로그인 페이지 접속하는것에 대해 권한 X
 
 				.and()
+				.userDetailsService(customUserDetailsService)//권한 설정을 위해 UserDetailsService를 설정
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
 
