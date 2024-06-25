@@ -1,4 +1,4 @@
-package me.jh.springstudy.controller;
+package me.jh.springstudy.controller.user;
 
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
@@ -27,9 +27,9 @@ import java.util.UUID;
  * 회원가입, 로그인, 아이디/비밀번호 찾기 등의 기능을 제공.
  */
 @Controller
-public class UserController {//todo : 컨트롤러 분리하기(분리 기준 생각하기)
+public class ApiController {
 
-	private final static Logger log = LoggerFactory.getLogger(UserController.class);// Log 찍는 내용
+	private final static Logger log = LoggerFactory.getLogger(ApiController.class);// Log 찍는 내용
 	private final SignupService signupService;
 	private final LoginService loginService;
 	private final FindService findService;
@@ -42,24 +42,12 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	 * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public UserController(SignupService signupService, LoginService loginService, FindService findservice) {
+	public ApiController(SignupService signupService, LoginService loginService, FindService findservice) {
 		this.signupService = signupService;
 		this.loginService = loginService;
 		this.findService = findservice;
 	}
 
-
-	/**
-	 * 로그인 페이지를 보여주는 API
-	 *
-	 * @param model 뷰 렌더링을 위해 속성을 추가하는 모델
-	 * @return 로그인 페이지 뷰 반환
-	 */
-	@GetMapping("/login")
-	public String loginForm(Model model) {
-		model.addAttribute("signin", new User());//signin이란 속성이름으로 새로운 User객체 생성
-		return "login/loginPage";
-	}
 
 	/**
 	 * 로그인 서비스를 호출하는 API
@@ -88,20 +76,7 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //		return "redirect:/";
 //	}
 
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
-	/**
-	 * 회원가입 페이지를 보여주는 API
-	 *
-	 * @param model member란 속성이름으로 새로운 User객체 생성
-	 * @return 회원가입 페이지 뷰 반환
-	 */
-	// 회원가입 페이지
-	@GetMapping("/signup")
-	public String signupForm(Model model) {
-		model.addAttribute("user", new User());
-		return "signup/signupPage";
-	}
 
 	/**
 	 * .
@@ -168,38 +143,6 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 	}
 
 
-	/**
-	 * 회원가입 성공시 Success페이지를 보여주는 API
-	 *
-	 * @return 회원가입 성공 페이지  뷰 반환
-	 */
-	@GetMapping("/signupSuccess")
-	public String signupSuccess() {
-		return "signup/signupSuccessPage";
-	}
-
-	/**
-	 * 에러페이지를 보여주는 API
-	 *
-	 * @return 에러페이지 뷰 반환
-	 */
-	@GetMapping("/error")
-	public String signupError() {
-		return "errors/error400";
-	}
-
-
-	/**
-	 * 아이디 찾기 페이지를 보여주는 API
-	 *
-	 * @param model findUserId라는 이름으로 새로운 User객체 생성
-	 * @return 아이디 찾기에 대한 인증페이지 뷰 반환
-	 */
-	@GetMapping("/findId")
-	public String findId(Model model) {
-		model.addAttribute("findUserId", new User());
-		return "finds/findIdPage";
-	}
 
 	/**
 	 * 이름과 전화번호를 기준으로 아이디를 찾아주는 API
@@ -234,17 +177,6 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 		return ResponseEntity.ok(response);
 	}
 
-	/**
-	 * 비밀번호 찾는 페이지를 보여주는 API
-	 *
-	 * @param model findUserPw라는 이름으로 새로윤 User객체 생성
-	 * @return 비밀번호 찾기에 대한 인증페이지 뷰 반환
-	 */
-	@GetMapping("/findPassword")
-	public String findPassword(Model model) {
-		model.addAttribute("findUserPassword", new User());
-		return "finds/findPasswordPage";
-	}
 
 	/**
 	 * 비밀번호 찾는 페이지에 대한 유저 인증하는 API
@@ -307,40 +239,6 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 
 
 	/**
-	 * 비밀번호 변경 페이지를 보여주는 API
-	 *
-	 * @param model           뷰 렌더링을 위해 속성을 추가하는 모델
-	 * @param session         세션에 저장된 사용자 정보를 가져오기 위해 사용
-	 * @param passwordChanger 쿠키를 사용 하여 고유ID를 가져오기 위해 사용
-	 * @return 비밀번호 변경 페이지 뷰 반환
-	 * @implNote 이 메서드는 /findPassword 세션에 저장된 비밀번호 변경하려는 사용자 정보를 가져와 새 비밀번호를 입력받는 페이지로 이동
-	 */
-	@GetMapping("/passwordChange")
-	public String resetPassword(Model model, HttpSession session, @CookieValue("passwordChanger") String passwordChanger) {
-//		String userId = (String) session.getAttribute("PasswordChangeUserId");
-//		String name = (String) session.getAttribute("PasswordChangeUserName");
-//		String phoneNum = (String) session.getAttribute("PasswordChangeUserPhoneNum");
-
-		//세션에 저장된 고유ID를 포함한 사용자 정보를 가져옴
-		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
-
-		//세션에 저장된 사용자 정보가 없을 경우 비밀번호 찾기 페이지로 리다이렉트
-		if (passwordChangeUser == null) {
-			log.warn("세션에 저장된 값이 없습니다.");
-			return "redirect:/findPassword";
-		}
-//
-//		User user = new User();
-//		user.setUserId(userId);
-//		user.setName(name);
-//		user.setPhoneNum(phoneNum);
-
-		//모델에 사용자 정보를 추가
-		model.addAttribute("passwordChangeUser", passwordChangeUser);
-		return "finds/newPasswordPage";
-	}
-
-	/**
 	 * 비밀번호 변경 서비스를 호출하는 API
 	 * 사용자가 입력한 새 비밀번호를 받아 비밀번호 변경 서비스를 호출
 	 *
@@ -388,10 +286,6 @@ public class UserController {//todo : 컨트롤러 분리하기(분리 기준 �
 //		return "passwordChangeSuccess";
 //	}
 
-	@GetMapping("/passwordChangeSuccess")
-	public String passwordChangeSuccess() {
-		return "finds/passwordChangeSuccessPage";
-	}
 
 }
 
