@@ -183,7 +183,7 @@ public class ApiController {
 	 * 사용자가 입력한 이름과 전화번호로 사용자를 찾아서 비밀번호 변경 페이지로 이동
 	 * 사용자가 없을 경우 사용자를 찾을 수 없다는 메세지를 반환
 	 *
-	 * @param reqData  사용자 아이디, 이름, 전화번호
+	 * @param user  사용자 아이디, 이름, 전화번호를 담은 User객체
 	 * @param response 쿠키를 사용하여 고유ID를 생성하여 비밀번호 변경 페이지로 전달
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
 	 * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 찾기에 실패할 경우 사용자를 찾을 수 없다는 메세지를 반환
@@ -192,15 +192,15 @@ public class ApiController {
 
 	@PostMapping("/findPassword")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> findPassword(@RequestBody Map<String, String> reqData, Model model,
+	public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user, Model model,//@RequstBody로 받아온 데이터를 User객체로 변환 = map to object와 같은 효과..?
 	                                                        HttpSession session, HttpServletResponse response) {
 //		boolean validateUser = findService.validateUser(userId, name, email);
-		String userId = reqData.get("userId");
-		String name = reqData.get("name");
-		String phoneNum = reqData.get("phoneNum");
+//		String userId = reqData.get("userId");
+//		String name = reqData.get("name");
+//		String phoneNum = reqData.get("phoneNum");
 
 
-		if (!findService.validateUser(userId, name, phoneNum)) {//사용자를 찾을 수 없을 경우
+		if (!findService.validateUser(user.getUserId(), user.getName(), user.getPhoneNum())) {//사용자를 찾을 수 없을 경우
 			log.warn("잘못된 입력입니다");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);//사용자를 찾을 수 없다는 메세지를 반환
 		}
@@ -209,7 +209,7 @@ public class ApiController {
 //		session.setAttribute("PasswordChangeUserId", userId);
 //		session.setAttribute("PasswordChangeUserName", name);
 //		session.setAttribute("PasswordChangeUserPhoneNum", phoneNum);
-		User user = new User(userId, name, null, phoneNum, null, null, null, null);
+//		User user = new User(userId, name, null, phoneNum, null, null, null, null); 이미 User객체로 받아왔기 때문에 객체 생성할 필요가 없음.
 
 		String passwordChanger = UUID.randomUUID().toString();//고유ID 생성
 		session.setAttribute("passwordChangeUser" + passwordChanger, user);//세션에 고유ID를 키로 사용자 정보 저장
@@ -227,9 +227,9 @@ public class ApiController {
 		response.addCookie(cookie);//쿠키를 응답에 추가
 
 		Map<String, String> responseData = new HashMap<>();
-		responseData.put("userId", userId);
-		responseData.put("name", name);
-		responseData.put("phoneNum", phoneNum);
+		responseData.put("userId", user.getUserId());
+		responseData.put("name", user.getName());
+		responseData.put("phoneNum", user.getPhoneNum());
 
 		return ResponseEntity.ok(responseData);
 
