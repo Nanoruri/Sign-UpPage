@@ -167,11 +167,13 @@
 
                 <configuration>
                     <excludes><!--테스트 제외설정-->
+                        <exclude>me/jh/springstudy/config/**/CorsConfig.class</exclude>
+                        <exclude>me/jh/springstudy/controller/**/TestController.class</exclude>
                         <exclude>me/jh/springstudy/exception/signup/**</exclude>
                         <exclude>me/jh/springstudy/exception/signin/**</exclude>
                         <exclude>me/jh/springstudy/exception/finds/**</exclude>
-                        <exclude>me/jh/springstudy/repositorydto/**</exclude>
-                        <exclude>me/jh/springstudy/repositorydao/MemberDaoEntityManager.class</exclude>
+                        <exclude>me/jh/springstudy/dto/**</exclude>
+                        <exclude>me/jh/springstudy/dao/MemberDaoEntityManager.class</exclude>
                         <exclude>me/jh/springstudy/config/JwtProvider.class</exclude>
                     </excludes>
                 </configuration>
