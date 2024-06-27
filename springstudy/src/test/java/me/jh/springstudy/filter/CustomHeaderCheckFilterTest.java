@@ -110,8 +110,26 @@ public class CustomHeaderCheckFilterTest {
 
 		verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST);
 		verify(chain, never()).doFilter(request, response);
-
 	}
+
+	@Test
+	public void testCustomHeaderValueEmpty() throws ServletException, IOException {
+
+
+		when(request.getHeader("Sec-Fetch-Dest")).thenReturn("empty");
+		when(request.getHeader("Study")).thenReturn("");
+
+		try {
+			filter.doFilter(request, response, chain);
+			fail("흐름대로 안됨");
+		} catch (IOException e) {
+			assertEquals("필수 헤더가 누락되었습니다", e.getMessage());
+		}
+
+		verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST);
+		verify(chain, never()).doFilter(request, response);
+	}
+
 
 
 }
