@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -251,7 +252,10 @@ public class ApiController {
 	 */
 	@PostMapping("/passwordChange")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, @CookieValue("passwordChanger") String passwordChanger, HttpSession session) {
+	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, @CookieValue("passwordChanger") String passwordChanger,
+	                                                         HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+		// 쿠키가 없을 경우 비밀번호 변경 실패(비밀번호 변경 페이지로 돌아가기
+
 
 		//세션에 저장된 고유ID를 포함한 사용자 정보를 가져옴
 		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
@@ -275,6 +279,21 @@ public class ApiController {
 		session.removeAttribute("PasswordChangeUser");// password사용된 세션은 제거해준다.
 		log.info("PasswordChangeUser 세션 제거 성공");
 
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("passwordChanger") && cookie.getValue().equals(passwordChanger)) {
+					cookie.setMaxAge(0); // 쿠키의 유효 시간을 0으로 설정하여 삭제
+					cookie.setPath("/"); // 쿠키의 유효 경로
+					response.addCookie(cookie); // 응답에 삭제된 쿠키를 추가
+					log.info("passwordChanger 쿠키 제거 성공");
+					break;
+				} else {
+					throw new UserException(UserErrorType.USER_NOT_FOUND);
+				}
+			}
+		}// 쿠키의 유효시간을 0으로 설정하여 쿠키를 삭제
+
 		Map<String, String> responseData = new HashMap<>();
 		responseData.put("messege", "비밀번호 변경 성공");
 		return ResponseEntity.ok(responseData);
@@ -286,10 +305,4 @@ public class ApiController {
 //		return "passwordChangeSuccess";
 //	}
 
-
 }
-
-
-
-
-
