@@ -168,7 +168,6 @@
                 <configuration>
                     <excludes><!--테스트 제외설정-->
                         <exclude>me/jh/springstudy/config/**/CorsConfig.class</exclude>
-                        <exclude>me/jh/springstudy/controller/**/TestController.class</exclude>
                         <exclude>me/jh/springstudy/exception/signup/**</exclude>
                         <exclude>me/jh/springstudy/exception/signin/**</exclude>
                         <exclude>me/jh/springstudy/exception/finds/**</exclude>
