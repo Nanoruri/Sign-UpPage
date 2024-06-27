@@ -75,6 +75,33 @@ public class SessionCheckFilterTest {
 		verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 세션 속성이 누락되었습니다.");
 		verify(chain, never()).doFilter(request, response);
 	}
+
+	@Test
+	public void testSessionCheckExceptionNull() throws ServletException, IOException {
+
+		//세션이 없을때
+		when(request.getSession()).thenReturn(null);
+
+		sessionCheckFilter.doFilter(request, response, chain);
+
+		verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 세션 속성이 누락되었습니다.");
+		verify(chain, never()).doFilter(request, response);
+
+	}
+
+	@Test
+	public void testSessionCheckExceptionAttributeNotMatch() throws ServletException, IOException {
+
+		//  HttpServletRequest, HttpServletResponse, FilterChain, Session Mock객체 생성
+
+		//세션의 속성값이 일치하지 않을때
+		when(request.getSession()).thenReturn(session);
+		when(session.getAttribute("Study")).thenReturn("invalidValue");
+
+		sessionCheckFilter.doFilter(request, response, chain);
+
+		verify(session, times(1)).getAttribute("Study");
+		verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 세션 속성이 누락되었습니다.");
 		verify(chain, never()).doFilter(request, response);
 	}
 }
