@@ -1,17 +1,16 @@
 package me.jh.springstudy.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.io.IOException;
-import java.util.List;
 
+
+/**
+ * CORS 설정 클래스.
+ */
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
@@ -29,19 +28,19 @@ public class CorsConfig implements WebMvcConfigurer {
 //		source.registerCorsConfiguration("/**", config);
 //		return source;
 //	}
-
- @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/js/**")
-                .addResourceLocations("classpath:/static/js/")
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver() {
-                    @Override
-                    protected org.springframework.core.io.Resource getResource(String resourcePath, org.springframework.core.io.Resource location) throws IOException {
-                        org.springframework.core.io.Resource requestedResource = location.createRelative(resourcePath);
-                        return requestedResource.exists() && requestedResource.isReadable() ? requestedResource : null;
-                    }
-                });
-    }
+//
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		registry.addResourceHandler("/js/**")
+//				.addResourceLocations("classpath:/static/js/")
+//				.resourceChain(true)
+//				.addResolver(new PathResourceResolver() {
+//					@Override
+//					protected org.springframework.core.io.Resource getResource(String resourcePath, org.springframework.core.io.Resource location) throws IOException {
+//						org.springframework.core.io.Resource requestedResource = location.createRelative(resourcePath);
+//						return requestedResource.exists() && requestedResource.isReadable() ? requestedResource : null;
+//					}
+//				});
+//	}
 
 }
