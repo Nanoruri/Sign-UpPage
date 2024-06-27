@@ -31,6 +31,13 @@ public class SpringApplicationTest {
 		String[] args = {}; // 테스트를 위한 빈 args 배열을 생성
 		ConfigurableApplicationContext context = SpringApplication.run(MySpringBootApplication.class, args);
 		assertNotNull(context); // 컨텍스트의 null체크.
+		context.close(); // 컨텍스트를 닫아 다음 테스트에 영향을 주지 않도록 함.
+	}
+
+
+	@Test// 메인 메서드 테스트
+	public void contextLoads() {
+		MySpringBootApplication.main(new String[]{});
 	}
 
 	@Test
