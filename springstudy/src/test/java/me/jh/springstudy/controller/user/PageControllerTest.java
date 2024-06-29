@@ -128,4 +128,12 @@ public class PageControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/passwordChangeSuccessPage"));
 	}
+
+	@Test
+	public void testErrorPage() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/error"))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("errors/error400"));
+	}
+
 }
