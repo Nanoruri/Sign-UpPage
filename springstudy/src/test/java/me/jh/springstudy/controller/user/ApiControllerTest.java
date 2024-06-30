@@ -4,12 +4,12 @@ package me.jh.springstudy.controller.user;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
-import me.jh.springstudy.service.userservice.CustomUserDetailsService;
 import me.jh.springstudy.service.userservice.FindService;
 import me.jh.springstudy.service.userservice.LoginService;
 import me.jh.springstudy.service.userservice.SignupService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -57,12 +58,14 @@ public class ApiControllerTest {
 	@MockBean
 	private HttpSession session;
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
+	private UserDetailsService userDetailsService;
 	@MockBean
 	private Authentication authentication;
 	@MockBean
 	private UserDao userDao;
 
+	@Mock
+	private Cookie cookie;
 
 	@Test
 	public void testLoginSuccess() throws Exception {
@@ -72,7 +75,7 @@ public class ApiControllerTest {
 //		when(loginService.loginCheck(userId, password)).thenReturn(true);
 
 		//사용자 정보가 있을 때
-		when(customUserDetailsService.loadUserByUsername(userId)).
+		when(userDetailsService.loadUserByUsername(userId)).
 				thenReturn(org.springframework.security.core.userdetails.User.builder()
 						.username(userId)
 						.password(passwordEncoder.encode(password))
@@ -96,7 +99,7 @@ public class ApiControllerTest {
 		String password = "test";
 
 		//사용자 정보가 없을 때
-		when(customUserDetailsService.loadUserByUsername(userId)).
+		when(userDetailsService.loadUserByUsername(userId)).
 				thenReturn(null);
 
 		mockMvc.perform(post("/loginCheck")
@@ -326,6 +329,7 @@ public class ApiControllerTest {
 		//메서드가 실행되었는지 확인
 		Mockito.verify(findService, Mockito.times(1)).changePassword(testUser, newPassword);
 		assertNull(session.getAttribute("passwordChangeUser123"));//세션에 저장된 사용자 정보가 삭제되었는지 확인
+
 	}
 
 
@@ -364,7 +368,7 @@ public class ApiControllerTest {
 		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
 	}
 
-	@Test//잘못된 쿠키값으로 비밀번호 변경 실패
+	@Test//잘못된 쿠키값으로 비밀번호 변경 실패 잘못된 쿠키값으로 비밀번호 변경 실패
 	public void testNewPasswordChangeWornCookie() throws Exception {
 		String userId = "test1234";
 		String name = "test";
@@ -384,8 +388,9 @@ public class ApiControllerTest {
 		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
 		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
 
+
 		//post요청을 보내는 부분
-		mockMvc.perform(post("/passwordChange") .cookie(new Cookie("no", "wrongValue"))
+		mockMvc.perform(post("/passwordChange").cookie(new Cookie("no", "wrongValue"))
 						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
@@ -395,12 +400,85 @@ public class ApiControllerTest {
 
 		//메서드가 실행되었는지 확인
 		Mockito.verify(findService, Mockito.times(0)).changePassword(testUser, newPassword);
+
+	}
+
+
+	@Test//잘못된 쿠키값으로 비밀번호 변경 실패 잘못된 쿠키값으로 비밀번호 변경 실패
+	public void testNewPasswordChangeWornCookieValue() throws Exception {
+		String userId = "test1234";
+		String name = "test";
+		String phoneNum = "010-1234-5678";
+		String newPassword = "test1234";
+
+		//세션에 저장된 사용자 정보
+		String passwordChangeUser = UUID.randomUUID().toString();
+		String worngValue = "wrong";
+		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+
+		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
+
+		//세션에 저장된 사용자 정보를 가져오는 메서드
+		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
+
+		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
+
+		when(findService.changePassword(testUser, newPassword)).thenReturn(false);
+
+
+		//post요청을 보내는 부분
+		mockMvc.perform(post("/passwordChange").cookie(new Cookie("passwordChanger", worngValue))
+						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
+						.contentType("application/json")
+						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
+						.content("{\"newPassword\":\"" + newPassword + "\"}")
+						.flashAttr("passwordChangeUser", testUser))
+				.andExpect(status().isNotFound());
+
+		//메서드가 실행되었는지 확인
+		Mockito.verify(findService, Mockito.times(0)).changePassword(testUser, newPassword);
 		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
 	}
 
 
-
-
+//	@Test
+//	public void testNewPasswordChangeFailure() throws Exception {
+//		String userId = "test1234";
+//		String name = "test";
+//		String phoneNum = "010-1234-5678";
+//		String newPassword = "test1234";
+//
+//		//세션에 저장된 사용자 정보
+//		String passwordChangeUser = UUID.randomUUID().toString();
+//		String worngValue = "wrong";
+//		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+//
+//		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
+//
+//		//세션에 저장된 사용자 정보를 가져오는 메서드
+//		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
+//
+//		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
+//
+//		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
+//
+//		when(cookie.getName()).thenReturn("FaiureCookie");
+//
+//
+//		//post요청을 보내는 부분
+//		mockMvc.perform(post("/passwordChange").cookie(new Cookie("passwordChanger", worngValue))
+//						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
+//						.contentType("application/json")
+//						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
+//						.content("{\"newPassword\":\"" + newPassword + "\"}")
+//						.flashAttr("passwordChangeUser", testUser))
+//				.andExpect(status().isNotFound());
+//
+//		//메서드가 실행되었는지 확인
+//		Mockito.verify(findService, Mockito.times(0)).changePassword(testUser, newPassword);
+//		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
+//	}
+//
 
 }
 

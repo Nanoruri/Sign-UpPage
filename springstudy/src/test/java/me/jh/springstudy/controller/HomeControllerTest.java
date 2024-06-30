@@ -1,7 +1,7 @@
 package me.jh.springstudy.controller;
 
 import me.jh.springstudy.config.SecurityConfig;
-import me.jh.springstudy.service.userservice.CustomUserDetailsService;
+import me.jh.springstudy.dao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,15 +11,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.servlet.http.HttpSession;
-
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,12 +32,14 @@ public class HomeControllerTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-//	@MockBean
-//	private HttpSession session;
+	@MockBean
+	private UserDao userDao;
 
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
+	private UserDetailsService userDetailsService;
 
+//	@MockBean
+//	private HttpSession session;
 
 
 	@Test

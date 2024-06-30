@@ -1,17 +1,20 @@
 package me.jh.springstudy.config;
 
-import me.jh.springstudy.service.userservice.CustomUserDetailsService;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entitiy.User;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -38,14 +41,33 @@ public class SecurityConfig {
 //
 //		return new InMemoryUserDetailsManager(user, admin);
 //	}
-
+	private final Logger log = org.slf4j.LoggerFactory.getLogger(SecurityConfig.class);
 
 	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
+	private UserDao userDao;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new UserDetailsService() {
+			@Override
+			public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+				User user = userDao.findById(userId)
+						.orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다!{}" + userId));//사용자가 없을 경우 예외를 던지도록 함.
+
+				log.info("success to load user : {}", user.getUserId());//로그인 성공 시 로그를 찍도록 함.
+
+				return org.springframework.security.core.userdetails.User.builder()
+						.username(user.getUserId())
+						.password(user.getPassword())
+						.roles("USER")// 사용자의 권한을 설정함. 이렇게 설정하면 "ROLE_USER"로 설정.
+						.build();
+			}
+		};
 	}
 
 
@@ -72,7 +94,7 @@ public class SecurityConfig {
 				.permitAll() //로그인 페이지 접속하는것에 대해 권한 X
 
 				.and()
-				.userDetailsService(customUserDetailsService)//권한 설정을 위해 UserDetailsService를 설정
+				.userDetailsService(userDetailsService())//권한 설정을 위해 UserDetailsService를 설정
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
 
