@@ -99,17 +99,4 @@ public class FindService {
 	}
 }
 
-//	public void resetPassword(String presentPassword, String newPassword) {
-//		String hashedRawPassword = passwordEncoder.encode(presentPassword);
-//		User user = memberDao.findByPassword(presentPassword);
-//
-//		if (user != null && passwordEncoder.matches(presentPassword, user.getPassword())) {
-//
-//			// 새로운 비밀번호로 업데이트
-//			user.setPassword(passwordEncoder.encode(newPassword));
-//
-//			// 업데이트된 사용자 정보 저장
-//			memberDao.save(user);
-//		}
-//	}
 

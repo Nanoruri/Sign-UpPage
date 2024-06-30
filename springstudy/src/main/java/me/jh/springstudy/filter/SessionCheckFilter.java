@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * 쿠키를 확인하고 없다면 에러를 반환하는 필터 클래스.
+ * 쿠키를 확인하고 없다면 에러를 반환하는 필터 클래스.// fixme: CustomHeaderCheckFilter.java에서 쿠키를 확인하는데 이게 필요한 이유가 있나?
  */
 
 public class SessionCheckFilter implements Filter {
@@ -29,56 +29,8 @@ public class SessionCheckFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
 
-//		Cookie cookie = new Cookie("customHeaderMissing", "true");
-//		logger.info("쿠키 생성");
-//		cookie.setMaxAge(60 * 60 * 24);
-//		cookie.setPath("/");
-//		httpResponse.addHeader("Study", "signupProject");
-//		httpResponse.addCookie(cookie);
 
-
-//		String customHeader = httpRequest.getHeader("Study");
-//		logger.info("customHeader : {}", customHeader);
-
-//		if(httpRequest.getMethod().equals("GET")) {
-//			chain.doFilter(request, response);
-//			return;
-//		}
-
-//		if ("signupProject".equals(customHeader) && httpRequest.getMethod().equals("POST")) {
-//			chain.doFilter(request, response);
-//		} else {
-//			logger.info(customHeader);
-//			logger.info("필수 헤더가 누락되었습니다.");
-//			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
-//		}
-
-//		if (customHeader == null || customHeader.isEmpty()) {
-//			logger.info(customHeader);
-//			logger.info("필수 헤더가 누락되었습니다.");
-//			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 헤더가 누락되었습니다.");
-//
-//			return;
-//		}
-
-//		chain.doFilter(request, response);
-
-
-//
-//		String cookieHeader = httpRequest.getHeader("Cookie");
-//		String cookieValue = "Study=signupProject";
-//
-//		logger.info("cookieHeader : {}", cookieHeader);
-//
-//
-//		if (cookieValue.equals(cookieHeader)) {
-//			chain.doFilter(request, response);
-//		} else {
-//			logger.warn("필수 쿠키가 누락되었습니다.");
-//			httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 쿠키가 누락되었습니다.");
-//		}
-
-		HttpSession session = httpRequest.getSession(); // 세션이 없을 때 새로 생성하지 않도록 설정
+		HttpSession session = httpRequest.getSession();
 
 		String sessionAttribute = (session != null) ? (String) session.getAttribute("Study") : null;
 		String requiredValue = "signupProject";

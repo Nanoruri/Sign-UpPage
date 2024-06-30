@@ -23,7 +23,7 @@ public class HomeController {
 	 */
 	@GetMapping("/")
 	public String index(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-		if (userDetails != null) {
+		if (userDetails != null) {//동적으로 로그인/로그아웃 버튼을 보여주기 위해 UserDetails가 null인지 확인
 			log.info("userDetails : {}", userDetails);
 			model.addAttribute("LoggedIn", true);
 		} else {
@@ -31,7 +31,7 @@ public class HomeController {
 		}
 
 		return "index";
-	}// 예약어랑 겹치면 안됨. 그래서 보통 메인페이지는 index나 ""로 한다.
+	}
 }
 
 

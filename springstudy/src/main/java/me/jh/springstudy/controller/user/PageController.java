@@ -21,7 +21,7 @@ public class PageController {
 	 */
 	@GetMapping("/login")
 	public String loginForm(Model model) {
-		model.addAttribute("signin", new User());//signin이란 속성이름으로 새로운 User객체 생성
+		model.addAttribute("signin", new User());
 		return "login/loginPage";
 	}
 
@@ -31,7 +31,6 @@ public class PageController {
 	 * @param model member란 속성이름으로 새로운 User객체 생성
 	 * @return 회원가입 페이지 뷰 반환
 	 */
-	// 회원가입 페이지
 	@GetMapping("/signup")
 	public String signupForm(Model model) {
 		model.addAttribute("user", new User());
@@ -95,25 +94,17 @@ public class PageController {
 	 */
 	@GetMapping("/passwordChange")
 	public String resetPassword(Model model, HttpSession session, @CookieValue("passwordChanger") String passwordChanger) {
-//		String userId = (String) session.getAttribute("PasswordChangeUserId");
-//		String name = (String) session.getAttribute("PasswordChangeUserName");
-//		String phoneNum = (String) session.getAttribute("PasswordChangeUserPhoneNum");
 
-		//세션에 저장된 고유ID를 포함한 사용자 정보를 가져옴
+
+
 		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
 
-		//세션에 저장된 사용자 정보가 없을 경우 비밀번호 찾기 페이지로 리다이렉트
+
 		if (passwordChangeUser == null) {
 			log.warn("세션에 저장된 값이 없습니다.");
 			return "redirect:/findPassword";
 		}
-//
-//		User user = new User();
-//		user.setUserId(userId);
-//		user.setName(name);
-//		user.setPhoneNum(phoneNum);
 
-		//모델에 사용자 정보를 추가
 		model.addAttribute("passwordChangeUser", passwordChangeUser);
 		return "finds/newPasswordPage";
 	}

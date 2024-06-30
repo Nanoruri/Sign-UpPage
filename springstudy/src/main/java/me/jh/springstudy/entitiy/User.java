@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 사용자 정보를 담는 엔티티 클래스.
@@ -31,7 +30,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 
 	@NotBlank(message = "전화번호를 입력해 주세요")//todo : @NotBlank와 @Pattern이 작동하지 않음...
 	@Pattern(regexp = "[0-9]{3}-[0-9]{4}-[0-9]{4}", message = "전화번호는 XXX-XXXX-XXXX 형식이어야 합니다.")
-	@Column(name = "USER_PHONE")//or 여기에다가 unique 설정하는 방법도 존재 함.
+	@Column(name = "USER_PHONE")
 	private String phoneNum;//010-0000-0000
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -48,7 +47,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 	private LocalDateTime updateDate;//YYYY/MM/DD/HH/MM/SS
 
 	public User() {
-	}//기본 생성자
+	}
 
 	public User(String userId, String name, String password, String phoneNum, LocalDate birth, String email, LocalDateTime createdDate, LocalDateTime updateDate) {
 		this.userId = userId;

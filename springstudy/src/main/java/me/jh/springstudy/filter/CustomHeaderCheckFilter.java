@@ -32,9 +32,9 @@ public class CustomHeaderCheckFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		//리소스헤더 Fetch-Dest의 유형을 확인
+
 		String resourceHeader = httpRequest.getHeader("Sec-Fetch-Dest");
-		//리소스의 헤더가 empty일 경우 CustomHeaderCheck 메서드 호출
+
 		if ("empty".equals(resourceHeader)) {
 			customHeaderCheck(httpRequest, httpResponse);
 			} chain.doFilter(request,response);
@@ -48,18 +48,18 @@ public class CustomHeaderCheckFilter implements Filter {
 
 
 	/**
-	 * 커스텀 헤더가 있는지 확인하고 없다면 예외를 발생시키는 메서드
+	 * 커스텀 헤더가 있는지 확인하고 없다면 BAD_REQUEST 예외를 발생시키는 메서드
 
 	 * @param httpRequest doFilter에서의 요청객체
 	 * @param httpResponse doFilter에서의 응답객체
 	 * @throws IOException 입출력 예외 발생 객체
 	 */
 	private  void  customHeaderCheck(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException {
-		//Study라는 이름의 헤더를 가져와 customHeader변수로 초기화
+
 		String customHeader = httpRequest.getHeader("Study");
 		logger.info(customHeader);
 
-		//헤더가 null이거나 없을 시 로그메세지를 남기고 400BadRequest응답을 발생
+
 		if (customHeader == null || customHeader.isEmpty() || !"signupProject".equals(customHeader)) {
 			//todo : index페이지에서 /study/webjars/bootstrap/5.3.2/css/bootstrap.min.css.map이 이걸 탐... 디버그해보기
 			logger.error("필수 헤더가 누락되었습니다");

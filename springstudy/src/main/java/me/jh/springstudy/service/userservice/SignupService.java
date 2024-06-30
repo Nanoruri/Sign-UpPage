@@ -64,22 +64,6 @@ public class SignupService {
 		userDao.save(user);// 사용자 엔티티를 데이터베이스에 저장
 	}
 
-//	/**
-//	 *입력받은 값의 패턴을 확인하여 중복검사 메서드를 호출하는 메서드
-//	 * @param identifier 중복 검사를 받을 입력값
-//	 * @return 패턴에 따라 아이디나 이메일 중복검사 메서드 호출
-//	 * @throws UserException 어느 패턴에도 해당하지 않을 경우 예외 발생
-//	 */
-//	public boolean isDuplicate(String identifier) {
-//		if(assureEmailPattern(identifier)){
-//			return isDuplicateEmail(identifier);
-//		}else if (assureIdPattern(identifier)){
-//			return isDuplicateId(identifier);
-//		}else{
-//			throw new UserException(UserErrorType.MISSING_INFORMATION);
-//		}
-//	}
-
 	/**
 	 * 아이디 패턴과 일치하는지 확인하고 중복검사를 실행하는 메서드
 	 * 아이디가 유효한 형식인지 검사한 후, 유효한 경우에만 데이터베이스에서 해당 아이디의 중복 여부를 확인.

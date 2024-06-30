@@ -30,7 +30,7 @@ import java.util.UUID;
 @Controller
 public class ApiController {
 
-	private final static Logger log = LoggerFactory.getLogger(ApiController.class);// Log 찍는 내용
+	private final static Logger log = LoggerFactory.getLogger(ApiController.class);
 	private final SignupService signupService;
 	private final LoginService loginService;
 	private final FindService findService;
@@ -59,16 +59,16 @@ public class ApiController {
 	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
 	 * @throws UserException 로그인 실패시 아이디 및 패스워드 오류 메세지를 반환
 	 */
-	@PostMapping("/loginCheck")//@RequestParam쓰면  html의 name태그의 이름을 갖다 쓸 수 있음.)
+	@PostMapping("/loginCheck")
 	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password, HttpSession session) {
 		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
 			log.warn("로그인 실패");
 			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
-			// UserException으로 예외 투척
+
 		}
 		log.info("로그인 성공");
-		session.setAttribute("userId", userId);//세션에 userId 저장
-		return "redirect:/";//로그인 성공시 메인페이지로 리다이렉트
+		session.setAttribute("userId", userId);//메인 페이지에 로그인/로그아웃 버튼을 위한 세션 저장
+		return "redirect:/";
 	}
 
 //	@PostMapping("/logout")//이 API는 필요X. 해당 http메서드와 엔드포인트로 시큐리티에서 로그아웃을 처리하고 있음.
@@ -90,12 +90,12 @@ public class ApiController {
 	 */
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute("user") @Validated User user) {
-		signupService.registerMember(user);//회원가입 서비스, 예외처리는 서비스 클래스에서 한다.
-//		if (result.hasErrors()) {//회원가입 실패 시의 로직
+		signupService.registerMember(user);
+//		if (result.hasErrors()) {
 //			return "redirect:/signupError";
 //		}
 		log.info("회원 정보 저장성공");
-		return "redirect:/signupSuccess";// signupPage에서 signupSuccessPage로 이동
+		return "redirect:/signupSuccess";
 	}
 
 	/**
@@ -108,14 +108,13 @@ public class ApiController {
 	 * @implNote 이 메서드는 {@link SignupService#isDuplicateId(String)}를 사용하여 사용자 ID 중복 여부를 확인.
 	 */
 	@PostMapping("/idCheck")
-	@ResponseBody//이 어노테이션이 붙은 파라미터에는 http요청, 본문(body)의 내용이 그대로 전달된다.
+	@ResponseBody
 	public ResponseEntity<String> checkDuplicateUserId(@RequestBody Map<String, String> reqData) {
 		String userId = reqData.get("userId");
 
-		if (signupService.isDuplicateId(userId)) {//ID 중복검사 로직
+		if (signupService.isDuplicateId(userId)) {
 			log.warn("중복된 ID 발견.DB 확인 요망");
-			throw new UserException(UserErrorType.ID_ALREADY_EXIST);//중복O
-			//http Conflict(409)상태만 전달해주면 front에서 처리할 수 있음.
+			throw new UserException(UserErrorType.ID_ALREADY_EXIST);
 		}
 		log.info("ID 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 ID입니다.");//중복X(false) = http ok(200)상태와 함께 메세지 출력
@@ -137,7 +136,7 @@ public class ApiController {
 
 		if (signupService.isDuplicateEmail(email)) {
 			log.warn("중복된 Email 발견.DB 확인 요망");
-			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//중복o;//todo: Email용 에러코드 만들어야함?
+			throw new UserException(UserErrorType.USER_ALREADY_EXIST);
 		}
 		log.info("Email 중복검사 성공");
 		return ResponseEntity.ok("사용가능한 이메일입니다.");
@@ -193,12 +192,8 @@ public class ApiController {
 
 	@PostMapping("/findPassword")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user, Model model,//@RequstBody로 받아온 데이터를 User객체로 변환 = map to object와 같은 효과..?
+	public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user, Model model,
 	                                                        HttpSession session, HttpServletResponse response) {
-//		boolean validateUser = findService.validateUser(userId, name, email);
-//		String userId = reqData.get("userId");
-//		String name = reqData.get("name");
-//		String phoneNum = reqData.get("phoneNum");
 
 
 		if (!findService.validateUser(user.getUserId(), user.getName(), user.getPhoneNum())) {//사용자를 찾을 수 없을 경우
@@ -207,25 +202,18 @@ public class ApiController {
 		}
 
 
-//		session.setAttribute("PasswordChangeUserId", userId);
-//		session.setAttribute("PasswordChangeUserName", name);
-//		session.setAttribute("PasswordChangeUserPhoneNum", phoneNum);
-//		User user = new User(userId, name, null, phoneNum, null, null, null, null); 이미 User객체로 받아왔기 때문에 객체 생성할 필요가 없음.
 
-		String passwordChanger = UUID.randomUUID().toString();//고유ID 생성
-		session.setAttribute("passwordChangeUser" + passwordChanger, user);//세션에 고유ID를 키로 사용자 정보 저장
 
-		// User validateUsers = new User();
-		// validateUsers.setUserId(userId);
-		// validateUsers.setName(name);
-		// validateUsers.setPhoneNum(phoneNum);
+		String passwordChanger = UUID.randomUUID().toString();
+		session.setAttribute("passwordChangeUser" + passwordChanger, user);
+
 
 		//쿠키를 사용해 고유ID를 비밀번호 변경 페이지로 전달
 		Cookie cookie = new Cookie("passwordChanger", passwordChanger);
-		cookie.setMaxAge(60 * 60 * 24);//쿠키의 유효시간
-		cookie.setPath("/");//쿠키의 유효경로
-		cookie.setHttpOnly(true);//자바스크립트에서 쿠키에 접근할 수 없도록 설정
-		response.addCookie(cookie);//쿠키를 응답에 추가
+		cookie.setMaxAge(60 * 60 * 24);
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+		response.addCookie(cookie);// TODO : 이것보단 jwt를 사용하는게 좋을 것 같다.
 
 		Map<String, String> responseData = new HashMap<>();
 		responseData.put("userId", user.getUserId());
@@ -233,9 +221,6 @@ public class ApiController {
 		responseData.put("phoneNum", user.getPhoneNum());
 
 		return ResponseEntity.ok(responseData);
-
-		// model.addAttribute("passwordChangeUser", validateUsers);
-		// return "finds/newPasswordPage";
 	}
 
 

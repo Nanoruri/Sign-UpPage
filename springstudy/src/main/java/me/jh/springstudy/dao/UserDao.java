@@ -10,19 +10,9 @@ import org.springframework.stereotype.Repository;
  * Jpa와 CustomDao를 상속받는다.
  */
 @Repository
-public interface UserDao extends JpaRepository<User, String>, CustomDao {//이러면 JPA 쓰는 의미가 있는가..
+public interface UserDao extends JpaRepository<User, String>, CustomDao {
 
-	//JPA는 메서드 이름을 기준으로  분석하여 쿼리를 자동으로 생성함. 그래서 엔티티 테이블과 매핑할 수 있는
-	//엔티티 클래스가 필요한거라고 추즉 됨
-
-	//
 	User findByNameAndPhoneNum(String name, String phoneNum);
 	boolean existsByEmail(String email);
-
-	//찾기 서비스
-//    User findByUserIdAndNameAndEmail(String userId, String name, String email);
-
-//    Optional<User> findByProperties(String userId, String name, String email);
-// todo : 이거를 추상클래스에서 구현()...or 인터페이스 다중 확장 기능 이용...
 
 }
