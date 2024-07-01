@@ -1,4 +1,4 @@
-package me.jh.springstudy.service.userservice;
+package me.jh.springstudy.service.user;
 
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.dao.UserDao;
