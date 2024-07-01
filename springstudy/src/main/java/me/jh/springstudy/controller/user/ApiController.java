@@ -78,7 +78,6 @@ public class ApiController {
 //	}
 
 
-
 	/**
 	 * .
 	 * 회원가입 서비스를 호출하는 API.
@@ -143,7 +142,6 @@ public class ApiController {
 	}
 
 
-
 	/**
 	 * 이름과 전화번호를 기준으로 아이디를 찾아주는 API
 	 *
@@ -183,7 +181,7 @@ public class ApiController {
 	 * 사용자가 입력한 이름과 전화번호로 사용자를 찾아서 비밀번호 변경 페이지로 이동
 	 * 사용자가 없을 경우 사용자를 찾을 수 없다는 메세지를 반환
 	 *
-	 * @param user  사용자 아이디, 이름, 전화번호를 담은 User객체
+	 * @param user     사용자 아이디, 이름, 전화번호를 담은 User객체
 	 * @param response 쿠키를 사용하여 고유ID를 생성하여 비밀번호 변경 페이지로 전달
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
 	 * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 찾기에 실패할 경우 사용자를 찾을 수 없다는 메세지를 반환
@@ -200,8 +198,6 @@ public class ApiController {
 			log.warn("잘못된 입력입니다");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);//사용자를 찾을 수 없다는 메세지를 반환
 		}
-
-
 
 
 		String passwordChanger = UUID.randomUUID().toString();
@@ -239,27 +235,23 @@ public class ApiController {
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, @CookieValue("passwordChanger") String passwordChanger,
 	                                                         HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		// 쿠키가 없을 경우 비밀번호 변경 실패(비밀번호 변경 페이지로 돌아가기
 
-		//세션에 저장된 고유ID를 포함한 사용자 정보를 가져옴
 		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
 
-		//사용자가 입력한 새 비밀번호를 받아옴
+
 		String newPassword = reqData.get("newPassword");
 
-		//비밀번호 변경 서비스 호출
+
 		findService.changePassword(passwordChangeUser, newPassword);
 
-//		if (!findService.changePassword(changePasswordUser, newPassword)) {
+//		if (!findService.changePassword(passwordChangeUser, newPassword)) {
 //			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
-//			return "redirect:/findPw";//해당 내용은 validateUser에서 필터링하기 때문에 주석처리함
+//			throw new UserException(UserErrorType.USER_NOT_FOUND);//해당 내용은 validateUser에서 필터링하기 때문에 주석처리함
 //		} else if (newPassword == null) {
 //			throw new UserException(UserErrorType.PASSWORD_NULL);
 //		}
 
-//		session.removeAttribute("PasswordChangeUserId");
-//		session.removeAttribute("PasswordChangeUserName");
-//		session.removeAttribute("PasswordChangeUserPhoneNum");
+
 		session.removeAttribute("PasswordChangeUser");// password사용된 세션은 제거해준다.
 		log.info("PasswordChangeUser 세션 제거 성공");
 
@@ -281,10 +273,5 @@ public class ApiController {
 		return ResponseEntity.ok(responseData);
 	}// TODO : 로직 다듬기, 성공시 메세지 출력, 실패시 메세지 출력, 실패시 다시 입력창으로 돌아가기, 테스트 코드 수정하기
 
-//	@PostMapping("/passwordChange")
-//	public String resetPassword(@ModelAttribute("passwordChange")@RequestParam("password") String presentPassword, @RequestParam("newPassword") String newPassword) {
-//		findService.resetPassword(presentPassword, newPassword);
-//		return "passwordChangeSuccess";
-//	}
 
 }
