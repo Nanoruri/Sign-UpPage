@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * Jpa와 CustomDao를 상속받는다.
  */
 @Repository
-public interface UserDao extends JpaRepository<User, String>, CustomDao {
+public interface UserDao extends JpaRepository<User, String>, UserPropertiesDao {
 
 	User findByNameAndPhoneNum(String name, String phoneNum);
 	boolean existsByEmail(String email);

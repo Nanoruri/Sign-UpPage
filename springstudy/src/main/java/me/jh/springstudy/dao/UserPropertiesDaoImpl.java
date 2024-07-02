@@ -14,11 +14,11 @@ import java.util.Optional;
 /**
  * 사용자 정보를 찾는 CustomDAO 구현 클래스.//
  */
-public class CustomDaoImpl implements CustomDao { //todo : CustomDao 인터페이스 이름 변경한다면 클래스명 변경하기
+public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : CustomDao 인터페이스 이름 변경한다면 클래스명 변경하기
 	@PersistenceContext
 	private final EntityManager entityManager;
 
-	public CustomDaoImpl(EntityManager entityManager) {
+	public UserPropertiesDaoImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 

@@ -26,9 +26,9 @@ import static org.mockito.Mockito.when;
  * 동적 쿼리를 생성해 사용자 정보를 찾는 CustomDAO 테스트 클래스.
  */
 @ExtendWith(MockitoExtension.class)
-public class CustomDaoTest {
+public class UserPropertiesDaoTest {
 
-	private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomDaoTest.class);
+	private static final Logger log = org.slf4j.LoggerFactory.getLogger(UserPropertiesDaoTest.class);
 
 	@Mock
 	private EntityManager entityManager;
@@ -69,7 +69,7 @@ public class CustomDaoTest {
 //		when(criteriaQuery.where(any(Predicate.class))).thenReturn(criteriaQuery);
 //		when(criteriaQuery.from(User.class)).thenReturn(root);
 
-		CustomDaoImpl customDao = new CustomDaoImpl(entityManager);
+		UserPropertiesDaoImpl customDao = new UserPropertiesDaoImpl(entityManager);
 		Optional<User> foundUser = customDao.findByProperties(user.getUserId(), user.getName(), user.getPhoneNum());
 
 		assertTrue(foundUser.isPresent());
