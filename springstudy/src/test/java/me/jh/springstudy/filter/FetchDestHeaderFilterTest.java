@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)// 스프링 컨텍스트 관련 기능 제공
 @SpringBootTest(classes = MySpringBootApplication.class)
-public class CustomHeaderCheckFilterTest {
+public class FetchDestHeaderFilterTest {
 
 	@Mock
 	private HttpServletRequest request;
@@ -33,7 +33,7 @@ public class CustomHeaderCheckFilterTest {
 	private FilterChain chain;
 
 	@InjectMocks
-	private CustomHeaderCheckFilter filter;
+	private FetchDestHeaderFilter filter;
 
 	@Test
 	public void testFetchDestNotEmptyValue() throws ServletException, IOException {

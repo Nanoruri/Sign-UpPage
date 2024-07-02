@@ -15,9 +15,9 @@ import java.io.IOException;
  * 	Fetch-Dest의 유형을 확인하여 empty일 경우 특정한 커스텀 헤더가 있는지 확인 후 있으면 다음 필터 호출,
  * 	없다면 예외를 발생시키는 필터
  */
-public class CustomHeaderCheckFilter implements Filter {
+public class FetchDestHeaderFilter implements Filter {
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomHeaderCheckFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(FetchDestHeaderFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
