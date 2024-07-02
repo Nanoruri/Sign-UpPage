@@ -7,11 +7,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -20,9 +23,9 @@ public class SpringApplicationTest {
 
 	@Autowired
 	private UserDao userDao;
-	private PasswordEncoder passwordEncoder;
-	private ApplicationContext context;
 
+	@Autowired
+	private Environment env;
 
 
 
@@ -55,6 +58,71 @@ public class SpringApplicationTest {
 
 		userDao.save(user);
 	}
+
+
+	@Test
+	void testServerPort() {
+		String serverPort = env.getProperty("server.port");
+		assertThat(serverPort).isEqualTo("8082");
+	}
+
+	@Test
+	void testDatasource() {
+		String dbUrl = env.getProperty("spring.datasource.url");
+		String dbUsername = env.getProperty("spring.datasource.username");
+		String dbPassword = env.getProperty("spring.datasource.password");
+		String dbDriver = env.getProperty("spring.datasource.driver-class-name");
+
+		assertThat(dbUrl).isEqualTo("jdbc:mariadb://127.0.0.1:44327/USERINFO");
+		assertThat(dbUsername).isEqualTo("kaby1217");
+		assertThat(dbPassword).isEqualTo("Cubie159!@");
+		assertThat(dbDriver).isEqualTo("org.mariadb.jdbc.Driver");
+	}
+
+	@Test
+	void testJpaProperties() {
+		String ddlAuto = env.getProperty("spring.jpa.hibernate.ddl-auto");
+		String showSql = env.getProperty("spring.jpa.show-sql");
+		String generateDdl = env.getProperty("spring.jpa.generate-ddl");
+		String openInView = env.getProperty("spring.jpa.open-in-view");
+
+		assertThat(ddlAuto).isEqualTo("update");
+		assertThat(showSql).isEqualTo("true");
+		assertThat(generateDdl).isEqualTo("true");
+		assertThat(openInView).isEqualTo("false");
+	}
+
+	@Test
+	void testHibernateProperties() {
+		String dialect = env.getProperty("spring.jpa.properties.hibernate.dialect");
+		String hibernateShowSql = env.getProperty("spring.jpa.properties.hibernate.show-sql");
+
+		assertThat(dialect).isEqualTo("org.hibernate.dialect.MySQL5Dialect");
+		assertThat(hibernateShowSql).isEqualTo("true");
+	}
+
+	@Test
+	void testSecurityProperties() {
+		String userName = env.getProperty("security.user.name");
+		String userPassword = env.getProperty("security.user.password");
+		String userRoles = env.getProperty("security.user.roles");
+
+		assertThat(userName).isEqualTo("kaby1217");
+		assertThat(userPassword).isEqualTo("1217159");
+		assertThat(userRoles).isEqualTo("USER,ADMIN");
+	}
+
+	@Test
+	void testJwtProperties() {
+		String secret = env.getProperty("jwt.secret");
+		String expiration = env.getProperty("jwt.expiration");
+
+		assertThat(secret).isEqualTo("dlrjgozldgoqhffurh?zz");
+		assertThat(expiration).isEqualTo("8640000");
+	}
+
+
+
 
 }
 

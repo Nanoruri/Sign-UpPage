@@ -6,49 +6,43 @@ server:
   error:
     path: /errors
 
-#로그 레벨
+# 로그 레벨 설정
 logging:
   level:
     org.springframework: INFO
 
-#스프링 설정
+# 스프링 설정
 spring:
   thymeleaf:
     check-template-location: true
 
-  # 접속 DB 설정
   datasource:
     url: "jdbc:mariadb://127.0.0.1:44327/USERINFO"
     username: "kaby1217"
     password: "Cubie159!@"
     driver-class-name: "org.mariadb.jdbc.Driver"
 
-  # Hibernate 설정
-  hibernate:
-    ddl-auto: update
-    dialect: org.hibernate.dialect.MySQL5Dialect
-    show-sql: true
-
-# JPA 설정
+#JPA 설정
   jpa:
     hibernate:
-    ddl-auto: update
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
     open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        show-sql: true # hibernate.show-sql should be under properties.hibernate
 
-  # 스프링 시큐리티
-  security:
-    user:
-      name: kaby1217
-      password: 1217159
-      roles: USER,ADMIN
+# 스프링 시큐리티 설정
+security:
+  user:
+    name: kaby1217
+    password: 1217159
+    roles: USER,ADMIN
 
-
-  #JWT설정
-  jwt:
-    secret: dlrjgozldgoqhffurh?zz #비밀의 키
-    expiration : 8640000 #만료시간
-
-
+# JWT 설정
+jwt:
+  secret: dlrjgozldgoqhffurh?zz # 비밀의 키
+  expiration: 8640000 # 만료시간
 
