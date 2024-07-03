@@ -3,9 +3,9 @@ package me.jh.springstudy.controller.user;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
-import me.jh.springstudy.service.userservice.FindService;
-import me.jh.springstudy.service.userservice.LoginService;
-import me.jh.springstudy.service.userservice.SignupService;
+import me.jh.springstudy.service.user.FindService;
+import me.jh.springstudy.service.user.LoginService;
+import me.jh.springstudy.service.user.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,16 +256,16 @@ public class ApiController {
 		log.info("PasswordChangeUser 세션 제거 성공");
 
 		Cookie[] cookies = request.getCookies();
-//		if (cookies != null) {// 쿠키가 존재하지 않는경우 400을 반환하기 때문에 필요없는 로직
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("passwordChanger") && cookie.getValue().equals(passwordChanger)) {
-					cookie.setMaxAge(0); // 쿠키의 유효 시간을 0으로 설정하여 삭제
-					cookie.setPath("/"); // 쿠키의 유효 경로
-					response.addCookie(cookie); // 응답에 삭제된 쿠키를 추가
-					log.info("passwordChanger 쿠키 제거 성공");
-					break;
-				}
+		for (Cookie cookie : cookies) {
+			log.info("쿠키 이름: {}, 쿠키 값: {}", cookie.getName(), cookie.getValue());
+			if (cookie.getName().equals("passwordChanger") && cookie.getValue().equals(passwordChanger)) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+				log.info("passwordChanger 쿠키 제거 성공");
+				break;
 			}
+		}
 //		}
 
 		Map<String, String> responseData = new HashMap<>();
