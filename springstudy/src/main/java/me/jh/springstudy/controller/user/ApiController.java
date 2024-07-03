@@ -242,7 +242,10 @@ public class ApiController {
 		String newPassword = reqData.get("newPassword");
 
 
-		findService.changePassword(passwordChangeUser, newPassword);
+		 if (!findService.changePassword(passwordChangeUser, newPassword)) {
+			log.warn("비밀번호 변경 실패");
+			throw new UserException(UserErrorType.USER_NOT_FOUND);
+		}
 
 //		if (!findService.changePassword(passwordChangeUser, newPassword)) {
 //			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
