@@ -81,15 +81,17 @@ public class FindServiceTest {
 		String userId = "test";
 		String name = "test";
 		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null);
 
-		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
 
-		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
 
-		boolean validUser = findService.validateUser(userId, name, phoneNum);
+		boolean validUser = findService.validateUser(user);
 		assertTrue(validUser, "사용자를 찾았습니다.");
 
-		verify(userDao, times(1)).findByProperties(userId, name, phoneNum);
+		verify(userDao, times(1)).findByProperties(user);
 	}
 
 	/**
@@ -100,13 +102,15 @@ public class FindServiceTest {
 		String userId = "Unknown";
 		String name = "test";
 		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null);
 
-		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(null));
+		when(userDao.findByProperties(user)).thenReturn(Optional.empty());
 
-		boolean validUser = findService.validateUser(userId, name, phoneNum);
+		boolean validUser = findService.validateUser(user);
 		assertFalse(validUser, "사용자를 찾지 못했습니다.");
 
-		verify(userDao, times(1)).findByProperties(userId, name, phoneNum);
+		verify(userDao, times(1)).findByProperties(user);
 	}
 
 	/**
@@ -117,12 +121,14 @@ public class FindServiceTest {
 		String userId = "test";
 		String name = "testName";
 		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, null, phoneNum,
+				null, null, null, null);
 
-		when(userDao.findByProperties(userId, name, phoneNum)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
 
 		String newPassword = "changedPassword";
 
-		boolean result = findService.changePassword(changePasswordUser, newPassword);
+		boolean result = findService.changePassword(user, newPassword);
 
 		assertTrue(result, "비밀번호 변경 성공해야함");
 		verify(userDao, times(1)).save(changePasswordUser);
@@ -137,9 +143,7 @@ public class FindServiceTest {
 
 		//given
 		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패해야함
-		when(userDao.findByProperties(changePasswordUser.getUserId(),
-				changePasswordUser.getName(),
-				changePasswordUser.getPhoneNum())).thenReturn(Optional.empty());
+		when(userDao.findByProperties(changePasswordUser)).thenReturn(Optional.empty());
 
 		// Act & Assert
 		try {
@@ -151,9 +155,7 @@ public class FindServiceTest {
 
 		// Verify
 		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패하고 해당 예외가 발생하는지 확인
-		verify(userDao, times(1)).findByProperties(changePasswordUser.getUserId(),
-				changePasswordUser.getName(),
-				changePasswordUser.getPhoneNum());
+		verify(userDao, times(1)).findByProperties(changePasswordUser);
 		verifyNoMoreInteractions(userDao);
 	}
 

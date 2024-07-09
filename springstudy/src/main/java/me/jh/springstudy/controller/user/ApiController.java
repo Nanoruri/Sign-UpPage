@@ -185,7 +185,7 @@ public class ApiController {
 	 * @param response 쿠키를 사용하여 고유ID를 생성하여 비밀번호 변경 페이지로 전달
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
 	 * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 찾기에 실패할 경우 사용자를 찾을 수 없다는 메세지를 반환
-	 * @implNote 이 메서드는 {@link FindService#validateUser(String, String, String)}를 사용하여 사용자를 조회.
+	 * @implNote 이 메서드는 {@link FindService#validateUser(User)}를 사용하여 사용자를 조회.
 	 */
 
 	@PostMapping("/findPassword")
@@ -194,7 +194,7 @@ public class ApiController {
 	                                                        HttpSession session, HttpServletResponse response) {
 
 
-		if (!findService.validateUser(user.getUserId(), user.getName(), user.getPhoneNum())) {//사용자를 찾을 수 없을 경우
+		if (!findService.validateUser(user)) {//사용자를 찾을 수 없을 경우
 			log.warn("잘못된 입력입니다");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);//사용자를 찾을 수 없다는 메세지를 반환
 		}

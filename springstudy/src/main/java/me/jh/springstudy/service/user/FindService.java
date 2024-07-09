@@ -49,15 +49,12 @@ public class FindService {
 	 * 입력된 사용자 아이디, 이름, 전화번호를 검증하여 사용자의 존재 여부를 확인하는 메서드.
 	 * 입력된 정보로 정확히 일치하는 사용자가 데이터베이스에 존재하는지 여부를 반환.
 	 *
-	 * @param userId   사용자의 아이디
-	 * @param name     사용자의 이름
-	 * @param phoneNum 사용자의 전화번호
 	 * @return 사용자가 존재할 경우 true, 존재하지 않을 경우 false 반환
-	 * @implNote 이 메서드는 {@link UserDao#findByProperties(String, String, String)}를 사용하여 사용자를 검증.
+	 * @implNote 이 메서드는 {@link UserDao#findByProperties(User)}를 사용하여 사용자를 검증.
 	 */
-	public boolean validateUser(String userId, String name, String phoneNum) {
-		boolean isValid = userDao.findByProperties(userId, name, phoneNum).isPresent();
-		log.info(isValid ? "사용자를 찾았습니다" + userId : "사용자를 찾을 수 없습니다.");
+	public boolean validateUser(User user) {
+		boolean isValid = userDao.findByProperties(user).isPresent();
+		log.info(isValid ? "사용자를 찾았습니다" + user.getUserId(): "사용자를 찾을 수 없습니다.");
 		return isValid;
 	}
 
@@ -70,13 +67,11 @@ public class FindService {
 	 * @param newPassword        새로운 비밀번호
 	 * @return 비밀번호 변경 성공 시 true, 실패 시 false
 	 * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 변경에 실패할 경우 예외 발생
-	 * @implNote 이 메서드는 {@link UserDao#findByProperties(String, String, String)}를 사용하여 사용자를 검증하고,
+	 * @implNote 이 메서드는 {@link UserDao#findByProperties(User)}를 사용하여 사용자를 검증하고,
 	 * {@link UserDao#save(Object)}를 사용하여 변경된 비밀번호를 저장합니다.
 	 */
 	public boolean changePassword(User changePasswordUser, String newPassword) {
-		Optional<User> optionalUser = userDao.findByProperties(changePasswordUser.getUserId(),
-				changePasswordUser.getName(),
-				changePasswordUser.getPhoneNum());
+		Optional<User> optionalUser = userDao.findByProperties(changePasswordUser);
 
 
 		if (optionalUser.isEmpty()) {

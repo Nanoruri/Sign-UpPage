@@ -1,14 +1,18 @@
 package me.jh.springstudy.controller.user;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.service.user.FindService;
 import me.jh.springstudy.service.user.LoginService;
 import me.jh.springstudy.service.user.SignupService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,8 +36,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -64,8 +70,21 @@ public class ApiControllerTest {
 	@MockBean
 	private UserDao userDao;
 
+	@Captor
+	private ArgumentCaptor<User> userCaptor;
+
+	@Mock
+	private User user;
 	@Mock
 	private Cookie cookie;
+
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	@BeforeEach
+	public void setUp() {
+		user = new User("test", "testName", "hashedPassword", "010-1234-5678",
+				LocalDate.of(1990, 11, 27), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+	}
 
 	@Test
 	public void testLoginSuccess() throws Exception {
@@ -233,65 +252,58 @@ public class ApiControllerTest {
 	}
 
 
-	@Test//비밀번호 찾기 성공
+	@Test
 	public void testFindPwSuccess() throws Exception {
 		// 입력값 설정
-		String userId = "test1234";
-		String name = "test";
-		String phoneNum = "010-1234-5678";
-		String passwordChanger = "fixed-uuid-for-testing";  // 테스트용 UUID
+		User testUser = new User();
+		testUser.setUserId("validUser");
+		testUser.setName("Valid");
+		testUser.setPhoneNum("987654321");
 
-		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
-		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
-
-		//TODO : UUID 생성 과정에서 테스트 통과하게끔 하기(UUID.randomUUID()이 static 메서드라서 테스트가 어려움)
-
-		// UUID.randomUUID()를 고정된 UUID로 변경
-//		try (MockedStatic<UUID> mockedUUID = mockStatic(UUID.class)) {
-//			mockedUUID.when(UUID::randomUUID).thenReturn(UUID.fromString(passwordChanger));
-//		}
-		// 세션에 사용자 정보를 저장
-//		session.setAttribute("passwordChangeUser" + passwordChanger, testUser);
-
+		//validateUser의 반환값 설정.API의 매개변수로 받는 user 객체와 테스트에 사용되는 user 객체가 달라 any()를 사용
+		when(findService.validateUser(any(User.class))).thenReturn(true);
 
 		mockMvc.perform(post("/findPassword")
-						.contentType("application/json")
-						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.userId").value(userId))
-				.andExpect(jsonPath("$.name").value(name))
-				.andExpect(jsonPath("$.phoneNum").value(phoneNum))
-				.andExpect(cookie().exists("passwordChanger"));//쿠키가 생성되었는지 확인
+				.andExpect(jsonPath("$.userId").value(testUser.getUserId()))
+				.andExpect(jsonPath("$.name").value(testUser.getName()))
+				.andExpect(jsonPath("$.phoneNum").value(testUser.getPhoneNum()))
+				.andExpect(cookie().exists("passwordChanger"))
+				.andReturn().getResponse();
 
-		Mockito.verify(findService, Mockito.times(1)).validateUser(userId, name, phoneNum);
-//		assertInstanceOf(User.class, session.getAttribute("passwordChangeUser" + passwordChanger));
-//
-//		User sessionUser = (User) mockSession.getAttribute("passwordChangeUser" + passwordChanger);
-//		assertNotNull(sessionUser);
-//		assertEquals(testUser.getUserId(), sessionUser.getUserId());
-//		assertEquals(testUser.getName(), sessionUser.getName());
-//		assertEquals(testUser.getPhoneNum(), sessionUser.getPhoneNum());
+		verify(findService, times(1)).validateUser(any(User.class));
 
+		verify(findService).validateUser(userCaptor.capture());
+		User capturedUser = userCaptor.getValue();
+
+		// 캡처된 User 객체와 테스트에서 사용한 User 객체의 내용이 동일한지 검증
+		assertEquals(testUser.getUserId(), capturedUser.getUserId());
+		assertEquals(testUser.getName(), capturedUser.getName());
+		assertEquals(testUser.getPhoneNum(), capturedUser.getPhoneNum());
 	}
 
 	@Test//비밀번호 찾기 실패
 	public void testFindPwFailure() throws Exception {
-		String userId = "test1234";
-		String name = "test";
+		String userId = "test";
+		String name = "testName";
 		String phoneNum = "010-1234-5678";
+		User testUser = new User(userId, name, null, phoneNum, null, null, null, null);
 
 		// 사용자 정보가 없을 때
-		when(findService.validateUser(userId, name, phoneNum)).thenReturn(false);
+		when(findService.validateUser(any(User.class))).thenReturn(false);
 
 		// 사용자 정보가 없을 때의 요청을 수행
 		mockMvc.perform(post("/findPassword")
-						.contentType("application/json")
-						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
 
 		// 메서드가 실행되었는지 확인
-		Mockito.verify(findService, Mockito.times(1)).validateUser(userId, name, phoneNum);
+		verify(findService, times(1)).validateUser(any(User.class));
+
 	}
 
 
@@ -312,7 +324,7 @@ public class ApiControllerTest {
 		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
 
 		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
+		when(findService.validateUser(testUser)).thenReturn(true);
 		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
 
 
@@ -327,7 +339,7 @@ public class ApiControllerTest {
 				.andExpect(jsonPath("$.messege").value("비밀번호 변경 성공"));
 
 		//메서드가 실행되었는지 확인
-		Mockito.verify(findService, Mockito.times(1)).changePassword(testUser, newPassword);
+		verify(findService, times(1)).changePassword(testUser, newPassword);
 		assertNull(session.getAttribute("passwordChangeUser123"));//세션에 저장된 사용자 정보가 삭제되었는지 확인
 
 	}
@@ -350,7 +362,7 @@ public class ApiControllerTest {
 		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
 
 		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
+		when(findService.validateUser(testUser)).thenReturn(true);
 		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
 
 
@@ -364,7 +376,7 @@ public class ApiControllerTest {
 				.andExpect(status().isBadRequest());
 
 		//메서드가 실행되었는지 확인
-		Mockito.verify(findService, Mockito.times(0)).changePassword(testUser, newPassword);
+		verify(findService, times(0)).changePassword(testUser, newPassword);
 		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
 	}
 
@@ -385,7 +397,7 @@ public class ApiControllerTest {
 		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
 
 		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-		when(findService.validateUser(userId, name, phoneNum)).thenReturn(true);
+		when(findService.validateUser(testUser)).thenReturn(true);
 		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
 
 
@@ -399,7 +411,7 @@ public class ApiControllerTest {
 				.andExpect(status().isBadRequest());
 
 		//메서드가 실행되었는지 확인
-		Mockito.verify(findService, Mockito.times(0)).changePassword(testUser, newPassword);
+		verify(findService, times(0)).changePassword(testUser, newPassword);
 
 	}
 
@@ -436,7 +448,7 @@ public class ApiControllerTest {
 				.andExpect(status().isNotFound());
 
 		//메서드가 실행되었는지 확인
-		Mockito.verify(findService, Mockito.times(0)).changePassword(testUser, newPassword);
+		verify(findService, times(0)).changePassword(testUser, newPassword);
 		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
 	}
 
@@ -479,7 +491,6 @@ public class ApiControllerTest {
 //		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
 //	}
 //
-
 }
 
 // todo : 빠진부분 없는지 확인하기
