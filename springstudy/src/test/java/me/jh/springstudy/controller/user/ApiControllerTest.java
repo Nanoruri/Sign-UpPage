@@ -157,7 +157,7 @@ public class ApiControllerTest {
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/signupSuccess"));
 
-		Mockito.verify(signupService, Mockito.times(1)).registerMember(user);
+		verify(signupService, times(1)).registerMember(user);
 	}
 
 	@Test
@@ -173,7 +173,7 @@ public class ApiControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 ID입니다."));
 
-		Mockito.verify(signupService, Mockito.times(1)).isDuplicateId(userId);
+		verify(signupService, times(1)).isDuplicateId(userId);
 	}
 
 	@Test
@@ -187,7 +187,7 @@ public class ApiControllerTest {
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isConflict())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("이미 존재하는 아이디입니다."));
-		Mockito.verify(signupService, Mockito.times(1)).isDuplicateId(userId);
+		verify(signupService, times(1)).isDuplicateId(userId);
 	}
 
 	@Test
@@ -201,7 +201,7 @@ public class ApiControllerTest {
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 이메일입니다."));
-		Mockito.verify(signupService, Mockito.times(1)).isDuplicateEmail(email);
+		verify(signupService, times(1)).isDuplicateEmail(email);
 	}
 
 	@Test
@@ -215,7 +215,7 @@ public class ApiControllerTest {
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isConflict())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
-		Mockito.verify(signupService, Mockito.times(1)).isDuplicateEmail(email);
+		verify(signupService, times(1)).isDuplicateEmail(email);
 	}
 
 
@@ -233,7 +233,7 @@ public class ApiControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId));
 
-		Mockito.verify(findService, Mockito.times(2)).findId(name, phoneNum);//findId메서드가 왜 두번 호출 되었는지 확인
+		verify(findService, times(2)).findId(name, phoneNum);//findId메서드가 왜 두번 호출 되었는지 확인
 	}
 
 	@Test//아이디 찾기 실패
@@ -248,7 +248,7 @@ public class ApiControllerTest {
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
-		Mockito.verify(findService, Mockito.times(1)).findId(name, phoneNum);
+		verify(findService, times(1)).findId(name, phoneNum);
 	}
 
 
