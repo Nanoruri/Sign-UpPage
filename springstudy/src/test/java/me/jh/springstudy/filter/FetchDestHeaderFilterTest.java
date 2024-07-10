@@ -39,7 +39,6 @@ public class FetchDestHeaderFilterTest {
 	public void testFetchDestNotEmptyValue() throws ServletException, IOException {
 
 
-
 		//Sec-Fetch-Dest헤더의 값을 document로 설정
 		when(request.getHeader("Sec-Fetch-Dest")).thenReturn("document");
 
@@ -53,7 +52,6 @@ public class FetchDestHeaderFilterTest {
 
 	@Test
 	public void testCustomHeaderExists() throws ServletException, IOException {
-
 
 
 		// Sec-Fetch-Dest헤더의 값을 empty로 설정
@@ -129,7 +127,6 @@ public class FetchDestHeaderFilterTest {
 		verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST);
 		verify(chain, never()).doFilter(request, response);
 	}
-
 
 
 }

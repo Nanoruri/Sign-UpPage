@@ -242,7 +242,7 @@ public class ApiController {
 		String newPassword = reqData.get("newPassword");
 
 
-		 if (!findService.changePassword(passwordChangeUser, newPassword)) {
+		if (!findService.changePassword(passwordChangeUser, newPassword)) {
 			log.warn("비밀번호 변경 실패");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);
 		}

@@ -25,7 +25,8 @@ public class GlobalExceptionHandlerTest {
 	private GlobalExceptionHandler globalExceptionHandler;
 
 
-	@Test// USER_NOT_FOUND 에러가 발생 시 404 상태 코드와 함께 UserException을 반환하는지 확인
+	@Test
+// USER_NOT_FOUND 에러가 발생 시 404 상태 코드와 함께 UserException을 반환하는지 확인
 	void testHandleMyException() {
 		// Arrange
 		UserException userException = new UserException(UserErrorType.USER_NOT_FOUND);
@@ -41,7 +42,8 @@ public class GlobalExceptionHandlerTest {
 		//fuckfuckfuckfuck
 	}
 
-	@Test// USER_ALREADY_EXIST 에러가 발생 시 409 상태 코드와 함께 UserException을 반환하는지 확인
+	@Test
+// USER_ALREADY_EXIST 에러가 발생 시 409 상태 코드와 함께 UserException을 반환하는지 확인
 	void testHandleMyException2() {
 		// Arrange
 		UserException userException = new UserException(UserErrorType.USER_ALREADY_EXIST);
@@ -54,7 +56,8 @@ public class GlobalExceptionHandlerTest {
 		assertEquals(userException.getMessage(), responseEntity.getBody());
 	}
 
-	@Test// ID_OR_PASSWORD_WRONG 에러가 발생 시 403 상태 코드와 함께 UserException을 반환하는지 확인
+	@Test
+// ID_OR_PASSWORD_WRONG 에러가 발생 시 403 상태 코드와 함께 UserException을 반환하는지 확인
 	void testHandleMyException3() {
 		// Arrange
 		UserException userException = new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
@@ -67,7 +70,8 @@ public class GlobalExceptionHandlerTest {
 		assertEquals(userException.getMessage(), responseEntity.getBody());
 	}
 
-	@Test// MISSING_INFORMATION 에러가 발생 시 400 상태 코드와 함께 UserException을 반환하는지 확인
+	@Test
+// MISSING_INFORMATION 에러가 발생 시 400 상태 코드와 함께 UserException을 반환하는지 확인
 	void testHandleMyException4() {
 		// Arrange
 		UserException userException = new UserException(UserErrorType.MISSING_INFORMATION);

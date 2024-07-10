@@ -54,7 +54,7 @@ public class FindService {
 	 */
 	public boolean validateUser(User user) {
 		boolean isValid = userDao.findByProperties(user).isPresent();
-		log.info(isValid ? "사용자를 찾았습니다" + user.getUserId(): "사용자를 찾을 수 없습니다.");
+		log.info(isValid ? "사용자를 찾았습니다" + user.getUserId() : "사용자를 찾을 수 없습니다.");
 		return isValid;
 	}
 

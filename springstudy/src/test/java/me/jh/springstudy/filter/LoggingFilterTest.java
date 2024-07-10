@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -46,7 +44,7 @@ public class LoggingFilterTest {
 		loggingFilter.destroy();
 
 		assertEquals(HttpServletResponse.SC_OK, response.getStatus(), "정상적으로 통과되었습니다.");
-		verify(chain,times(1)).doFilter(request, response);
+		verify(chain, times(1)).doFilter(request, response);
 
 	}
 

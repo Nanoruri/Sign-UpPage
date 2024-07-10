@@ -1,15 +1,12 @@
-import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entitiy.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +23,6 @@ public class SpringApplicationTest {
 
 	@Autowired
 	private Environment env;
-
 
 
 	@Test // 애플리케이션 로드 테스트
@@ -50,7 +46,7 @@ public class SpringApplicationTest {
 		user.setUserId("kaby1217");
 		user.setName("Lim");
 		user.setPassword("1217159");
-		user.setBirth(LocalDate.of(1996,11,27));
+		user.setBirth(LocalDate.of(1996, 11, 27));
 		user.setPhoneNum("010-9525-6863");
 		user.setEmail("kaby1217@gmail.com");
 		user.setCreatedDate(LocalDateTime.now());
@@ -120,8 +116,6 @@ public class SpringApplicationTest {
 		assertThat(secret).isEqualTo("dlrjgozldgoqhffurh?zz");
 		assertThat(expiration).isEqualTo("8640000");
 	}
-
-
 
 
 }

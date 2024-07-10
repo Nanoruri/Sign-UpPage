@@ -1,8 +1,8 @@
 package me.jh.springstudy.service.user;
 
+import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserException;
-import me.jh.springstudy.dao.UserDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -124,7 +124,7 @@ public class SignupServiceTest {
 	}
 
 	@Test
-	public void registMemberPattrnNotMatchTest(){
+	public void registMemberPattrnNotMatchTest() {
 		//given
 		//아이디 패턴이 일치하지 않는 상태로 설정
 		failTestUser.setUserId("tex");
@@ -145,7 +145,7 @@ public class SignupServiceTest {
 	}
 
 	@Test
-	public void registMemberEmailPattrnNotMatchTest(){
+	public void registMemberEmailPattrnNotMatchTest() {
 		//given
 		//이메일 패턴이 일치하지 않는 상태로 설정
 		failTestUser.setEmail("test.com");
@@ -164,8 +164,6 @@ public class SignupServiceTest {
 		//예외가 잘 던져졌는지에대한 검증;
 		verify(userDao, times(0)).save(failTestUser);
 	}
-
-
 
 
 	/**
@@ -236,7 +234,6 @@ public class SignupServiceTest {
 		//예외가 잘 던져졌는지에대한 검증;
 		verify(userDao, times(0)).existsById(userId);
 	}
-
 
 
 	/**

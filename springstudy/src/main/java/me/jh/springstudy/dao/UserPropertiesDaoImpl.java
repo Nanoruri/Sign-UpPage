@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * 사용자 정보를 찾는 CustomDAO 구현 클래스.//
  */
-public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : CustomDao 인터페이스 이름 변경한다면 클래스명 변경하기
+public class UserPropertiesDaoImpl implements UserPropertiesDao {
 	@PersistenceContext
 	private final EntityManager entityManager;
 
@@ -41,7 +41,7 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : Custo
 	 */
 	public Optional<User> findByProperties(User user) {
 
- 		if (user == null) {
+		if (user == null) {
 			return Optional.empty();
 		}
 		Map<String, Object> properties = mapUserToProperties(user);
@@ -50,6 +50,7 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : Custo
 
 
 	// fixme : entity to Map withoutNull 방법을 고려한 방식(리플렉션 방식을 사용할 경우 생성자 수정)
+
 	/**
 	 * User 객체를 Map<String, Object> 형식의 검색 조건 맵으로 변환하는 유틸리티 메서드.
 	 * 모든 필드를 자동으로 순회하면서 null 값을 체크하고 Map에 추가합니다.
@@ -59,7 +60,8 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : Custo
 	 */
 	private Map<String, Object> mapUserToProperties(User user) {
 		// ObjectMapper를 사용하여 Entity를 Map으로 변환
-		Map<String, Object> properties = objectMapper.convertValue(user, new TypeReference<>() {});
+		Map<String, Object> properties = objectMapper.convertValue(user, new TypeReference<>() {
+		});
 
 		// null 값 제거
 		properties.entrySet().removeIf(entry -> entry.getValue() == null);
@@ -67,7 +69,6 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : Custo
 
 		return properties;
 	}
-
 
 
 	/**
@@ -109,7 +110,6 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao { //todo : Custo
 
 		return Optional.ofNullable(user);
 	}
-
 
 
 }

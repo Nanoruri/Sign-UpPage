@@ -96,7 +96,6 @@ public class PageController {
 	public String resetPassword(Model model, HttpSession session, @CookieValue("passwordChanger") String passwordChanger) {
 
 
-
 		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
 
 
