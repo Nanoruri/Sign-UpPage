@@ -88,26 +88,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.14.2</version>
         </dependency>
-
-
-        <!--스프링 부트에서는 slf4j와 로그백을 기본적으로 제공함-->
-<!--        <dependency> &lt;!&ndash; 로그 &ndash;&gt;-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.32</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>&lt;!&ndash; 로그 구현체 &ndash;&gt;-->
-<!--            <groupId>ch.qos.logback</groupId>-->
-<!--            <artifactId>logback-classic</artifactId>-->
-<!--            <version>1.2.9</version>-->
-<!--        </dependency>-->
 
 
         <dependency><!--타임리프-->
@@ -116,24 +102,34 @@
             <version>${spring.boot.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>2.7.0</version>
         </dependency>
 
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
+            <version>0.12.6</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
+            <version>0.12.5</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.webjars</groupId>
@@ -141,14 +137,6 @@
             <version>5.3.2</version>
         </dependency>
 
-
-        <!--        <dependency>-->
-        <!--            <groupId>io.jsonwebtoken</groupId>-->
-        <!--            <artifactId>jjwt-jackson</artifactId>-->
-        <!--            <version>0.11.5</version>-->
-        <!--            <scope>runtime</scope>-->
-        <!--        </dependency>--><!--TODO :보안 이슈-->
-        <!--     -->
 
         <dependency>
             <groupId>org.jacoco</groupId>
