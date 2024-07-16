@@ -1,7 +1,9 @@
 package me.jh.springstudy.config;
 
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.filter.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,9 +27,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 	private final Logger log = org.slf4j.LoggerFactory.getLogger(SecurityConfig.class);
+	private final JwtProvider JwtProvider;
+	private final UserDao userDao;
 
 	@Autowired
-	private UserDao userDao;
+	public SecurityConfig(UserDao userDao, JwtProvider jwtProvider) {
+		this.userDao = userDao;
+		this.JwtProvider = jwtProvider;
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -76,6 +83,7 @@ public class SecurityConfig {
 				.permitAll()
 
 				.and()
+				.addFilterBefore(new JwtAuthenticationFilter(JwtProvider), UsernamePasswordAuthenticationFilter.class)
 				.userDetailsService(userDetailsService())
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
