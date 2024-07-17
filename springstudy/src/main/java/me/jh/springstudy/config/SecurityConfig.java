@@ -66,27 +66,24 @@ public class SecurityConfig {
 		http.csrf().disable()
 
 				.authorizeRequests()//권한 설정
-				.antMatchers("/", "/signup", "/signupSuccess", "/login", "/idCheck", "/logout")
-				.permitAll()
-				.anyRequest()
-				.permitAll()
-
+				.anyRequest().permitAll()//모든 요청에 대해 접근을 허용함.
 				.and()
 
-				.formLogin()
-				.loginPage("/login")
-				.loginProcessingUrl("/loginCheck") // 설정한 엔드포인트로 로그인 요청이 들어오면 스프링 시큐리티가 가로채어 처리.
-				.usernameParameter("userId")
-				.passwordParameter("password")
-				.defaultSuccessUrl("/")
-				.failureUrl("/login")
-				.permitAll()
+				.formLogin().disable()// JWT 쓸거면 formLogin()은 필요없음
+//				.loginPage("/login")
+//				.loginProcessingUrl("/loginCheck")
+//				.usernameParameter("userId")
+//				.passwordParameter("password")
+//				.defaultSuccessUrl("/")
+//				.failureUrl("/login")
+//				.permitAll()
 
-				.and()
+
+//				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(JwtProvider), UsernamePasswordAuthenticationFilter.class)
 				.userDetailsService(userDetailsService())
 				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
 
 				.and()
 				.logout()
