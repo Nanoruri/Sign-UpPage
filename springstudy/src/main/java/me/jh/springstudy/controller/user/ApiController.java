@@ -1,5 +1,7 @@
 package me.jh.springstudy.controller.user;
 
+import me.jh.springstudy.auth.JwtGenerator;
+import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
@@ -9,7 +11,14 @@ import me.jh.springstudy.service.user.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -32,8 +41,9 @@ public class ApiController {
 
 	private final static Logger log = LoggerFactory.getLogger(ApiController.class);
 	private final SignupService signupService;
-	private final LoginService loginService;
 	private final FindService findService;
+	private final JwtGenerator jwtGenerator;
+	private final AuthenticationManager authenticationManager;
 
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
@@ -43,32 +53,46 @@ public class ApiController {
 	 * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public ApiController(SignupService signupService, LoginService loginService, FindService findservice) {
+	public ApiController(SignupService signupService, LoginService loginService, FindService findservice, JwtGenerator jwtGenerator, AuthenticationManager authenticationManager) {
 		this.signupService = signupService;
-		this.loginService = loginService;
 		this.findService = findservice;
+		this.jwtGenerator = jwtGenerator;
+		this.authenticationManager = authenticationManager;
 	}
 
 
 	/**
-	 * 로그인 서비스를 호출하는 API
-	 * 사용자가 입력한 ID와 Password를 받아 로그인 서비스를 호출
 	 *
-	 * @param userId   로그인에 사용될 ID HTML 파라미터
-	 * @param password 로그인에 사용될 Password HTML 파라미터
-	 * @return 로그인에 성공하면 메인 페이지로 리다이렉트하고, 유효성 검사 오류가 있으면 로그인 페이지로 돌아감.
-	 * @throws UserException 로그인 실패시 아이디 및 패스워드 오류 메세지를 반환
+	 *이 메서드는 "/loginCheck" 엔드포인트에 대한 POST 요청을 처리합니다.
+	 * 제공된 사용자 ID와 비밀번호를 사용하여 사용자를 인증하려고 시도합니다.
+	 * 인증이 성공하면 사용자에게 JWT 토큰을 생성하여 응답 헤더와 본문에 반환합니다.
+	 * 인증이 실패하면 HTTP 401 Unauthorized 상태를 반환합니다.
+	 *
+	 * @param reqData 사용자가 입력한 ID와 Password을 담는 Map 객체
+	 * @return 로그인에 성공하면 JWT 토큰을 반환하고, 실패하면 HTTP 401 Unauthorized 상태를 반환합니다.
+	 * @implNote 이 메서드는 {@link JwtGenerator#generateToken(Authentication)}를 사용하여 JWT 토큰을 생성합니다.
+	 * 이 메서드는 {@link AuthenticationManager#authenticate(Authentication)}를 사용하여 사용자를 인증합니다.
 	 */
 	@PostMapping("/loginCheck")
-	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password, HttpSession session) {
-		if (!loginService.loginCheck(userId, password)) {//로그인 실패 시의 로직
-			log.warn("로그인 실패");
-			throw new UserException(UserErrorType.ID_OR_PASSWORD_WRONG);
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> reqData) {
+		String userId = reqData.get("userId");
+		String password = reqData.get("password");
 
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(userId, password));
+			JWToken jwt = jwtGenerator.generateToken(authentication);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getAccessToken());
+
+			Map<String, String> response = new HashMap<>();
+			response.put("accessToken", jwt.getAccessToken());
+
+			return new ResponseEntity<>(response, headers, HttpStatus.OK);
+		} catch (AuthenticationException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
 		}
-		log.info("로그인 성공");
-		session.setAttribute("userId", userId);//메인 페이지에 로그인/로그아웃 버튼을 위한 세션 저장
-		return "redirect:/";
 	}
 
 //	@PostMapping("/logout")//이 API는 필요X. 해당 http메서드와 엔드포인트로 시큐리티에서 로그아웃을 처리하고 있음.
