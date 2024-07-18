@@ -8,6 +8,13 @@
  // 헤더를 포함한 fetch 요청을 보내는 함수
 const fetchWithHeaders = async (url, options = {}) => {
   const defaultHeaders = {};
+  const aToken = sessionStorage.getItem('aToken');
+
+  // jwt가 존재하면 Authorization 헤더에 추가
+  if (aToken) {
+    defaultHeaders['Authorization'] = `Bearer ${aToken}`;
+  }
+  
   
   // 추가하려는 헤더 설정
   const customHeader = {
