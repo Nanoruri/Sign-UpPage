@@ -2,12 +2,14 @@ import fetchWithHeaders  from "./headerAdd.js";
 
 // 페이지 로드 시 쿠키 확인 및 서버 요청 함수
 async function checkCookieAndRequest() {
-    const studyCookie = getCookie("JSESSIONID");
-    if (studyCookie) {
-        await sendRequest();
-    } else {
-        alert("필수 쿠키가 설정되어 있지 않습니다.");
-    }
+    sendRequest();
+
+//    const studyCookie = getCookie("JSESSIONID");
+//    if (studyCookie) {
+//        await sendRequest();
+//    } else {
+//        alert("필수 쿠키가 설정되어 있지 않습니다.");
+//    }
 }
 
 
