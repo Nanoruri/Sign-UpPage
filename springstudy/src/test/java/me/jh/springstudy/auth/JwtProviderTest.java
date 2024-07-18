@@ -57,7 +57,7 @@ public class JwtProviderTest {
 	@Test
 	public void testGetAuthentication_ValidToken() {
 
-		UserDetails userDetails = new User("testUser", "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+		UserDetails userDetails = new User("testUser", "test1234", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
 		when(authentication.getPrincipal()).thenReturn(userDetails);
 		token = jwtGenerator.generateToken(authentication);
@@ -153,6 +153,21 @@ public class JwtProviderTest {
 		} catch (JwtException e) {
 			assertEquals("토큰이 비어있습니다.", e.getMessage());
 		}
+	}
 
+
+	@Test
+	public void testGetAuthenticationFromRefreshToken() {
+		UserDetails userDetails = new User("testUser", "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
+		when(authentication.getPrincipal()).thenReturn(userDetails);
+		token = jwtGenerator.generateToken(authentication);
+		String refreshToken = token.getRefreshToken();
+
+		Authentication result = jwtProvider.getAuthenticationFromRefreshToken(refreshToken);
+
+		assertNotNull(result);
+		assertEquals("testUser", result.getName());
+		assertTrue(result.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
 	}
 }
