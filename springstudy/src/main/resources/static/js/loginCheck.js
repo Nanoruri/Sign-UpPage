@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 const jwt = await response.json();
                 const accessToken = jwt.accessToken;
+                const refreshToken = jwt.refreshToken;
                 sessionStorage.setItem('aToken',accessToken);
+                sessionStorage.setItem('rToken',refreshToken);
                 alert('로그인 성공!');
                 window.location.href = '/study/';
             } else {

@@ -2,8 +2,11 @@ package me.jh.springstudy.controller.user;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jh.springstudy.auth.JwtGenerator;
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.service.user.FindService;
 import me.jh.springstudy.service.user.LoginService;
@@ -69,6 +72,10 @@ public class ApiControllerTest {
 	private Authentication authentication;
 	@MockBean
 	private UserDao userDao;
+	@MockBean
+	private JwtProvider jwtProvider;
+	@MockBean
+	private JwtGenerator jwtGenerator;
 
 	@Captor
 	private ArgumentCaptor<User> userCaptor;
@@ -138,6 +145,25 @@ public class ApiControllerTest {
 				.andExpect(request().sessionAttributeDoesNotExist("userId"));
 	}
 
+	@Test
+	public void testRefreshToken() throws Exception {
+		String refreshToken = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTcyMTg5MzY3Nn0.if0TRpEajwjMn4N70WMErS7YnbeHpcPKrVkWdehawn-IDrFLwZ6kzMQseHhp3Plk";//미정
+		JWToken jwToken = new JWToken("Bearer ", "newAccessToken", "newRefreshToken");
+
+		when(jwtProvider.validateToken(refreshToken)).thenReturn(true);
+		when(jwtProvider.getAuthenticationFromRefreshToken(refreshToken)).thenReturn(authentication);
+		when(jwtGenerator.generateToken(authentication)).thenReturn(jwToken);
+
+		mockMvc.perform(post("/refresh")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.accessToken").value(jwToken.getAccessToken()))
+				.andExpect(jsonPath("$.refreshToken").value(jwToken.getRefreshToken()));
+		verify(jwtProvider, times(1)).validateToken(refreshToken);
+		verify(jwtProvider, times(1)).getAuthenticationFromRefreshToken(refreshToken);
+		verify(jwtGenerator, times(1)).generateToken(authentication);
+	}
 
 	@Test
 	public void testSignupSuccess() throws Exception {

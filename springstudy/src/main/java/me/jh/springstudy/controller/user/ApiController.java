@@ -1,6 +1,7 @@
 package me.jh.springstudy.controller.user;
 
 import me.jh.springstudy.auth.JwtGenerator;
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
@@ -44,6 +45,7 @@ public class ApiController {
 	private final FindService findService;
 	private final JwtGenerator jwtGenerator;
 	private final AuthenticationManager authenticationManager;
+	private final JwtProvider jwtProvider;
 
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
@@ -54,10 +56,12 @@ public class ApiController {
 	 */
 	@Autowired
 	public ApiController(SignupService signupService, LoginService loginService, FindService findservice, JwtGenerator jwtGenerator, AuthenticationManager authenticationManager) {
+	                     JwtProvider jwtProvider) {
 		this.signupService = signupService;
 		this.findService = findservice;
 		this.jwtGenerator = jwtGenerator;
 		this.authenticationManager = authenticationManager;
+		this.jwtProvider = jwtProvider;
 	}
 
 
@@ -100,6 +104,39 @@ public class ApiController {
 //		session.invalidate();
 //		return "redirect:/";
 //	}
+
+	/**
+	 * 이 메서드는 "/refresh" 엔드포인트에 대한 POST 요청을 처리합니다.
+	 * 이 엔드포인트는 리프레시 토큰과 함께 호출되며, 토큰이 유효한 경우
+	 * 새로운 액세스 및 리프레시 토큰이 생성되어 반환됩니다.
+	 * 토큰이 유효하지 않은 경우 HTTP 401 Unauthorized 상태를 반환합니다.
+	 *
+	 * @param reqData 리프레시 토큰을 담는 Map 객체
+	 * @return 새로운 액세스 및 리프레시 토큰이 생성되어 ResponseEntity 객체에 담겨 반환됩니다.
+	 * @implNote 이 메서드는 {@link JwtProvider#validateToken(String)}를 사용하여 토큰의 유효성을 검사합니다.
+	 * {@link JwtProvider#getAuthenticationFromRefreshToken(String)}를 사용하여 리프레시 토큰에서 인증 정보를 가져옵니다.
+	 * 이 메서드는 {@link JwtGenerator#generateToken(Authentication)}를 사용하여 JWT 토큰을 생성합니다.
+	 */
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refresh(@RequestBody Map<String, String> reqData) {
+		String refreshToken = reqData.get("refreshToken");
+
+		if (jwtProvider.validateToken(refreshToken)) {
+			Authentication authentication = jwtProvider.getAuthenticationFromRefreshToken(refreshToken);
+			JWToken newJwt = jwtGenerator.generateToken(authentication);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + newJwt.getAccessToken());
+
+			Map<String, String> response = new HashMap<>();
+			response.put("accessToken", newJwt.getAccessToken());
+			response.put("refreshToken", newJwt.getRefreshToken());
+
+			return new ResponseEntity<>(response, headers, HttpStatus.OK);
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh failed");
+		}
+	}
 
 
 	/**
