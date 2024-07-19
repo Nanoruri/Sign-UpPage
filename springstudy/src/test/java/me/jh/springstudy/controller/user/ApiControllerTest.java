@@ -132,6 +132,35 @@ public class ApiControllerTest {
 	}
 
 	@Test
+	public void testLoginFailWithEmptyId() throws Exception {
+		String userId = "";
+		String password = "validPassword";
+
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenThrow(new UserException(UserErrorType.ID_NULL));
+
+		mockMvc.perform(post("/loginCheck")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string("아이디를 입력해주세요."));
+	}
+
+	@Test
+	public void testLoginFailWithEmptyPassword() throws Exception {
+		String userId = "validUser";
+		String password = "";
+
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenThrow(new UserException(UserErrorType.PASSWORD_NULL));
+
+		mockMvc.perform(post("/loginCheck")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string("비밀번호를 입력해주세요."));
+	}
+	@Test
 	public void testLogout() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/logout"))
 				.andExpect(status().isFound())
