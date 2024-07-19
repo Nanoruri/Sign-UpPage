@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             logoutForm.addEventListener('submit', function (event) {
                 event.preventDefault(); // 기본 폼 제출 동작 방지
                 sessionStorage.removeItem('aToken');
+                sessionStorage.removeItem('rToken');
 
                 // 서버에 로그아웃 요청 보내기
                 fetch('/study/logout', {
