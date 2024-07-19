@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +33,7 @@ public class AuthenticationServiceTest {
 	private AuthenticationService authenticationService;
 
 	@Test
-	public void authenticationWithValidCredentialsShouldGenerateToken() {
+	public void testAuthentication_ValidCredentialsShouldGenerateToken() {
 		String userId = "validUser";
 		String password = "validPassword";
 		Authentication authentication = new UsernamePasswordAuthenticationToken(userId, password);
@@ -49,12 +47,12 @@ public class AuthenticationServiceTest {
 		assertNotNull(actualToken);
 		assertEquals(expectedToken.getAccessToken(), actualToken.getAccessToken());
 		assertEquals(expectedToken.getRefreshToken(), actualToken.getRefreshToken());
-		verify(authenticationManager,times(1)).authenticate(any(Authentication.class));
-		verify(jwtGenerator,times(1)).generateToken(authentication);
+		verify(authenticationManager, times(1)).authenticate(any(Authentication.class));
+		verify(jwtGenerator, times(1)).generateToken(authentication);
 	}
 
 	@Test
-	public void authenticationWithInvalidCredentialsShouldThrowException() {
+	public void testAuthentication_InvalidCredentialsShouldThrowException() {
 		String userId = "invalidUser";
 		String password = "invalidPassword";
 
@@ -62,24 +60,42 @@ public class AuthenticationServiceTest {
 				.thenThrow(new BadCredentialsException("Bad credentials"));
 
 		assertThrows(RuntimeException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
-		verify(authenticationManager, never()).authenticate(any(Authentication.class));
+		verify(authenticationManager, times(1)).authenticate(any(Authentication.class));
 		verify(jwtGenerator, never()).generateToken(any(Authentication.class));
 
 	}
 
 	@Test
-	public void authenticationWithEmptyCredentialsShouldThrowException() {
+	public void testAuthentication_EmptyCredentialsShouldThrowException() {
 		String userId = "";
-		String password = "";
+		String password = "test1234";
 
 		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
 		verify(authenticationManager, never()).authenticate(any(Authentication.class));
 	}
 
 	@Test
-	public void authenticationWithNullCredentialsShouldThrowException() {
+	public void testAuthentication_NullCredentialsShouldThrowException() {
 		String userId = null;
+		String password = "test1234";
+
+		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
+		verify(authenticationManager, never()).authenticate(any(Authentication.class));
+	}
+
+	@Test
+	public void testAuthentication_NullUserIdShouldThrowException() {
+		String userId = "test1234";
 		String password = null;
+
+		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
+		verify(authenticationManager, never()).authenticate(any(Authentication.class));
+	}
+
+	@Test
+	public void testAuthentication_EmptyPasswordShouldThrowException() {
+		String userId = "test1234";
+		String password = "";
 
 		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
 		verify(authenticationManager, never()).authenticate(any(Authentication.class));
