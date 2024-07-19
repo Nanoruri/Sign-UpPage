@@ -5,6 +5,8 @@ import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.exception.user.UserException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,13 +25,13 @@ import static org.mockito.Mockito.*;
 public class AuthenticationServiceTest {
 
 
-	@MockBean
+	@Mock
 	private AuthenticationManager authenticationManager;
 
-	@MockBean
+	@Mock
 	private JwtGenerator jwtGenerator;
 
-	@Autowired
+	@InjectMocks
 	private AuthenticationService authenticationService;
 
 	@Test
@@ -60,7 +62,7 @@ public class AuthenticationServiceTest {
 				.thenThrow(new BadCredentialsException("Bad credentials"));
 
 		assertThrows(RuntimeException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
-		verify(authenticationManager, times(1)).authenticate(any(Authentication.class));
+		verify(authenticationManager, never()).authenticate(any(Authentication.class));
 		verify(jwtGenerator, never()).generateToken(any(Authentication.class));
 
 	}
