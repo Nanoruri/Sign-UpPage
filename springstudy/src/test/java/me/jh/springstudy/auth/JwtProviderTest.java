@@ -71,6 +71,30 @@ public class JwtProviderTest {
 	}
 
 	@Test
+	public void testGetAuthentication_WithNotRoleClaim() {
+
+		String token = Jwts.builder()//role클레임이 없는 토큰
+				.subject("testUser")
+				.signWith(key)
+				.compact();
+
+		assertThrows(RuntimeException.class, () -> jwtProvider.getAuthentication(token));
+	}
+
+	@Test
+	public void testGetAuthentication_ExpiredJwt() {
+		String token = Jwts.builder()
+				.subject("testUser")
+				.claim("role", "User")
+				.expiration(new Date(System.currentTimeMillis() - 1000))
+				.signWith(key)
+				.compact();
+
+		Authentication reuslt = jwtProvider.getAuthentication(token);
+	}
+
+
+	@Test
 	public void testValidateToken_ValidToken() {
 		UserDetails userDetails = new User("testUser", "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
