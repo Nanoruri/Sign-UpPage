@@ -6,8 +6,8 @@ import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.user.AuthenticationService;
 import me.jh.springstudy.service.user.FindService;
-import me.jh.springstudy.service.user.LoginService;
 import me.jh.springstudy.service.user.SignupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -44,30 +42,29 @@ public class ApiController {
 	private final SignupService signupService;
 	private final FindService findService;
 	private final JwtGenerator jwtGenerator;
-	private final AuthenticationManager authenticationManager;
 	private final JwtProvider jwtProvider;
+	private final AuthenticationService authenticationService;
 
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
 	 *
-	 * @param signupService 회원 관련 작업을 수행하는 서비스
-	 * @param loginService  로그인 관련 작업을 수행하는 서비스
-	 * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
+	 * @param signupService         회원 관련 작업을 수행하는 서비스
+	 * @param authenticationService 로그인 인증을 수행하는 서비스
+	 * @param findservice           아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public ApiController(SignupService signupService, LoginService loginService, FindService findservice, JwtGenerator jwtGenerator, AuthenticationManager authenticationManager) {
+	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtGenerator jwtGenerator,
 	                     JwtProvider jwtProvider) {
 		this.signupService = signupService;
 		this.findService = findservice;
 		this.jwtGenerator = jwtGenerator;
-		this.authenticationManager = authenticationManager;
+		this.authenticationService = authenticationService;
 		this.jwtProvider = jwtProvider;
 	}
 
 
 	/**
-	 *
-	 *이 메서드는 "/loginCheck" 엔드포인트에 대한 POST 요청을 처리합니다.
+	 * 이 메서드는 "/loginCheck" 엔드포인트에 대한 POST 요청을 처리합니다.
 	 * 제공된 사용자 ID와 비밀번호를 사용하여 사용자를 인증하려고 시도합니다.
 	 * 인증이 성공하면 사용자에게 JWT 토큰을 생성하여 응답 헤더와 본문에 반환합니다.
 	 * 인증이 실패하면 HTTP 401 Unauthorized 상태를 반환합니다.
@@ -83,19 +80,18 @@ public class ApiController {
 		String password = reqData.get("password");
 
 		try {
-			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(userId, password));
-			JWToken jwt = jwtGenerator.generateToken(authentication);
+			JWToken jwt = authenticationService.authenticateAndGenerateToken(userId, password);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getAccessToken());
 
 			Map<String, String> response = new HashMap<>();
 			response.put("accessToken", jwt.getAccessToken());
+			response.put("refreshToken", jwt.getRefreshToken());
 
 			return new ResponseEntity<>(response, headers, HttpStatus.OK);
 		} catch (AuthenticationException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패");
 		}
 	}
 

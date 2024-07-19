@@ -63,7 +63,7 @@ public class ApiControllerTest {
 	@MockBean
 	private SignupService signupService;
 	@MockBean
-	private LoginService loginService;
+	private AuthenticationService authenticationService;
 	@MockBean
 	private FindService findService;
 	@MockBean
@@ -100,46 +100,35 @@ public class ApiControllerTest {
 
 	@Test
 	public void testLoginSuccess() throws Exception {
-		String userId = "test123";
-		String password = "test123";
+		String userId = "validUser";
+		String password = "validPassword";
 
-//		when(loginService.loginCheck(userId, password)).thenReturn(true);
 
-		//사용자 정보가 있을 때
-		when(userDetailsService.loadUserByUsername(userId)).
-				thenReturn(org.springframework.security.core.userdetails.User.builder()
-						.username(userId)
-						.password(passwordEncoder.encode(password))
-						.roles("USER")
-						.build());
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenReturn(new JWToken("Bearer ", "accessToken", "refreshToken"));
+
 
 		mockMvc.perform(post("/loginCheck")
-						.param("userId", userId)
-						.param("password", password))
-				.andExpect(status().isFound())//로그인에 성공하면 시큐리티는 302 리다이렉트를 반환
-				.andExpect(redirectedUrl("/"))//로그인에 성공하면 메인 페이지로 리다이렉트
-				.andExpect(request().sessionAttribute("SPRING_SECURITY_CONTEXT", notNullValue()))
-				.andExpect(authenticated()
-						.withAuthenticationName(userId)//  인증된 사용자 이름이 userId인지 확인
-						.withRoles("USER"));//  인증된 사용자 권한이 ROLE_USER인지 확인
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.accessToken").value("accessToken"))
+				.andExpect(jsonPath("$.refreshToken").value("refreshToken"));
 	}
 
 	@Test
 	public void testLoginFail() throws Exception {
-		String userId = "test123";
-		String password = "test";
+		String userId = "invalidUser";
+		String password = "invalidPassword";
 
-		//사용자 정보가 없을 때
-		when(userDetailsService.loadUserByUsername(userId)).
-				thenReturn(null);
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenThrow(new BadCredentialsException("Authentication failed"));
 
 		mockMvc.perform(post("/loginCheck")
-						.param("userId", userId)
-						.param("password", password))
-				.andExpect(status().isFound())//로그인에 실패하면 시큐리티는 302 리다이렉트를 반환
-				.andExpect(redirectedUrl("/login"))//로그인에 실패하면 로그인 페이지로 리다이렉트
-				.andExpect(request().sessionAttributeDoesNotExist("SPRING_SECURITY_CONTEXT"));
-//				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디 혹은 비밀번호가 잘못되었습니다."));//
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isUnauthorized())
+				.andExpect(content().string("인증 실패"));
 	}
 
 	@Test
