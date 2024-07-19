@@ -38,12 +38,11 @@ public class JwtGenerator {
 
 	public JWToken generateToken(Authentication authentication) {
 
+		if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+			throw new JwtException("잘못된 인증 정보입니다.");
+		}
+
 		try {
-			if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
-				throw new JwtException("Invalid authentication details");
-			}
-
-
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			String userId = userDetails.getUsername();
 			long now = (new Date()).getTime();
@@ -72,12 +71,8 @@ public class JwtGenerator {
 					.refreshToken(refreshToken)
 					.build();
 
-		} catch (JwtException e) {
-			logger.warn("토큰 생성에 실패하였습니다.", e);
-			throw e;
 		} catch (Exception e) {
-			// JWT 생성 중 알 수 없는 예외 발생 시
-			throw new JwtException("Failed to generate JWT token", e);
+			throw new JwtException("토큰 생성에 실패하였습니다.",e);
 		}
 	}
 }

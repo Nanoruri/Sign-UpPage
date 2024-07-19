@@ -69,7 +69,7 @@ public class JwtGeneratorTest {
 			jwtGenerator.generateToken(null);
 			fail("예외 발생 실패");
 		} catch (JwtException e) {
-			assertEquals("Invalid authentication details", e.getMessage());
+			assertEquals("잘못된 인증 정보입니다.", e.getMessage());
 		}
 		// 추가적인 검증이 필요하다면 여기서 수행
 	}
@@ -85,7 +85,7 @@ public class JwtGeneratorTest {
 			JWToken jwtToken = jwtGenerator.generateToken(authentication);
 			fail("예외 발생 실패");
 		} catch (JwtException e) {
-			assertEquals("Invalid authentication details", e.getMessage());
+			assertEquals("잘못된 인증 정보입니다.", e.getMessage());
 		}
 		verify(authentication, times(1)).getPrincipal();
 	}
