@@ -24,6 +24,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -76,6 +78,9 @@ public class ApiControllerTest {
 	private JwtProvider jwtProvider;
 	@MockBean
 	private JwtGenerator jwtGenerator;
+	@MockBean
+	private AuthenticationManager authenticationManager;
+
 
 	@Captor
 	private ArgumentCaptor<User> userCaptor;

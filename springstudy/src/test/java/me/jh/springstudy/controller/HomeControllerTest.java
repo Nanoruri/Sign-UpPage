@@ -1,5 +1,6 @@
 package me.jh.springstudy.controller;
 
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,6 +39,12 @@ public class HomeControllerTest {
 
 	@MockBean
 	private UserDetailsService userDetailsService;
+
+	@MockBean
+	private AuthenticationManager authenticationManager;
+
+	@MockBean
+	private JwtProvider jwtProvider;
 
 //	@MockBean
 //	private HttpSession session;
