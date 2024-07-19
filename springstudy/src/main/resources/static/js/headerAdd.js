@@ -18,7 +18,6 @@ const fetchWithHeaders = async (url, options = {}) => {
   
   // 추가하려는 헤더 설정
   const customHeader = {
-    'Study': 'signupProject'
   };
 
   // 기본 헤더, 옵션 헤더, 커스텀 헤더를 병합

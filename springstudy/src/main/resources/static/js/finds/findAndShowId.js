@@ -8,7 +8,6 @@ function doFindId() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Study' : 'signupProject'
         },
         body: JSON.stringify({
             name: name,

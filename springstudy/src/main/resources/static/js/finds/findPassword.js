@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Study': 'signupProject'
             },
             body: JSON.stringify({
                 userId: userId,
