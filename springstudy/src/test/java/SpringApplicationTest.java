@@ -113,7 +113,7 @@ public class SpringApplicationTest {
 		String secret = env.getProperty("jwt.secret");
 		String expiration = env.getProperty("jwt.expiration");
 
-		assertThat(secret).isEqualTo("dlrjgozldgoqhffurh?zz");
+		assertThat(secret).isEqualTo("7L2cIOu4lOugiOydtOuTnCDsubTtg4DsiqTtirjroZztlLw=");
 		assertThat(expiration).isEqualTo("8640000");
 	}
 
