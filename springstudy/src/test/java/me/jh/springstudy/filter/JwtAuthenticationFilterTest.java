@@ -90,6 +90,20 @@ public class JwtAuthenticationFilterTest {
 		verify(jwtProvider, never()).validateToken(any());
 		verify(chain, times(1)).doFilter(request, response);
 	}
+
+	@Test
+	public void testDoFilterInternal_TokenMotStartWithBearer() throws ServletException, IOException {
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		HttpServletResponse response = mock(HttpServletResponse.class);
+		FilterChain chain = mock(FilterChain.class);
+
+		when(request.getHeader("Authorization")).thenReturn("invalid_token");
+
+		jwtAuthenticationFilter.doFilter(request, response, chain);
+
+		verify(jwtProvider, never()).validateToken(any());
+		verify(chain, times(1)).doFilter(request, response);
+	}
 }
 
 
