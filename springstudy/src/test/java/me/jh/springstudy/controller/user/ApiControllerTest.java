@@ -170,7 +170,7 @@ public class ApiControllerTest {
 
 	@Test
 	public void testRefreshToken() throws Exception {
-		String refreshToken = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTcyMTg5MzY3Nn0.if0TRpEajwjMn4N70WMErS7YnbeHpcPKrVkWdehawn-IDrFLwZ6kzMQseHhp3Plk";//미정
+		String refreshToken = "validToken";
 		JWToken jwToken = new JWToken("Bearer ", "newAccessToken", "newRefreshToken");
 
 		when(jwtProvider.validateToken(refreshToken)).thenReturn(true);
@@ -186,6 +186,19 @@ public class ApiControllerTest {
 		verify(jwtProvider, times(1)).validateToken(refreshToken);
 		verify(jwtProvider, times(1)).getAuthenticationFromRefreshToken(refreshToken);
 		verify(jwtGenerator, times(1)).generateToken(authentication);
+	}
+
+	@Test
+	public void testRefreshTokenWithInvalidToken() throws Exception {
+		String refreshToken = "invalidToken";
+
+		when(jwtProvider.validateToken(refreshToken)).thenReturn(false);
+
+		mockMvc.perform(post("/refresh")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
+				.andExpect(status().isUnauthorized())
+				.andExpect(content().string("토큰 인증 실패"));
 	}
 
 	@Test
