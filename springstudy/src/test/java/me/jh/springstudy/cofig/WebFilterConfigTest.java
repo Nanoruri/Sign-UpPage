@@ -1,7 +1,6 @@
 package me.jh.springstudy.cofig;
 
 import me.jh.springstudy.config.WebFilterConfig;
-import me.jh.springstudy.filter.FetchDestHeaderFilter;
 import me.jh.springstudy.filter.LoggingFilter;
 import me.jh.springstudy.filter.SessionCheckFilter;
 import me.jh.springstudy.filter.SessionCreateFilter;
@@ -30,14 +29,10 @@ public class WebFilterConfigTest {
 	@Autowired
 	private FilterRegistrationBean<SessionCheckFilter> sessionCheckFilterRegistration;
 
-	@Autowired
-	private FilterRegistrationBean<FetchDestHeaderFilter> customHeaderCheckFilterRegistration;
-
 	@Test
 	public void testFilterRegistrationBeans() {
 		assertNotNull(loggingFilterRegistration);
 		assertNotNull(sessionCreateFilterRegistration);
 		assertNotNull(sessionCheckFilterRegistration);
-		assertNotNull(customHeaderCheckFilterRegistration);
 	}
 }
