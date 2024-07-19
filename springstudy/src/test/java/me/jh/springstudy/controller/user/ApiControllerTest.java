@@ -8,8 +8,10 @@ import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.user.UserErrorType;
+import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.user.AuthenticationService;
 import me.jh.springstudy.service.user.FindService;
-import me.jh.springstudy.service.user.LoginService;
 import me.jh.springstudy.service.user.SignupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,8 +32,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
@@ -40,11 +39,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -160,9 +157,11 @@ public class ApiControllerTest {
 				.andExpect(status().isBadRequest())
 				.andExpect(content().string("비밀번호를 입력해주세요."));
 	}
+
+
 	@Test
 	public void testLogout() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/logout"))
+		mockMvc.perform(post("/logout"))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/"))
 				.andExpect(request().sessionAttributeDoesNotExist("userId"));
@@ -212,7 +211,7 @@ public class ApiControllerTest {
 
 		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now());
 
-		Mockito.doNothing().when(signupService).registerMember(user);
+		doNothing().when(signupService).registerMember(user);
 
 		mockMvc.perform(post("/signup")
 						.flashAttr("user", user))
@@ -233,7 +232,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 ID입니다."));
+				.andExpect(jsonPath("$").value("사용가능한 ID입니다."));
 
 		verify(signupService, times(1)).isDuplicateId(userId);
 	}
@@ -248,7 +247,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isConflict())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("이미 존재하는 아이디입니다."));
+				.andExpect(jsonPath("$").value("이미 존재하는 아이디입니다."));
 		verify(signupService, times(1)).isDuplicateId(userId);
 	}
 
@@ -262,7 +261,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 이메일입니다."));
+				.andExpect(jsonPath("$").value("사용가능한 이메일입니다."));
 		verify(signupService, times(1)).isDuplicateEmail(email);
 	}
 
@@ -276,7 +275,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isConflict())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
+				.andExpect(jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
 		verify(signupService, times(1)).isDuplicateEmail(email);
 	}
 
@@ -293,7 +292,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId));
+				.andExpect(jsonPath("$.userId").value(userId));
 
 		verify(findService, times(2)).findId(name, phoneNum);//findId메서드가 왜 두번 호출 되었는지 확인
 	}
@@ -309,7 +308,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
+				.andExpect(jsonPath("$").value("해당 사용자 정보가 없습니다"));
 		verify(findService, times(1)).findId(name, phoneNum);
 	}
 
@@ -361,7 +360,7 @@ public class ApiControllerTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isNotFound())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
+				.andExpect(jsonPath("$").value("해당 사용자 정보가 없습니다"));
 
 		// 메서드가 실행되었는지 확인
 		verify(findService, times(1)).validateUser(any(User.class));
