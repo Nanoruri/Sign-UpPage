@@ -95,11 +95,6 @@ public class ApiController {
 		}
 	}
 
-//	@PostMapping("/logout")//이 API는 필요X. 해당 http메서드와 엔드포인트로 시큐리티에서 로그아웃을 처리하고 있음.
-//	public String logout(HttpSession session) {
-//		session.invalidate();
-//		return "redirect:/";
-//	}
 
 	/**
 	 * 이 메서드는 "/refresh" 엔드포인트에 대한 POST 요청을 처리합니다.
@@ -130,7 +125,7 @@ public class ApiController {
 
 			return new ResponseEntity<>(response, headers, HttpStatus.OK);
 		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh failed");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰 인증 실패");
 		}
 	}
 
