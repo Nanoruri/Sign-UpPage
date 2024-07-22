@@ -1,7 +1,9 @@
 package me.jh.springstudy.filter;
 
+import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -12,7 +14,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 
 
 /**
@@ -28,6 +32,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
 	private final JwtProvider jwtTokenProvider;
 
+	@Autowired
 	public JwtAuthenticationFilter(JwtProvider jwtTokenProvider) {
 		this.jwtTokenProvider = jwtTokenProvider;
 	}
@@ -36,23 +41,37 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		String token = resolveToken((HttpServletRequest) request);
-
-		if (token != null && jwtTokenProvider.validateToken(token)) {
-			Authentication authentication = jwtTokenProvider.getAuthentication(token);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		String token = resolveToken(httpRequest);
+		try {
+			if (token != null && jwtTokenProvider.validateToken(token)) {
+				setAuthentication(token, httpRequest);
+			}
 			chain.doFilter(request, response);
+		} catch (JwtException e) {
+			SecurityContextHolder.clearContext();
+			((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 		}
-		chain.doFilter(request, response);
 	}
 
-	// Request Header에서 토큰 정보 추출
 	private String resolveToken(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-			logger.info(bearerToken.substring(7));
+		String refreshToken = request.getHeader("refreshToken");
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring(7);
+		} else if (StringUtils.hasText(refreshToken)) {
+			return refreshToken;
 		}
 		return null;
+	}
+
+	private void setAuthentication(String token, HttpServletRequest request) {
+		Authentication authentication;
+		if (request.getHeader("refreshToken") != null) {
+			authentication = jwtTokenProvider.getAuthenticationFromRefreshToken(token);
+		} else {
+			authentication = jwtTokenProvider.getAuthentication(token);
+		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 }

@@ -1,6 +1,7 @@
 package me.jh.springstudy.filter;
 
 
+import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.auth.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ public class JwtAuthenticationFilterTest {
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(jwtProvider, times(1)).getAuthentication(token);
-		verify(chain, times(2)).doFilter(request, response);
+		verify(chain, times(1)).doFilter(request, response);
 		verify(response, never()).sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰입니다.");
 	}
 
@@ -67,14 +68,15 @@ public class JwtAuthenticationFilterTest {
 		String token = "invalid_token";
 
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(jwtProvider.validateToken(token)).thenReturn(false);
+		doThrow(new JwtException("유효하지 않은 토큰입니다.")).when(jwtProvider).validateToken(token);
 
 
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 
-		verify(jwtProvider, never()).getAuthentication(any());
-		verify(chain, times(1)).doFilter(request, response);
+		verify(jwtProvider,times(1)).validateToken(token);
+		verify(chain,never()).doFilter(request, response);
+		verify(response,times(1)).sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰입니다.");
 	}
 
 	@Test
