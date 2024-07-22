@@ -75,19 +75,13 @@ public class SecurityConfig {
 
 				.authorizeRequests()//권한 설정
 				.anyRequest().permitAll()//모든 요청에 대해 접근을 허용함.
+
 				.and()
+				.formLogin().disable()
+				.exceptionHandling()
+				.authenticationEntryPoint(new JwtAuthenticationEntryPoint())//인증 실패 시 처리할 핸들러 설정
 
-				.formLogin().disable()// JWT 쓸거면 formLogin()은 필요없음
-//				.loginPage("/login")
-//				.loginProcessingUrl("/loginCheck")
-//				.usernameParameter("userId")
-//				.passwordParameter("password")
-//				.defaultSuccessUrl("/")
-//				.failureUrl("/login")
-//				.permitAll()
-
-
-//				.and()
+				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(JwtProvider), UsernamePasswordAuthenticationFilter.class)
 				.userDetailsService(userDetailsService())
 				.sessionManagement()
