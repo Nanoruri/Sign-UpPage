@@ -3,6 +3,7 @@ package me.jh.springstudy.config;
 import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.JwtAuthenticationEntryPoint;
 import me.jh.springstudy.filter.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
