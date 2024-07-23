@@ -12,6 +12,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +29,12 @@ public class AuthenticationServiceTest {
 
 	@Mock
 	private AuthenticationManager authenticationManager;
+
+	@Mock
+	private UserDetails UserDetails;
+
+	@Mock
+	private UserDetailsService userDetailsService;
 
 	@Mock
 	private JwtGenerator jwtGenerator;
@@ -99,5 +109,55 @@ public class AuthenticationServiceTest {
 
 		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId, password));
 		verify(authenticationManager, never()).authenticate(any(Authentication.class));
+	}
+
+	@Test
+	public void testAuthentication2_ValidUserIdShouldGenerateToken() {
+		String userId = "validUserId";
+		JWToken expectedToken = new JWToken("Bearer", "accessToken", "refreshToken");
+
+		UserDetails = User.builder()
+				.username(userId)
+				.password("password")
+				.roles("USER")
+				.build();
+
+		when(userDetailsService.loadUserByUsername(userId)).thenReturn(UserDetails);
+		when(jwtGenerator.generateToken(any(Authentication.class))).thenReturn(expectedToken);
+
+		JWToken actualToken = authenticationService.authenticateAndGenerateToken(userId);
+
+		assertNotNull(actualToken);
+		assertEquals(expectedToken.getAccessToken(), actualToken.getAccessToken());
+		assertEquals(expectedToken.getRefreshToken(), actualToken.getRefreshToken());
+	}
+
+
+	@Test
+	public void testAuthentication2_InvalidUserIdShouldThrowException() {
+		String userId = "invalidUserId";
+
+		when(userDetailsService.loadUserByUsername(userId)).thenThrow(new UsernameNotFoundException("사용자가 없습니다!{}" + userId));
+
+		assertThrows(RuntimeException.class, () -> authenticationService.authenticateAndGenerateToken(userId));
+		verify(jwtGenerator, never()).generateToken(any(Authentication.class));
+	}
+
+	@Test
+	public void testAuthentication2_EmptyUserIdShouldThrowException() {
+		String userId = "";
+
+		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId));
+		verify(userDetailsService, never()).loadUserByUsername(any());
+		verify(jwtGenerator, never()).generateToken(any(Authentication.class));
+	}
+
+	@Test
+	public void testAuthentication2_NullUserIdShouldThrowException() {
+		String userId = null;
+
+		assertThrows(UserException.class, () -> authenticationService.authenticateAndGenerateToken(userId));
+		verify(userDetailsService, never()).loadUserByUsername(any());
+		verify(jwtGenerator, never()).generateToken(any(Authentication.class));
 	}
 }
