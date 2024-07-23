@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
@@ -181,17 +182,18 @@ public class JwtProviderTest {
 
 
 	@Test
-	public void testGetAuthenticationFromRefreshToken() {
-		UserDetails userDetails = new User("testUser", "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+	public void testGetUserIdFromToken() {
+		// given
+		String expectedUserId = "user123";
+		String token = Jwts.builder()
+				.subject(expectedUserId)
+				.signWith(key)
+				.compact();
+		// when
+		String actualUserId = jwtProvider.getUserIdFromToken(token);
 
-		when(authentication.getPrincipal()).thenReturn(userDetails);
-		token = jwtGenerator.generateToken(authentication);
-		String refreshToken = token.getRefreshToken();
-
-		Authentication result = jwtProvider.getAuthenticationFromRefreshToken(refreshToken);
-
-		assertNotNull(result);
-		assertEquals("testUser", result.getName());
-		assertTrue(result.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+		// then
+		assertEquals(expectedUserId, actualUserId, "토큰에서 추출한 사용자 ID가 예상과 다릅니다.");
 	}
+
 }

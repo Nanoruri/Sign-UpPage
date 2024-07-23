@@ -59,12 +59,11 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-	public Authentication getAuthenticationFromRefreshToken(String refreshToken) {
-		Claims claims = parseClaims(refreshToken);
-		String userId = claims.getSubject();
-		UserDetails principal = new User(userId, "", List.of(new SimpleGrantedAuthority("ROLE_USER")));
-		return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
-	}
+
+    public String getUserIdFromToken(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getSubject();
+    }
 
 
 
