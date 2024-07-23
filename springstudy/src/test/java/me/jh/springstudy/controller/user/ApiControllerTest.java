@@ -173,8 +173,8 @@ public class ApiControllerTest {
 		JWToken jwToken = new JWToken("Bearer ", "newAccessToken", "newRefreshToken");
 
 		when(jwtProvider.validateToken(refreshToken)).thenReturn(true);
-		when(jwtProvider.getAuthenticationFromRefreshToken(refreshToken)).thenReturn(authentication);
-		when(jwtGenerator.generateToken(authentication)).thenReturn(jwToken);
+		when(jwtProvider.getUserIdFromToken(refreshToken)).thenReturn("test");
+		when(authenticationService.authenticateAndGenerateToken("test")).thenReturn(jwToken);
 
 		mockMvc.perform(post("/refresh")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -183,8 +183,8 @@ public class ApiControllerTest {
 				.andExpect(jsonPath("$.accessToken").value(jwToken.getAccessToken()))
 				.andExpect(jsonPath("$.refreshToken").value(jwToken.getRefreshToken()));
 		verify(jwtProvider, times(1)).validateToken(refreshToken);
-		verify(jwtProvider, times(1)).getAuthenticationFromRefreshToken(refreshToken);
-		verify(jwtGenerator, times(1)).generateToken(authentication);
+		verify(jwtProvider, times(1)).getUserIdFromToken(refreshToken);
+		verify(authenticationService, times(1)).authenticateAndGenerateToken("test");
 	}
 
 	@Test

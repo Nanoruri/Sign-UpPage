@@ -41,7 +41,6 @@ public class ApiController {
 	private final static Logger log = LoggerFactory.getLogger(ApiController.class);
 	private final SignupService signupService;
 	private final FindService findService;
-	private final JwtGenerator jwtGenerator;
 	private final JwtProvider jwtProvider;
 	private final AuthenticationService authenticationService;
 
@@ -53,11 +52,9 @@ public class ApiController {
 	 * @param findservice           아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtGenerator jwtGenerator,
-	                     JwtProvider jwtProvider) {
+	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtProvider jwtProvider) {
 		this.signupService = signupService;
 		this.findService = findservice;
-		this.jwtGenerator = jwtGenerator;
 		this.authenticationService = authenticationService;
 		this.jwtProvider = jwtProvider;
 	}
@@ -97,24 +94,25 @@ public class ApiController {
 
 
 	/**
-	 * 이 메서드는 "/refresh" 엔드포인트에 대한 POST 요청을 처리합니다.
-	 * 이 엔드포인트는 리프레시 토큰과 함께 호출되며, 토큰이 유효한 경우
-	 * 새로운 액세스 및 리프레시 토큰이 생성되어 반환됩니다.
-	 * 토큰이 유효하지 않은 경우 HTTP 401 Unauthorized 상태를 반환합니다.
+	 * "/refresh" 엔드포인트에 대한 POST 요청을 처리합니다. 이 엔드포인트는 클라이언트로부터 리프레시 토큰을 받아,
+	 * 해당 토큰이 유효한 경우 새로운 액세스 토큰과 리프레시 토큰을 생성하여 반환합니다. 유효하지 않은 토큰을 받았을 경우,
+	 * HTTP 401 Unauthorized 상태 코드와 함께 오류 메시지를 반환합니다.
 	 *
-	 * @param reqData 리프레시 토큰을 담는 Map 객체
-	 * @return 새로운 액세스 및 리프레시 토큰이 생성되어 ResponseEntity 객체에 담겨 반환됩니다.
-	 * @implNote 이 메서드는 {@link JwtProvider#validateToken(String)}를 사용하여 토큰의 유효성을 검사합니다.
-	 * {@link JwtProvider#getAuthenticationFromRefreshToken(String)}를 사용하여 리프레시 토큰에서 인증 정보를 가져옵니다.
-	 * 이 메서드는 {@link JwtGenerator#generateToken(Authentication)}를 사용하여 JWT 토큰을 생성합니다.
+	 * @param reqData 리프레시 토큰을 포함하는 Map 객체. "refreshToken" 키를 사용하여 리프레시 토큰 값을 전달받습니다.
+	 * @return 새로운 액세스 토큰과 리프레시 토큰이 담긴 ResponseEntity 객체를 반환합니다. 토큰이 유효하지 않을 경우,
+	 *         HTTP 401 Unauthorized 상태와 오류 메시지를 담은 ResponseEntity 객체를 반환합니다.
+	 * @see JwtProvider#validateToken(String) 토큰의 유효성 검증을 위한 메서드 참조.
+	 * @see JwtProvider#getUserIdFromToken(String) 토큰으로부터 사용자 ID를 추출하기 위한 메서드 참조.
+	 * @see AuthenticationService#authenticateAndGenerateToken(String) 새로운 토큰을 생성하기 위한 메서드 참조.
 	 */
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refresh(@RequestBody Map<String, String> reqData) {
 		String refreshToken = reqData.get("refreshToken");
 
 		if (jwtProvider.validateToken(refreshToken)) {
-			Authentication authentication = jwtProvider.getAuthenticationFromRefreshToken(refreshToken);
-			JWToken newJwt = jwtGenerator.generateToken(authentication);
+			String userId = jwtProvider.getUserIdFromToken(refreshToken);
+
+			JWToken newJwt = authenticationService.authenticateAndGenerateToken(userId);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + newJwt.getAccessToken());
