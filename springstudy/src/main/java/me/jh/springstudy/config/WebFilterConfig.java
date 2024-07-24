@@ -1,7 +1,6 @@
 package me.jh.springstudy.config;
 
 
-import me.jh.springstudy.filter.FetchDestHeaderFilter;
 import me.jh.springstudy.filter.LoggingFilter;
 import me.jh.springstudy.filter.SessionCheckFilter;
 import me.jh.springstudy.filter.SessionCreateFilter;
@@ -49,15 +48,15 @@ public class WebFilterConfig {
 		return registrationBean;
 	}
 
-	@Bean
-	public FilterRegistrationBean<FetchDestHeaderFilter> customHeaderCheckFilter() {
-
-		FilterRegistrationBean<FetchDestHeaderFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new FetchDestHeaderFilter());
-		registrationBean.setOrder(3);
-		registrationBean.addUrlPatterns("/*");
-
-		return registrationBean;
-	}
+//	@Bean
+//	public FilterRegistrationBean<FetchDestHeaderFilter> customHeaderCheckFilter() {
+//
+//		FilterRegistrationBean<FetchDestHeaderFilter> registrationBean = new FilterRegistrationBean<>();
+//		registrationBean.setFilter(new FetchDestHeaderFilter());
+//		registrationBean.setOrder(3);
+//		registrationBean.addUrlPatterns("/*");
+//
+//		return registrationBean;
+//	}
 
 }

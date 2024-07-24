@@ -43,6 +43,6 @@ security:
 
 # JWT 설정
 jwt:
-  secret: dlrjgozldgoqhffurh?zz # 비밀의 키
+  secret: 7L2cIOu4lOugiOydtOuTnCDsubTtg4DsiqTtirjroZztlLw= # 비밀의 키
   expiration: 8640000 # 만료시간
 

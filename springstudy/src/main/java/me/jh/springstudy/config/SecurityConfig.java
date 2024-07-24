@@ -1,11 +1,16 @@
 package me.jh.springstudy.config;
 
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.JwtAuthenticationEntryPoint;
+import me.jh.springstudy.filter.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 /**
@@ -24,10 +30,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final Logger log = org.slf4j.LoggerFactory.getLogger(SecurityConfig.class);
+	private static final Logger log = org.slf4j.LoggerFactory.getLogger(SecurityConfig.class);
+	private final JwtProvider JwtProvider;
+	private final UserDao userDao;
 
 	@Autowired
-	private UserDao userDao;
+	public SecurityConfig(UserDao userDao, JwtProvider jwtProvider) {
+		this.userDao = userDao;
+		this.JwtProvider = jwtProvider;
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -53,32 +64,29 @@ public class SecurityConfig {
 		};
 	}
 
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
+
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 
 				.authorizeRequests()//권한 설정
-				.antMatchers("/", "/signup", "/signupSuccess", "/login", "/idCheck", "/logout")
-				.permitAll()
-				.anyRequest()
-				.permitAll()
+				.anyRequest().permitAll()//모든 요청에 대해 접근을 허용함.
 
 				.and()
-
-				.formLogin()
-				.loginPage("/login")
-				.loginProcessingUrl("/loginCheck") // 설정한 엔드포인트로 로그인 요청이 들어오면 스프링 시큐리티가 가로채어 처리.
-				.usernameParameter("userId")
-				.passwordParameter("password")
-				.defaultSuccessUrl("/")
-				.failureUrl("/login")
-				.permitAll()
+				.formLogin().disable()
+				.exceptionHandling()
+				.authenticationEntryPoint(new JwtAuthenticationEntryPoint())//인증 실패 시 처리할 핸들러 설정
 
 				.and()
+				.addFilterBefore(new JwtAuthenticationFilter(JwtProvider), UsernamePasswordAuthenticationFilter.class)
 				.userDetailsService(userDetailsService())
 				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
 
 				.and()
 				.logout()

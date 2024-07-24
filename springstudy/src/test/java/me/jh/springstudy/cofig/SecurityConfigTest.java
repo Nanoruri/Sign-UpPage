@@ -1,5 +1,6 @@
 package me.jh.springstudy.cofig;
 
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +37,11 @@ public class SecurityConfigTest {
 
 	@Mock
 	private User user;
+
+	@MockBean
+	private AuthenticationManager authenticationManager;
+	@MockBean
+	private JwtProvider jwtProvider;
 
 	@Autowired
 	private UserDetailsService userDetailsService;

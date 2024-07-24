@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Study' : 'signupProject'
             },
             body: JSON.stringify({
                 userId: userId,

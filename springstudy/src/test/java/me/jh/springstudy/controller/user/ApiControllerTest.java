@@ -2,11 +2,16 @@ package me.jh.springstudy.controller.user;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jh.springstudy.auth.JwtGenerator;
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.exception.user.UserErrorType;
+import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.user.AuthenticationService;
 import me.jh.springstudy.service.user.FindService;
-import me.jh.springstudy.service.user.LoginService;
 import me.jh.springstudy.service.user.SignupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,20 +19,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
@@ -35,11 +39,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -58,7 +60,7 @@ public class ApiControllerTest {
 	@MockBean
 	private SignupService signupService;
 	@MockBean
-	private LoginService loginService;
+	private AuthenticationService authenticationService;
 	@MockBean
 	private FindService findService;
 	@MockBean
@@ -69,6 +71,13 @@ public class ApiControllerTest {
 	private Authentication authentication;
 	@MockBean
 	private UserDao userDao;
+	@MockBean
+	private JwtProvider jwtProvider;
+	@MockBean
+	private JwtGenerator jwtGenerator;
+	@MockBean
+	private AuthenticationManager authenticationManager;
+
 
 	@Captor
 	private ArgumentCaptor<User> userCaptor;
@@ -88,56 +97,108 @@ public class ApiControllerTest {
 
 	@Test
 	public void testLoginSuccess() throws Exception {
-		String userId = "test123";
-		String password = "test123";
+		String userId = "validUser";
+		String password = "validPassword";
 
-//		when(loginService.loginCheck(userId, password)).thenReturn(true);
 
-		//사용자 정보가 있을 때
-		when(userDetailsService.loadUserByUsername(userId)).
-				thenReturn(org.springframework.security.core.userdetails.User.builder()
-						.username(userId)
-						.password(passwordEncoder.encode(password))
-						.roles("USER")
-						.build());
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenReturn(new JWToken("Bearer ", "accessToken", "refreshToken"));
+
 
 		mockMvc.perform(post("/loginCheck")
-						.param("userId", userId)
-						.param("password", password))
-				.andExpect(status().isFound())//로그인에 성공하면 시큐리티는 302 리다이렉트를 반환
-				.andExpect(redirectedUrl("/"))//로그인에 성공하면 메인 페이지로 리다이렉트
-				.andExpect(request().sessionAttribute("SPRING_SECURITY_CONTEXT", notNullValue()))
-				.andExpect(authenticated()
-						.withAuthenticationName(userId)//  인증된 사용자 이름이 userId인지 확인
-						.withRoles("USER"));//  인증된 사용자 권한이 ROLE_USER인지 확인
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.accessToken").value("accessToken"))
+				.andExpect(jsonPath("$.refreshToken").value("refreshToken"));
 	}
 
 	@Test
 	public void testLoginFail() throws Exception {
-		String userId = "test123";
-		String password = "test";
+		String userId = "invalidUser";
+		String password = "invalidPassword";
 
-		//사용자 정보가 없을 때
-		when(userDetailsService.loadUserByUsername(userId)).
-				thenReturn(null);
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenThrow(new BadCredentialsException("Authentication failed"));
 
 		mockMvc.perform(post("/loginCheck")
-						.param("userId", userId)
-						.param("password", password))
-				.andExpect(status().isFound())//로그인에 실패하면 시큐리티는 302 리다이렉트를 반환
-				.andExpect(redirectedUrl("/login"))//로그인에 실패하면 로그인 페이지로 리다이렉트
-				.andExpect(request().sessionAttributeDoesNotExist("SPRING_SECURITY_CONTEXT"));
-//				.andExpect(MockMvcResultMatchers.jsonPath("$").value("아이디 혹은 비밀번호가 잘못되었습니다."));//
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isUnauthorized())
+				.andExpect(content().string("인증 실패"));
 	}
 
 	@Test
+	public void testLoginFailWithEmptyId() throws Exception {
+		String userId = "";
+		String password = "validPassword";
+
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenThrow(new UserException(UserErrorType.ID_NULL));
+
+		mockMvc.perform(post("/loginCheck")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string("아이디를 입력해주세요."));
+	}
+
+	@Test
+	public void testLoginFailWithEmptyPassword() throws Exception {
+		String userId = "validUser";
+		String password = "";
+
+		when(authenticationService.authenticateAndGenerateToken(userId, password))
+				.thenThrow(new UserException(UserErrorType.PASSWORD_NULL));
+
+		mockMvc.perform(post("/loginCheck")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string("비밀번호를 입력해주세요."));
+	}
+
+
+	@Test
 	public void testLogout() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/logout"))
+		mockMvc.perform(post("/logout"))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/"))
 				.andExpect(request().sessionAttributeDoesNotExist("userId"));
 	}
 
+	@Test
+	public void testRefreshToken() throws Exception {
+		String refreshToken = "validToken";
+		JWToken jwToken = new JWToken("Bearer ", "newAccessToken", "newRefreshToken");
+
+		when(jwtProvider.validateToken(refreshToken)).thenReturn(true);
+		when(jwtProvider.getUserIdFromToken(refreshToken)).thenReturn("test");
+		when(authenticationService.authenticateAndGenerateToken("test")).thenReturn(jwToken);
+
+		mockMvc.perform(post("/refresh")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.accessToken").value(jwToken.getAccessToken()))
+				.andExpect(jsonPath("$.refreshToken").value(jwToken.getRefreshToken()));
+		verify(jwtProvider, times(1)).validateToken(refreshToken);
+		verify(jwtProvider, times(1)).getUserIdFromToken(refreshToken);
+		verify(authenticationService, times(1)).authenticateAndGenerateToken("test");
+	}
+
+	@Test
+	public void testRefreshTokenWithInvalidToken() throws Exception {
+		String refreshToken = "invalidToken";
+
+		when(jwtProvider.validateToken(refreshToken)).thenReturn(false);
+
+		mockMvc.perform(post("/refresh")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
+				.andExpect(status().isUnauthorized())
+				.andExpect(content().string("토큰 인증 실패"));
+	}
 
 	@Test
 	public void testSignupSuccess() throws Exception {
@@ -150,7 +211,7 @@ public class ApiControllerTest {
 
 		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now());
 
-		Mockito.doNothing().when(signupService).registerMember(user);
+		doNothing().when(signupService).registerMember(user);
 
 		mockMvc.perform(post("/signup")
 						.flashAttr("user", user))
@@ -171,7 +232,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 ID입니다."));
+				.andExpect(jsonPath("$").value("사용가능한 ID입니다."));
 
 		verify(signupService, times(1)).isDuplicateId(userId);
 	}
@@ -186,7 +247,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isConflict())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("이미 존재하는 아이디입니다."));
+				.andExpect(jsonPath("$").value("이미 존재하는 아이디입니다."));
 		verify(signupService, times(1)).isDuplicateId(userId);
 	}
 
@@ -200,7 +261,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("사용가능한 이메일입니다."));
+				.andExpect(jsonPath("$").value("사용가능한 이메일입니다."));
 		verify(signupService, times(1)).isDuplicateEmail(email);
 	}
 
@@ -214,7 +275,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isConflict())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
+				.andExpect(jsonPath("$").value("해당정보로 가입한 사용자가 이미 있습니다."));
 		verify(signupService, times(1)).isDuplicateEmail(email);
 	}
 
@@ -231,7 +292,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId));
+				.andExpect(jsonPath("$.userId").value(userId));
 
 		verify(findService, times(2)).findId(name, phoneNum);//findId메서드가 왜 두번 호출 되었는지 확인
 	}
@@ -247,7 +308,7 @@ public class ApiControllerTest {
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
+				.andExpect(jsonPath("$").value("해당 사용자 정보가 없습니다"));
 		verify(findService, times(1)).findId(name, phoneNum);
 	}
 
@@ -299,7 +360,7 @@ public class ApiControllerTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isNotFound())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").value("해당 사용자 정보가 없습니다"));
+				.andExpect(jsonPath("$").value("해당 사용자 정보가 없습니다"));
 
 		// 메서드가 실행되었는지 확인
 		verify(findService, times(1)).validateUser(any(User.class));

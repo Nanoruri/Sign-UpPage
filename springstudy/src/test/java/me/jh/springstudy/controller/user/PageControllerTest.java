@@ -1,5 +1,6 @@
 package me.jh.springstudy.controller.user;
 
+import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,6 +41,10 @@ public class PageControllerTest {
 	private UserDao userDao;
 	@MockBean
 	private UserDetailsService userDetailsService;
+	@MockBean
+	private JwtProvider jwtProvider;
+	@MockBean
+	private AuthenticationManager authenticationManager;
 
 
 	@Test

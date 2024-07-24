@@ -22,7 +22,7 @@ function checkDuplicate() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Study' : 'signupProject'
+
         },
         body: JSON.stringify({
             userId: userId
@@ -60,7 +60,6 @@ function checkDuplicateEmail() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Study' : 'signupProject'
         },
         body: JSON.stringify({
             email: email
