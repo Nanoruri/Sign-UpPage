@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jh.springstudy.entitiy.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,11 +20,14 @@ import java.util.Optional;
 /**
  * 사용자 정보를 찾는 CustomDAO 구현 클래스.//
  */
+
+@Repository
 public class UserPropertiesDaoImpl implements UserPropertiesDao {
 	@PersistenceContext
-	private final EntityManager entityManager;
+	private EntityManager entityManager;
 
 	private final ObjectMapper objectMapper;
+
 
 	@Autowired
 	public UserPropertiesDaoImpl(EntityManager entityManager, ObjectMapper objectMapper) {
@@ -39,6 +43,7 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao {
 	 * @param user 사용자 정보 객체
 	 * @return Optional<User> 사용자 객체의 Optional
 	 */
+	@Override
 	public Optional<User> findByProperties(User user) {
 
 		if (user == null) {
@@ -48,8 +53,6 @@ public class UserPropertiesDaoImpl implements UserPropertiesDao {
 		return findByDynamicProperties(properties);
 	}
 
-
-	// fixme : entity to Map withoutNull 방법을 고려한 방식(리플렉션 방식을 사용할 경우 생성자 수정)
 
 	/**
 	 * User 객체를 Map<String, Object> 형식의 검색 조건 맵으로 변환하는 유틸리티 메서드.
