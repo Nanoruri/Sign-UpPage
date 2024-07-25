@@ -75,6 +75,7 @@ public class SecurityConfig {
 		http.csrf().disable()
 
 				.authorizeRequests()//권한 설정
+				.antMatchers("/user/api/**").permitAll()
 				.anyRequest().permitAll()//모든 요청에 대해 접근을 허용함.
 
 				.and()
@@ -90,7 +91,7 @@ public class SecurityConfig {
 
 				.and()
 				.logout()
-				.logoutUrl("/logout")
+				.logoutUrl("/user/api/logout")
 				//로그아웃 핸들러 추가
 //				.addLogoutHandler((request, response, authentication) -> { // 핸들러 설정을 하지 않으면 기본 로그아웃 핸들러가 동작
 //					HttpSession session = request.getSession();

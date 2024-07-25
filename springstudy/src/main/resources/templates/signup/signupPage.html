@@ -14,7 +14,7 @@
 </head>
 
 <body>
-	<form method="post" class="joinForm" th:action="@{/signup}" onsubmit="return commonValidate()" th:object="${user}">
+	<form method="post" class="joinForm" th:action="@{/user/api/signup}" onsubmit="return commonValidate()" th:object="${user}">
 
 		<h2>회원가입</h2>
 		<div class="textForm"><!--사용자 아이디-->

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var phoneNum = document.getElementById('phoneNum').value;
         var newPassword = document.getElementById('inputPassword').value;
         
-        fetch('/study/passwordChange', {
+        fetch('/study/user/api/passwordChange', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

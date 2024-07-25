@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 sessionStorage.removeItem('rToken');
 
                 // 서버에 로그아웃 요청 보내기
-                fetch('/study/logout', {
+                fetch('/study/user/api/logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',

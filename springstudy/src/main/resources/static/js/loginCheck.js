@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
 
         try {
-            const response = await fetch('/study/loginCheck', {
+            const response = await fetch('/study/user/api/loginCheck', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

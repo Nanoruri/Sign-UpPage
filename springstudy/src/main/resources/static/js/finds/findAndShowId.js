@@ -4,7 +4,7 @@ function doFindId() {
     var phoneNum = document.getElementById('inputPhoneNum').value;
 
 
-    fetch('/study/findId', {
+    fetch('/study/user/api/findId', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

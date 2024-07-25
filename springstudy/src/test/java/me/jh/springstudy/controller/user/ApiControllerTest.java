@@ -105,7 +105,7 @@ public class ApiControllerTest {
 				.thenReturn(new JWToken("Bearer ", "accessToken", "refreshToken"));
 
 
-		mockMvc.perform(post("/loginCheck")
+		mockMvc.perform(post("/user/api/loginCheck")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
 				.andExpect(status().isOk())
@@ -121,7 +121,7 @@ public class ApiControllerTest {
 		when(authenticationService.authenticateAndGenerateToken(userId, password))
 				.thenThrow(new BadCredentialsException("Authentication failed"));
 
-		mockMvc.perform(post("/loginCheck")
+		mockMvc.perform(post("/user/api/loginCheck")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
 				.andExpect(status().isUnauthorized())
@@ -136,7 +136,7 @@ public class ApiControllerTest {
 		when(authenticationService.authenticateAndGenerateToken(userId, password))
 				.thenThrow(new UserException(UserErrorType.ID_NULL));
 
-		mockMvc.perform(post("/loginCheck")
+		mockMvc.perform(post("/user/api/loginCheck")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
 				.andExpect(status().isBadRequest())
@@ -151,7 +151,7 @@ public class ApiControllerTest {
 		when(authenticationService.authenticateAndGenerateToken(userId, password))
 				.thenThrow(new UserException(UserErrorType.PASSWORD_NULL));
 
-		mockMvc.perform(post("/loginCheck")
+		mockMvc.perform(post("/user/api/loginCheck")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"userId\":\"" + userId + "\",\"password\":\"" + password + "\"}"))
 				.andExpect(status().isBadRequest())
@@ -161,7 +161,7 @@ public class ApiControllerTest {
 
 	@Test
 	public void testLogout() throws Exception {
-		mockMvc.perform(post("/logout"))
+		mockMvc.perform(post("/user/api/logout"))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/"))
 				.andExpect(request().sessionAttributeDoesNotExist("userId"));
@@ -176,7 +176,7 @@ public class ApiControllerTest {
 		when(jwtProvider.getUserIdFromToken(refreshToken)).thenReturn("test");
 		when(authenticationService.authenticateAndGenerateToken("test")).thenReturn(jwToken);
 
-		mockMvc.perform(post("/refresh")
+		mockMvc.perform(post("/user/api/refresh")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
 				.andExpect(status().isOk())
@@ -193,7 +193,7 @@ public class ApiControllerTest {
 
 		when(jwtProvider.validateToken(refreshToken)).thenReturn(false);
 
-		mockMvc.perform(post("/refresh")
+		mockMvc.perform(post("/user/api/refresh")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
 				.andExpect(status().isUnauthorized())
@@ -213,7 +213,7 @@ public class ApiControllerTest {
 
 		doNothing().when(signupService).registerMember(user);
 
-		mockMvc.perform(post("/signup")
+		mockMvc.perform(post("/user/api/signup")
 						.flashAttr("user", user))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/signupSuccess"));
@@ -228,7 +228,7 @@ public class ApiControllerTest {
 		when(signupService.isDuplicateId(userId)).thenReturn(false);
 		//실제 메서드의 return값은 true라서 테스트 코드에는 false로 설정해야 중복x가 나옴
 
-		mockMvc.perform(post("/idCheck")
+		mockMvc.perform(post("/user/api/idCheck")
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isOk())
@@ -243,7 +243,7 @@ public class ApiControllerTest {
 
 		when(signupService.isDuplicateId(userId)).thenReturn(true);
 
-		mockMvc.perform(post("/idCheck")
+		mockMvc.perform(post("/user/api/idCheck")
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\"}"))
 				.andExpect(status().isConflict())
@@ -257,7 +257,7 @@ public class ApiControllerTest {
 
 		when(signupService.isDuplicateEmail(email)).thenReturn(false);
 
-		mockMvc.perform(post("/emailCheck")
+		mockMvc.perform(post("/user/api/emailCheck")
 						.contentType("application/json")
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isOk())
@@ -271,7 +271,7 @@ public class ApiControllerTest {
 
 		when(signupService.isDuplicateEmail(email)).thenReturn(true);
 
-		mockMvc.perform(post("/emailCheck")
+		mockMvc.perform(post("/user/api/emailCheck")
 						.contentType("application/json")
 						.content("{\"email\":\"" + email + "\"}"))
 				.andExpect(status().isConflict())
@@ -288,7 +288,7 @@ public class ApiControllerTest {
 
 		when(findService.findId(name, phoneNum)).thenReturn(userId);
 
-		mockMvc.perform(post("/findId")
+		mockMvc.perform(post("/user/api/findId")
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isOk())
@@ -304,7 +304,7 @@ public class ApiControllerTest {
 
 		when(findService.findId(name, phoneNum)).thenReturn(null);
 
-		mockMvc.perform(post("/findId")
+		mockMvc.perform(post("/user/api/findId")
 						.contentType("application/json")
 						.content("{\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}"))
 				.andExpect(status().isNotFound())
@@ -324,7 +324,7 @@ public class ApiControllerTest {
 		//validateUser의 반환값 설정.API의 매개변수로 받는 user 객체와 테스트에 사용되는 user 객체가 달라 any()를 사용
 		when(findService.validateUser(any(User.class))).thenReturn(true);
 
-		mockMvc.perform(post("/findPassword")
+		mockMvc.perform(post("/user/api/findPassword")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isOk())
@@ -356,7 +356,7 @@ public class ApiControllerTest {
 		when(findService.validateUser(any(User.class))).thenReturn(false);
 
 		// 사용자 정보가 없을 때의 요청을 수행
-		mockMvc.perform(post("/findPassword")
+		mockMvc.perform(post("/user/api/findPassword")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isNotFound())
@@ -390,7 +390,7 @@ public class ApiControllerTest {
 
 
 		//post요청을 보내는 부분
-		mockMvc.perform(post("/passwordChange").cookie(new Cookie("passwordChanger", passwordChangeUser))
+		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("passwordChanger", passwordChangeUser))
 						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
@@ -428,7 +428,7 @@ public class ApiControllerTest {
 
 
 		//post요청을 보내는 부분
-		mockMvc.perform(post("/passwordChange") // 쿠키 없이 보내면?
+		mockMvc.perform(post("/user/api/passwordChange") // 쿠키 없이 보내면?
 						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
@@ -463,7 +463,7 @@ public class ApiControllerTest {
 
 
 		//post요청을 보내는 부분
-		mockMvc.perform(post("/passwordChange").cookie(new Cookie("no", "wrongValue"))
+		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("no", "wrongValue"))
 						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
@@ -500,7 +500,7 @@ public class ApiControllerTest {
 
 
 		//post요청을 보내는 부분
-		mockMvc.perform(post("/passwordChange").cookie(new Cookie("passwordChanger", worngValue))
+		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("passwordChanger", worngValue))
 						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
 						.contentType("application/json")
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")

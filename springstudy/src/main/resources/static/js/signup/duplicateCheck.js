@@ -18,7 +18,7 @@ function checkDuplicate() {
         return; // 중복 확인을 수행하지 않고 함수 종료
     }
 
-    fetch('/study/idCheck', {
+    fetch('/study/user/api/idCheck', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function checkDuplicateEmail() {
         return; // 중복 확인을 수행하지 않고 함수 종료
     }
 
-    fetch('/study/emailCheck', {
+    fetch('/study/user/api/emailCheck', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

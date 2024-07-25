@@ -36,6 +36,7 @@ import java.util.UUID;
  * 회원가입, 로그인, 아이디/비밀번호 찾기 등의 기능을 제공.
  */
 @Controller
+@RequestMapping("/user/api")
 public class ApiController {
 
 	private final static Logger log = LoggerFactory.getLogger(ApiController.class);
