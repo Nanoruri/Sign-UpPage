@@ -1,6 +1,7 @@
 package me.jh.springstudy.auth;
 
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Encoders;
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dto.JWToken;
@@ -19,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -107,4 +109,47 @@ public class JwtGeneratorTest {
 			jwtGenerator.generateToken(authentication);
 		});
 	}
+
+	@Test
+	public void generateTokenForPasswordSuccess() {
+		String userId = "testUser";
+
+		// 토큰 생성
+		JWToken jwToken = jwtGenerator.generateTokenForPassword(userId);
+
+		// 토큰 검증
+		assertNotNull(jwToken);
+		assertEquals("Bearer", jwToken.getGrantType());
+		assertNotNull(jwToken.getAccessToken());
+	}
+
+	@Test
+	public void generateTokenForPasswordNullUserId() {
+		String userId = null;
+
+		assertThrows(JwtException.class, () -> {
+			jwtGenerator.generateTokenForPassword(userId);
+		});
+	}
+
+	@Test
+	public void generateTokenForPasswordEmptyUserId() {
+		String userId = "";
+
+		assertThrows(JwtException.class, () -> {
+			jwtGenerator.generateTokenForPassword(userId);
+		});
+	}
+
+	@Test
+	public void generateTokenForPasswordException() {
+		String userId = "user123";
+
+		jwtGenerator = new JwtGenerator("invalidBase64SecretKey");
+
+		assertThrows(JwtException.class, () -> {
+			jwtGenerator.generateTokenForPassword(userId);
+		});
+	}
+
 }

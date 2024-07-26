@@ -22,6 +22,7 @@ public class JwtGenerator {
 
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(JwtGenerator.class);
 	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30; // 30분
+	private static final long PASSWORD_CHANGE_EXPIRE_TIME = 1000L * 60 * 5; //5분
 	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // 7일
 	private static final String GRANT_TYPE = "Bearer";
 
@@ -72,7 +73,35 @@ public class JwtGenerator {
 					.build();
 
 		} catch (Exception e) {
-			throw new JwtException("토큰 생성에 실패하였습니다.",e);
+			throw new JwtException("토큰 생성에 실패하였습니다.", e);
+		}
+	}
+
+
+	public JWToken generateTokenForPassword(String userId) {
+
+		if (userId == null || userId.isEmpty()) {
+			throw new JwtException("잘못된 인증 정보입니다.");
+		}
+
+		long now = (new Date()).getTime();
+
+		try {
+			Date passwordTokenExpiresIn = new Date(now + PASSWORD_CHANGE_EXPIRE_TIME);
+
+			String passwordToken = Jwts.builder()
+					.subject(userId)
+					.expiration(passwordTokenExpiresIn)
+					.claim("wantChangePassword", "PasswordUser")
+					.signWith(getSigningKey())
+					.compact();
+
+			return JWToken.builder()
+					.grantType(GRANT_TYPE)
+					.accessToken(passwordToken)
+					.build();
+		} catch (Exception e) {
+			throw new JwtException("토큰 생성에 실패하였습니다.", e);
 		}
 	}
 }
