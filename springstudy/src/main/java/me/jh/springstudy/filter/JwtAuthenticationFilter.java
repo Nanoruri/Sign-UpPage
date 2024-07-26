@@ -3,7 +3,6 @@ package me.jh.springstudy.filter;
 import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -29,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtProvider jwtTokenProvider;
 
-	@Autowired
+
 	public JwtAuthenticationFilter(JwtProvider jwtTokenProvider) {
 		this.jwtTokenProvider = jwtTokenProvider;
 	}
