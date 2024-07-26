@@ -2,6 +2,7 @@ package me.jh.springstudy.controller.user;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.auth.JwtGenerator;
 import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
@@ -37,10 +38,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -321,28 +319,20 @@ public class ApiControllerTest {
 		testUser.setName("Valid");
 		testUser.setPhoneNum("987654321");
 
+		JWToken passwordToken = new JWToken("Bearer ", "passwordToken", null);
+
 		//validateUser의 반환값 설정.API의 매개변수로 받는 user 객체와 테스트에 사용되는 user 객체가 달라 any()를 사용
 		when(findService.validateUser(any(User.class))).thenReturn(true);
+		when(jwtGenerator.generateTokenForPassword(testUser.getUserId())).thenReturn(passwordToken);
 
 		mockMvc.perform(post("/user/api/findPassword")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(testUser)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.userId").value(testUser.getUserId()))
-				.andExpect(jsonPath("$.name").value(testUser.getName()))
-				.andExpect(jsonPath("$.phoneNum").value(testUser.getPhoneNum()))
-				.andExpect(cookie().exists("passwordChanger"))
-				.andReturn().getResponse();
+				.andExpect(jsonPath("$.passwordToken").value("passwordToken"));
 
 		verify(findService, times(1)).validateUser(any(User.class));
-
-		verify(findService).validateUser(userCaptor.capture());
-		User capturedUser = userCaptor.getValue();
-
-		// 캡처된 User 객체와 테스트에서 사용한 User 객체의 내용이 동일한지 검증
-		assertEquals(testUser.getUserId(), capturedUser.getUserId());
-		assertEquals(testUser.getName(), capturedUser.getName());
-		assertEquals(testUser.getPhoneNum(), capturedUser.getPhoneNum());
+		verify(jwtGenerator, times(1)).generateTokenForPassword(testUser.getUserId());
 	}
 
 	@Test//비밀번호 찾기 실패
@@ -370,148 +360,193 @@ public class ApiControllerTest {
 
 	@Test//새 비밀번호로 변경 성공
 	public void testNewPasswordChangeSuccess() throws Exception {
-		String userId = "test1234";
-		String name = "test";
-		String phoneNum = "010-1234-5678";
+
+		String passwordToken = "passwordValidToken";
 		String newPassword = "test1234";
 
-		//세션에 저장된 사용자 정보
-		String passwordChangeUser = UUID.randomUUID().toString();
-		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+		User testUser = new User();
+		testUser.setUserId("validUser");
 
-		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
 
-		//세션에 저장된 사용자 정보를 가져오는 메서드
-		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
-
-		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-		when(findService.validateUser(testUser)).thenReturn(true);
-		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
+		when(jwtProvider.validateToken(passwordToken)).thenReturn(true);
+		when(jwtProvider.getUserIdFromToken(passwordToken)).thenReturn(testUser.getUserId());
+		when(findService.changePassword(any(User.class), eq(newPassword))).thenReturn(true);
 
 
 		//post요청을 보내는 부분
-		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("passwordChanger", passwordChangeUser))
-						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
-						.contentType("application/json")
-						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
-						.content("{\"newPassword\":\"" + newPassword + "\"}")
-						.flashAttr("passwordChangeUser", testUser))
+		mockMvc.perform(post("/user/api/passwordChange")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"passwordToken\":\"" + passwordToken + "\", \"newPassword\":\"" + newPassword + "\"}"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.messege").value("비밀번호 변경 성공"));
+				.andExpect(jsonPath("$.message").value("비밀번호 변경 성공"));
 
 		//메서드가 실행되었는지 확인
-		verify(findService, times(1)).changePassword(testUser, newPassword);
-		assertNull(session.getAttribute("passwordChangeUser123"));//세션에 저장된 사용자 정보가 삭제되었는지 확인
-
+		//테스트 대상 API에서 새 User객체를 생성하기에 인자를 비교
+		verify(findService, times(1)).changePassword(argThat(user -> user.getUserId().equals("validUser")), eq(newPassword));
+		verify(jwtProvider, times(1)).validateToken(passwordToken);
+		verify(jwtProvider, times(1)).getUserIdFromToken(passwordToken);
 	}
 
-
-	@Test//쿠키 누락으로 비밀번호 변경 실패
-	public void testNewPasswordChangeWithoutCookie() throws Exception {
-		String userId = "test1234";
-		String name = "test";
-		String phoneNum = "010-1234-5678";
+	@Test
+	public void testPasswordChangeUserNotFound() throws Exception {
+		String passwordToken = "validToken";
 		String newPassword = "test1234";
+		String userId = "nonExistentUser";
 
-		//세션에 저장된 사용자 정보
-		String passwordChangeUser = UUID.randomUUID().toString();
-		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+		when(jwtProvider.validateToken(passwordToken)).thenReturn(true);
+		when(jwtProvider.getUserIdFromToken(passwordToken)).thenReturn(userId);
+		when(findService.changePassword(any(User.class), eq(newPassword))).thenReturn(false);
 
-		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
-
-		//세션에 저장된 사용자 정보를 가져오는 메서드
-		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
-
-		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-		when(findService.validateUser(testUser)).thenReturn(true);
-		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
-
-
-		//post요청을 보내는 부분
-		mockMvc.perform(post("/user/api/passwordChange") // 쿠키 없이 보내면?
-						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
-						.contentType("application/json")
-						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
-						.content("{\"newPassword\":\"" + newPassword + "\"}")
-						.flashAttr("passwordChangeUser", testUser))
-				.andExpect(status().isBadRequest());
-
-		//메서드가 실행되었는지 확인
-		verify(findService, times(0)).changePassword(testUser, newPassword);
-		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
-	}
-
-	@Test//잘못된 쿠키값으로 비밀번호 변경 실패 잘못된 쿠키값으로 비밀번호 변경 실패
-	public void testNewPasswordChangeWornCookie() throws Exception {
-		String userId = "test1234";
-		String name = "test";
-		String phoneNum = "010-1234-5678";
-		String newPassword = "test1234";
-
-		//세션에 저장된 사용자 정보
-		String passwordChangeUser = UUID.randomUUID().toString();
-		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
-
-		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
-
-		//세션에 저장된 사용자 정보를 가져오는 메서드
-		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
-
-		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-		when(findService.validateUser(testUser)).thenReturn(true);
-		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
-
-
-		//post요청을 보내는 부분
-		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("no", "wrongValue"))
-						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
-						.contentType("application/json")
-						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
-						.content("{\"newPassword\":\"" + newPassword + "\"}")
-						.flashAttr("passwordChangeUser", testUser))
-				.andExpect(status().isBadRequest());
-
-		//메서드가 실행되었는지 확인
-		verify(findService, times(0)).changePassword(testUser, newPassword);
-
-	}
-
-
-	@Test//잘못된 쿠키값으로 비밀번호 변경 실패 잘못된 쿠키값으로 비밀번호 변경 실패
-	public void testNewPasswordChangeWornCookieValue() throws Exception {
-		String userId = "test1234";
-		String name = "test";
-		String phoneNum = "010-1234-5678";
-		String newPassword = "test1234";
-
-		//세션에 저장된 사용자 정보
-		String passwordChangeUser = UUID.randomUUID().toString();
-		String worngValue = "wrong";
-		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
-
-		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
-
-		//세션에 저장된 사용자 정보를 가져오는 메서드
-		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
-
-		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
-
-		when(findService.changePassword(testUser, newPassword)).thenReturn(false);
-
-
-		//post요청을 보내는 부분
-		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("passwordChanger", worngValue))
-						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
-						.contentType("application/json")
-						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
-						.content("{\"newPassword\":\"" + newPassword + "\"}")
-						.flashAttr("passwordChangeUser", testUser))
+		mockMvc.perform(post("/user/api/passwordChange")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"passwordToken\":\"" + passwordToken + "\", \"newPassword\":\"" + newPassword + "\"}"))
 				.andExpect(status().isNotFound());
 
-		//메서드가 실행되었는지 확인
-		verify(findService, times(0)).changePassword(testUser, newPassword);
-		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
+		verify(findService, times(1)).changePassword(argThat(user -> user.getUserId().equals(userId)), eq(newPassword));
 	}
+
+
+	@Test
+	public void testPasswordChangeInvalidToken() throws Exception {
+		String passwordToken = "invalidToken";
+		String newPassword = "test1234";
+
+		// Mock the validateToken method to throw an exception for an invalid token
+		doThrow(new JwtException("Invalid Token")).when(jwtProvider).validateToken(passwordToken);
+
+		mockMvc.perform(post("/user/api/passwordChange")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"passwordToken\":\"" + passwordToken + "\", \"newPassword\":\"" + newPassword + "\"}"))
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.message").value("토큰 인증 실패."));
+
+		// Verify that changePassword is not called
+		verify(findService, times(0)).changePassword(any(User.class), eq(newPassword));
+	}
+
+
+	@Test
+	public void tokenValidationReturnsFalse() throws Exception {
+		String passwordToken = "falseToken";
+		String newPassword = "newPassword123";
+
+		when(jwtProvider.validateToken(passwordToken)).thenReturn(false);
+
+		mockMvc.perform(post("/user/api/passwordChange")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"newPassword\":\"" + newPassword + "\", \"passwordToken\":\"" + passwordToken + "\"}"))
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.message").value("토큰 인증 실패."));
+
+		verify(findService, times(0)).changePassword(any(User.class), eq(newPassword));
+	}
+
+//	@Test//쿠키 누락으로 비밀번호 변경 실패
+//	public void testNewPasswordChangeWithoutCookie() throws Exception {
+//		String userId = "test1234";
+//		String name = "test";
+//		String phoneNum = "010-1234-5678";
+//		String newPassword = "test1234";
+//
+//		//세션에 저장된 사용자 정보
+//		String passwordChangeUser = UUID.randomUUID().toString();
+//		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+//
+//		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
+//
+//		//세션에 저장된 사용자 정보를 가져오는 메서드
+//		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
+//
+//		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
+//		when(findService.validateUser(testUser)).thenReturn(true);
+//		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
+//
+//
+//		//post요청을 보내는 부분
+//		mockMvc.perform(post("/user/api/passwordChange") // 쿠키 없이 보내면?
+//						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
+//						.contentType("application/json")
+//						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
+//						.content("{\"newPassword\":\"" + newPassword + "\"}")
+//						.flashAttr("passwordChangeUser", testUser))
+//				.andExpect(status().isBadRequest());
+//
+//		//메서드가 실행되었는지 확인
+//		verify(findService, times(0)).changePassword(testUser, newPassword);
+//		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
+//	}
+//
+//	@Test//잘못된 쿠키값으로 비밀번호 변경 실패 잘못된 쿠키값으로 비밀번호 변경 실패
+//	public void testNewPasswordChangeWornCookie() throws Exception {
+//		String userId = "test1234";
+//		String name = "test";
+//		String phoneNum = "010-1234-5678";
+//		String newPassword = "test1234";
+//
+//		//세션에 저장된 사용자 정보
+//		String passwordChangeUser = UUID.randomUUID().toString();
+//		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+//
+//		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
+//
+//		//세션에 저장된 사용자 정보를 가져오는 메서드
+//		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
+//
+//		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
+//		when(findService.validateUser(testUser)).thenReturn(true);
+//		when(findService.changePassword(testUser, newPassword)).thenReturn(true);
+//
+//
+//		//post요청을 보내는 부분
+//		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("no", "wrongValue"))
+//						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
+//						.contentType("application/json")
+//						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
+//						.content("{\"newPassword\":\"" + newPassword + "\"}")
+//						.flashAttr("passwordChangeUser", testUser))
+//				.andExpect(status().isBadRequest());
+//
+//		//메서드가 실행되었는지 확인
+//		verify(findService, times(0)).changePassword(testUser, newPassword);
+//
+//	}
+//
+//
+//	@Test//잘못된 쿠키값으로 비밀번호 변경 실패 잘못된 쿠키값으로 비밀번호 변경 실패
+//	public void testNewPasswordChangeWornCookieValue() throws Exception {
+//		String userId = "test1234";
+//		String name = "test";
+//		String phoneNum = "010-1234-5678";
+//		String newPassword = "test1234";
+//
+//		//세션에 저장된 사용자 정보
+//		String passwordChangeUser = UUID.randomUUID().toString();
+//		String worngValue = "wrong";
+//		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
+//
+//		//when = 해당 메서드가 실행됬을때의 리턴값을 설정
+//
+//		//세션에 저장된 사용자 정보를 가져오는 메서드
+//		when(session.getAttribute("passwordChangeUser" + passwordChangeUser)).thenReturn(testUser);
+//
+//		//validateUser메서드, changePassword메서드가 실행됬을때의 리턴값을 설정
+//
+//		when(findService.changePassword(testUser, newPassword)).thenReturn(false);
+//
+//
+//		//post요청을 보내는 부분
+//		mockMvc.perform(post("/user/api/passwordChange").cookie(new Cookie("passwordChanger", worngValue))
+//						.sessionAttr("passwordChangeUser" + passwordChangeUser, testUser)
+//						.contentType("application/json")
+//						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"phoneNum\":\"" + phoneNum + "\"}")
+//						.content("{\"newPassword\":\"" + newPassword + "\"}")
+//						.flashAttr("passwordChangeUser", testUser))
+//				.andExpect(status().isNotFound());
+//
+//		//메서드가 실행되었는지 확인
+//		verify(findService, times(0)).changePassword(testUser, newPassword);
+//		// 쿠키 이름과 값이 적절히 삭제되었는지 확인
+//	}
 
 
 //	@Test

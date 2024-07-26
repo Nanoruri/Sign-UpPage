@@ -1,5 +1,6 @@
 package me.jh.springstudy.controller.user;
 
+import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.auth.JwtGenerator;
 import me.jh.springstudy.auth.JwtProvider;
 import me.jh.springstudy.dto.JWToken;
@@ -19,17 +20,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 사용자 관련 요청을 처리하는 컨트롤러 클래스.
@@ -44,6 +39,7 @@ public class ApiController {
 	private final FindService findService;
 	private final JwtProvider jwtProvider;
 	private final AuthenticationService authenticationService;
+	private final JwtGenerator jwtGenerator;
 
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
@@ -53,11 +49,12 @@ public class ApiController {
 	 * @param findservice           아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtProvider jwtProvider) {
+	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtProvider jwtProvider, JwtGenerator jwtGenerator) {
 		this.signupService = signupService;
 		this.findService = findservice;
 		this.authenticationService = authenticationService;
 		this.jwtProvider = jwtProvider;
+		this.jwtGenerator = jwtGenerator;
 	}
 
 
@@ -101,7 +98,7 @@ public class ApiController {
 	 *
 	 * @param reqData 리프레시 토큰을 포함하는 Map 객체. "refreshToken" 키를 사용하여 리프레시 토큰 값을 전달받습니다.
 	 * @return 새로운 액세스 토큰과 리프레시 토큰이 담긴 ResponseEntity 객체를 반환합니다. 토큰이 유효하지 않을 경우,
-	 *         HTTP 401 Unauthorized 상태와 오류 메시지를 담은 ResponseEntity 객체를 반환합니다.
+	 * HTTP 401 Unauthorized 상태와 오류 메시지를 담은 ResponseEntity 객체를 반환합니다.
 	 * @see JwtProvider#validateToken(String) 토큰의 유효성 검증을 위한 메서드 참조.
 	 * @see JwtProvider#getUserIdFromToken(String) 토큰으로부터 사용자 ID를 추출하기 위한 메서드 참조.
 	 * @see AuthenticationService#authenticateAndGenerateToken(String) 새로운 토큰을 생성하기 위한 메서드 참조.
@@ -229,43 +226,29 @@ public class ApiController {
 
 	/**
 	 * 비밀번호 찾는 페이지에 대한 유저 인증하는 API
-	 * 사용자가 입력한 이름과 전화번호로 사용자를 찾아서 비밀번호 변경 페이지로 이동
+	 * 사용자가 입력한 이름과 전화번호로 사용자를 찾은 후 토큰을 생성하여 응답
 	 * 사용자가 없을 경우 사용자를 찾을 수 없다는 메세지를 반환
 	 *
-	 * @param user     사용자 아이디, 이름, 전화번호를 담은 User객체
-	 * @param response 쿠키를 사용하여 고유ID를 생성하여 비밀번호 변경 페이지로 전달
+	 * @param user 클라이언트가 입력한 아이디와 이름과 전화번호를 담아 User객체로 전달
 	 * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
-	 * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 찾기에 실패할 경우 사용자를 찾을 수 없다는 메세지를 반환
+	 * @throws UserException 사용자를 찾을 수 없을 경우  404 상태와 사용자를 찾을 수 없다는 메세지를 반환
 	 * @implNote 이 메서드는 {@link FindService#validateUser(User)}를 사용하여 사용자를 조회.
 	 */
 
 	@PostMapping("/findPassword")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user, Model model,
-	                                                        HttpSession session, HttpServletResponse response) {
-
+	public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user) {
 
 		if (!findService.validateUser(user)) {//사용자를 찾을 수 없을 경우
 			log.warn("잘못된 입력입니다");
 			throw new UserException(UserErrorType.USER_NOT_FOUND);//사용자를 찾을 수 없다는 메세지를 반환
 		}
 
-
-		String passwordChanger = UUID.randomUUID().toString();
-		session.setAttribute("passwordChangeUser" + passwordChanger, user);
-
-
-		//쿠키를 사용해 고유ID를 비밀번호 변경 페이지로 전달
-		Cookie cookie = new Cookie("passwordChanger", passwordChanger);
-		cookie.setMaxAge(60 * 60 * 24);
-		cookie.setPath("/");
-		cookie.setHttpOnly(true);
-		response.addCookie(cookie);// TODO : 이것보단 jwt를 사용하는게 좋을 것 같다.
+		JWToken passwordChangeToken = jwtGenerator.generateTokenForPassword(user.getUserId());
+		String passwordChanger = passwordChangeToken.getAccessToken();
 
 		Map<String, String> responseData = new HashMap<>();
-		responseData.put("userId", user.getUserId());
-		responseData.put("name", user.getName());
-		responseData.put("phoneNum", user.getPhoneNum());
+		responseData.put("passwordToken", passwordChanger);
 
 		return ResponseEntity.ok(responseData);
 	}
@@ -273,59 +256,44 @@ public class ApiController {
 
 	/**
 	 * 비밀번호 변경 서비스를 호출하는 API
-	 * 사용자가 입력한 새 비밀번호를 받아 비밀번호 변경 서비스를 호출
+	 * 사용자가 입력한 새 비밀번호와 비밀번호 변경 토큰을 사용하여 비밀번호 변경을 수행
+	 * 토큰을 검증하여 사용자를 확인하고, 비밀번호 변경이 성공하면 비밀번호 변경 성공 페이지로 리다이렉트
+	 * 토큰이 유효하지 않을 경우 HTTP 401 Unauthorized 상태와 오류 메시지를 반환
 	 *
-	 * @param reqData         사용자가 입력한 새 비밀번호
-	 * @param passwordChanger 쿠키를 사용하여 고유ID를 가져오기 위해 사용
-	 * @param session         세션에 저장된 사용자 정보를 가져오기 위해 사용
-	 * @return 비밀번호 변경 성공시 비밀번호 변경 성공 페이지로 리다이렉트
-	 * @throws UserException 비밀번호가 null일 경우 비밀번호가 null이라는 메세지를 반환
-	 * @implNote 이 메서드는 {@link FindService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
+	 * @param reqData 사용자가 입력한 새 비밀번호와 비밀번호 변경 토큰을 담은 Map 객체
+	 * @return 비밀번호 변경 성공시 비밀번호 변경 성공 페이지로 리다이렉트, 실패시 401 Unauthorized 상태와 오류 메시지를 반환
+	 * @throws UserException 사용자를 찾을 수 없을 경우 404 상태와 사용자를 찾을 수 없다는 메세지를 반환
+	 * @implNote 이 메서드는 {@link JwtProvider#validateToken(String)}를 사용하여 토큰의 유효성을 검증.
+	 * {@link FindService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
 	 */
 	@PostMapping("/passwordChange")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData, @CookieValue("passwordChanger") String passwordChanger,
-	                                                         HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-
-		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
-
+	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData) {
 
 		String newPassword = reqData.get("newPassword");
+		String passwordToken = reqData.get("passwordToken");
 
+		try {
+			if (jwtProvider.validateToken(passwordToken)) {
+				String userId = jwtProvider.getUserIdFromToken(passwordToken);
+				User user = new User();
+				user.setUserId(userId);
 
-		if (!findService.changePassword(passwordChangeUser, newPassword)) {
-			log.warn("비밀번호 변경 실패");
-			throw new UserException(UserErrorType.USER_NOT_FOUND);
-		}
+				if (!findService.changePassword(user, newPassword)) {
+					log.warn("비밀번호 변경 실패");
+					throw new UserException(UserErrorType.USER_NOT_FOUND);
+				}
 
-//		if (!findService.changePassword(passwordChangeUser, newPassword)) {
-//			log.info("실패.");//사용자를 못찾는 로직은 서비스 내부에 포함함
-//			throw new UserException(UserErrorType.USER_NOT_FOUND);//해당 내용은 validateUser에서 필터링하기 때문에 주석처리함
-//		} else if (newPassword == null) {
-//			throw new UserException(UserErrorType.PASSWORD_NULL);
-//		}
-
-
-		session.removeAttribute("PasswordChangeUser");// password사용된 세션은 제거해준다.
-		log.info("PasswordChangeUser 세션 제거 성공");
-
-		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			log.info("쿠키 이름: {}, 쿠키 값: {}", cookie.getName(), cookie.getValue());
-			if (cookie.getName().equals("passwordChanger") && cookie.getValue().equals(passwordChanger)) {
-				cookie.setMaxAge(0);
-				cookie.setPath("/");
-				response.addCookie(cookie);
-				log.info("passwordChanger 쿠키 제거 성공");
-				break;
+				Map<String, String> response = new HashMap<>();
+				response.put("message", "비밀번호 변경 성공");
+				return ResponseEntity.ok(response);
 			}
+		} catch (JwtException e) {
+			log.error("JWT 예외 발생: {}", e.getMessage());
 		}
-//		}
 
-		Map<String, String> responseData = new HashMap<>();
-		responseData.put("messege", "비밀번호 변경 성공");
-		return ResponseEntity.ok(responseData);
-	}// TODO : 로직 다듬기, 성공시 메세지 출력, 실패시 메세지 출력, 실패시 다시 입력창으로 돌아가기, 테스트 코드 수정하기
-
-
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "토큰 인증 실패.");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+	}
 }
