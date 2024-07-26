@@ -85,44 +85,26 @@ public class PageControllerTest {
 
 	@Test//비밀번호 변경 폼 로드 성공
 	public void testPasswordChangeFormSuccess() throws Exception {
-		//세션을 가지고 요청을 보내어 성공적으로 비밀번호 변경 페이지로 이동하는지 확인
-
-		// 세션에 저장된 사용자 정보가 있을 때
-		String userId = "test1234";
-		String name = "test";
-		String phoneNum = "010-1234-5678";
-
-		//세션에 저장된 사용자 정보
-		String passwordChanger = UUID.randomUUID().toString();
-		User testUser = new User(userId, name, phoneNum, null, null, null, null, null);
-
-		//세션에 저장된 사용자 정보를 가져오는 메서드
-		when(session.getAttribute("passwordChangeUser" + passwordChanger)).thenReturn(testUser);
-
 		//세션에 저장된 사용자 정보가 있을때의 요청을 수행
-		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChange")
-						.cookie(new Cookie("passwordChanger", passwordChanger))
-						.sessionAttr("passwordChangeUser" + passwordChanger, testUser))
+		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChange"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/newPasswordPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("passwordChangeUser"))
-				.andExpect(MockMvcResultMatchers.model().attribute("passwordChangeUser", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("finds/newPasswordPage"));
 	}
 
-	@Test//비밀번호 변경 폼 리다이렉트
-	public void testPasswordChangeFormRedirect() throws Exception {
-		//세션을 가지지 않고 요청을 보내어 비밀번호 찾기 페이지로 리다이렉트 되는지 확인
-
-		// 세션에 저장된 사용자 정보가 없을 때
-		when(session.getAttribute("passwordChangeUser")).thenReturn(null);
-
-
-		// 세션 없이 요청을 수행
-		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChange")
-						.cookie(new Cookie("passwordChanger", "test")))
-				.andExpect(status().is3xxRedirection()) // 3xx 리다이렉션 상태 코드 확인
-				.andExpect(redirectedUrl("/findPassword")); // 리다이렉트된 URL 확인
-	}
+//	@Test//비밀번호 변경 폼 리다이렉트
+//	public void testPasswordChangeFormRedirect() throws Exception {
+//		//세션을 가지지 않고 요청을 보내어 비밀번호 찾기 페이지로 리다이렉트 되는지 확인
+//
+//		// 세션에 저장된 사용자 정보가 없을 때
+//		when(session.getAttribute("passwordChangeUser")).thenReturn(null);
+//
+//
+//		// 세션 없이 요청을 수행
+//		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChange")
+//						.cookie(new Cookie("passwordChanger", "test")))
+//				.andExpect(status().is3xxRedirection()) // 3xx 리다이렉션 상태 코드 확인
+//				.andExpect(redirectedUrl("/findPassword")); // 리다이렉트된 URL 확인
+//	}
 
 	@Test
 	public void testSignupSuccessPage() throws Exception {

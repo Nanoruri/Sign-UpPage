@@ -3,15 +3,10 @@ package me.jh.springstudy.controller.user;
 import me.jh.springstudy.entitiy.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class PageController {
-
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PageController.class);
 
 	/**
 	 * 로그인 페이지를 보여주는 API
@@ -86,25 +81,11 @@ public class PageController {
 	/**
 	 * 비밀번호 변경 페이지를 보여주는 API
 	 *
-	 * @param model           뷰 렌더링을 위해 속성을 추가하는 모델
-	 * @param session         세션에 저장된 사용자 정보를 가져오기 위해 사용
-	 * @param passwordChanger 쿠키를 사용 하여 고유ID를 가져오기 위해 사용
 	 * @return 비밀번호 변경 페이지 뷰 반환
-	 * @implNote 이 메서드는 /findPassword 세션에 저장된 비밀번호 변경하려는 사용자 정보를 가져와 새 비밀번호를 입력받는 페이지로 이동
+	 * @implNote 새 비밀번호를 입력받는 페이지로 이동
 	 */
 	@GetMapping("/passwordChange")
-	public String resetPassword(Model model, HttpSession session, @CookieValue("passwordChanger") String passwordChanger) {
-
-
-		User passwordChangeUser = (User) session.getAttribute("passwordChangeUser" + passwordChanger);
-
-
-		if (passwordChangeUser == null) {
-			log.warn("세션에 저장된 값이 없습니다.");
-			return "redirect:/findPassword";
-		}
-
-		model.addAttribute("passwordChangeUser", passwordChangeUser);
+	public String resetPassword() {
 		return "finds/newPasswordPage";
 	}
 
