@@ -14,9 +14,7 @@
 	<div class="wrapper">
 		<div class="container">
 			<h1>Welcome</h1>
-			<form method="post" id="loginForm" class="form" th:action="@{/user/api/loginCheck}"
-			      onsubmit="return commonValidate();"
-			      th:object="${signin}">
+			<form method="post" id="loginForm" class="form" th:action="@{/user/api/loginCheck}" th:object="${signin}">
 				<!--from태그 method = http의 Request method, action = 요청을 보낼 URL-->
 
 				<!--사용자 아이디-->

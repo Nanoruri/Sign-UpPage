@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
             password: password
         };
 
+        if (commonValidate()) {
 
             try {
                 const response = await fetch('/study/user/api/loginCheck', {
