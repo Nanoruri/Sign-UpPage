@@ -90,7 +90,7 @@ public class ApiControllerTest {
 	@BeforeEach
 	public void setUp() {
 		user = new User("test", "testName", "hashedPassword", "010-1234-5678",
-				LocalDate.of(1990, 11, 27), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 11, 27), "test@test.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class ApiControllerTest {
 		LocalDate birth = LocalDate.of(1999, 11, 11);
 		String email = "test1234@test.com";
 
-		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now());
+		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now(), "USER");
 
 		doNothing().when(signupService).registerMember(user);
 
@@ -340,7 +340,7 @@ public class ApiControllerTest {
 		String userId = "test";
 		String name = "testName";
 		String phoneNum = "010-1234-5678";
-		User testUser = new User(userId, name, null, phoneNum, null, null, null, null);
+		User testUser = new User(userId, name, null, phoneNum, null, null, null, null, null);
 
 		// 사용자 정보가 없을 때
 		when(findService.validateUser(any(User.class))).thenReturn(false);
