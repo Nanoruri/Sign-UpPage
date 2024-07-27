@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
 
 
-        if (commonValidate() && checkPasswordMatch()) {
+        if (commonValidate() && passwordValidate()) {
             const newPassword = document.getElementById('inputPassword').value;
 
             fetch('/study/user/api/passwordChange', {
