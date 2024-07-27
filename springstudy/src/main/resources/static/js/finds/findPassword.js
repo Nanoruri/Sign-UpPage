@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (commonValidate()) { //동일한 html에 있는 js파일의 내용을 가져다 쓸 수 있음.
-        var userId = document.getElementById('inputAdress').value;
-        var name = document.getElementById('inputName').value;
-        var phoneNum = document.getElementById('inputPhoneNum').value;
+            const userId = document.getElementById('inputAdress').value;
+            const name = document.getElementById('inputName').value;
+            const phoneNum = document.getElementById('inputPhoneNum').value;
 
 
-        fetch('/study/user/api/findPassword', {
+            fetch('/study/user/api/findPassword', {
             method: 'POST',
             credentials: 'include',
             headers: {

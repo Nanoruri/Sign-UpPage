@@ -1,22 +1,22 @@
 // 공통적으로 사용되는 유효성 검사 함수 정의
 function commonValidate() {
     console.debug('commonValidate함수 실행')
-    var userIdInput = document.getElementById('inputAdress');
-    var nameInput = document.getElementById('inputName');
-    var passwordInput = document.getElementById('inputPassword');
-    var birthInput = document.getElementById('inputBirth');
-    var emailInput = document.getElementById('inputEmail');
-    var phoneNumInput = document.getElementById('inputPhoneNum');
+    const userIdInput = document.getElementById('inputAdress');
+    const nameInput = document.getElementById('inputName');
+    const passwordInput = document.getElementById('inputPassword');
+    const birthInput = document.getElementById('inputBirth');
+    const emailInput = document.getElementById('inputEmail');
+    const phoneNumInput = document.getElementById('inputPhoneNum');
 
     // 요소가 존재하지 않는 경우에는 기본값으로 null을 할당
-    var userId = userIdInput ? userIdInput.value.trim() : null;
-    var name = nameInput ? nameInput.value.trim() : null;
-    var password = passwordInput ? passwordInput.value.trim() : null;
-    var birth = birthInput ? birthInput.value.trim() : null;
-    var email = emailInput ? emailInput.value.trim() : null;
-    var phoneNum = phoneNumInput ? phoneNumInput.value.trim() : null;
-    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;//이메일 유효성
-    var phoneNumRegex = /^\d{3}-\d{4}-\d{4}$/
+    const userId = userIdInput ? userIdInput.value.trim() : null;
+    const name = nameInput ? nameInput.value.trim() : null;
+    const password = passwordInput ? passwordInput.value.trim() : null;
+    const birth = birthInput ? birthInput.value.trim() : null;
+    const email = emailInput ? emailInput.value.trim() : null;
+    const phoneNum = phoneNumInput ? phoneNumInput.value.trim() : null;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;//이메일 유효성
+    const phoneNumRegex = /^\d{3}-\d{4}-\d{4}$/
 
     if (userId === '') {
         console.debug('아이디 유효성 검증 실행');
@@ -63,7 +63,7 @@ function commonValidate() {
 //생년월일 유효성 검사
 function validateBirthday(birthday) {
     // 정규식을 사용하여 '년-월-일' 형식 체크
-    var regex = /^\d{4}-\d{1,2}-\d{1,2}$/;
+    const regex = /^\d{4}-\d{1,2}-\d{1,2}$/;
 
     console.debug('validateBirthday 실행')
 
@@ -73,12 +73,12 @@ function validateBirthday(birthday) {
     }
 
     // 입력된 생년월일을 '-'로 분리
-    var parts = birthday.split('-');
+    const parts = birthday.split('-');
 
     // 년, 월, 일 추출
-    var year = parseInt(parts[0], 10);
-    var month = parseInt(parts[1], 10);
-    var day = parseInt(parts[2], 10);
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
 
     console.log('Year:', year);
     console.log('Month:', month);
@@ -105,8 +105,8 @@ function validateBirthday(birthday) {
 function formatDatePickerInput(inputBirthday) {
     if (inputBirthday) {
         inputBirthday.addEventListener('input', function (event) {
-            var value = inputBirthday.value.replace(/[^\d]/g, ''); // 숫자 이외의 문자 제거
-            var cursorPosition = inputBirthday.selectionStart;
+            let value = inputBirthday.value.replace(/[^\d]/g, ''); // 숫자 이외의 문자 제거
+            const cursorPosition = inputBirthday.selectionStart;
 
             if (event.inputType === 'deleteContentBackward' && cursorPosition > 0 && value.charAt(cursorPosition - 1) === '-') {
                 // 백스페이스로 '-' 제거 처리
@@ -116,9 +116,9 @@ function formatDatePickerInput(inputBirthday) {
             }
 
             // 변수를 사용하여 년, 월, 일 추출
-            var year = value.slice(0, 4);
-            var month = value.slice(4, 6);
-            var day = value.slice(6, 8); // 일자의 '-'를 포함하여 추출
+            const year = value.slice(0, 4);
+            const month = value.slice(4, 6);
+            const day = value.slice(6, 8); // 일자의 '-'를 포함하여 추출
 
             // 날짜 형식 처리
             // 수정된 부분: 월이 있는 경우에만 '-'를 추가
@@ -144,8 +144,8 @@ function formatDatePickerInput(inputBirthday) {
 function formatPhoneNumberInput(inputPhoneNumber) {
     if (inputPhoneNumber) {
         inputPhoneNumber.addEventListener('input', function (event) {
-            var value = inputPhoneNumber.value.replace(/[^\d]/g, ''); // 숫자 이외의 문자 제거
-            var cursorPosition = inputPhoneNumber.selectionStart;
+            let value = inputPhoneNumber.value.replace(/[^\d]/g, ''); // 숫자 이외의 문자 제거
+            const cursorPosition = inputPhoneNumber.selectionStart;
 
             if (event.inputType === 'deleteContentBackward') {
                 // 백스페이스로 삭제 시
@@ -158,9 +158,9 @@ function formatPhoneNumberInput(inputPhoneNumber) {
             }
 
             // 지역번호, 중간번호, 끝번호 추출
-            var areaCode = value.slice(0, 3);
-            var middleNumber = value.slice(3, 7);
-            var lastNumber = value.slice(7, 11);
+            const areaCode = value.slice(0, 3);
+            const middleNumber = value.slice(3, 7);
+            const lastNumber = value.slice(7, 11);
 
             // 전화번호 형식 처리
             if (middleNumber && middleNumber.length >= 4) {
@@ -205,7 +205,7 @@ function formatPhoneNumberInput(inputPhoneNumber) {
 // 초기화 함수
 function init() {
     // 문서가 로드될 때 실행되는 초기화 코드
-    var form = document.getElementById('joinForm'); // 폼 요소 가져오기
+    const form = document.getElementById('joinForm'); // 폼 요소 가져오기
 
     if (form) {
         // 폼이 존재할 경우에만 이벤트 리스너 추가
@@ -215,8 +215,8 @@ function init() {
         });
     }
 
-    var birthInput = document.getElementById('inputBirth');
-    var phoneNumInput = document.getElementById('inputPhoneNum');
+    const birthInput = document.getElementById('inputBirth');
+    const phoneNumInput = document.getElementById('inputPhoneNum');
 
     formatDatePickerInput(birthInput);
     formatPhoneNumberInput(phoneNumInput);

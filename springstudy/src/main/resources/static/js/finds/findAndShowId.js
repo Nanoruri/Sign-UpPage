@@ -1,7 +1,7 @@
 function doFindId() {
 
-    var name = document.getElementById('inputName').value;
-    var phoneNum = document.getElementById('inputPhoneNum').value;
+    const name = document.getElementById('inputName').value;
+    const phoneNum = document.getElementById('inputPhoneNum').value;
 
 
     fetch('/study/user/api/findId', {

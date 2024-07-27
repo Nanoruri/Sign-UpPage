@@ -3,8 +3,8 @@ function checkPasswordMatch() {
 
 
     // 비밀번호와 비밀번호 확인 값 가져오기
-    var newPassword = document.getElementById('inputPassword').value;
-    var validatePassword = document.getElementById('inputPasswordConfirm').value;
+    const newPassword = document.getElementById('inputPassword').value;
+    const validatePassword = document.getElementById('inputPasswordConfirm').value;
     // 비밀번호가 일치하지 않으면 모달 띄우기
     
     
@@ -18,17 +18,17 @@ function checkPasswordMatch() {
 
 // 모달 띄우기
 function displayModal(message) {
-    var missMatchModal = new bootstrap.Modal(document.getElementById('missMatchModal'));
+    const missMatchModal = new bootstrap.Modal(document.getElementById('missMatchModal'));
 
     // 모달 내용 설정
-    var modalMessage = document.getElementById('passwordMissMatchMessage');
+    const modalMessage = document.getElementById('passwordMissMatchMessage');
     modalMessage.innerHTML = message;
 
     // 모달 열기
     missMatchModal.show();
 
     // 모달 닫기 버튼에 이벤트 리스너 추가
-    var closeModalButtons = document.querySelectorAll('[data-bs-dismiss="modal"]');
+    const closeModalButtons = document.querySelectorAll('[data-bs-dismiss="modal"]');
     closeModalButtons.forEach(function(button) {
         button.addEventListener('click', function() {
             missMatchModal.hide();

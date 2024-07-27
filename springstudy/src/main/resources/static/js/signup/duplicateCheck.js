@@ -1,16 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var userIdInput = document.getElementById('inputAdress');
-    var emailInput = document.getElementById('inputEmail');
- 
+    const userIdInput = document.getElementById('inputAdress');
+    const emailInput = document.getElementById('inputEmail');
+
     userIdInput.addEventListener('input', checkDuplicate);
     emailInput.addEventListener('input', checkDuplicateEmail);
 });
 
 function checkDuplicate() {
-    var userIdInput = document.getElementById('inputAdress');
-    var userId = userIdInput.value.trim(); // 입력값의 앞뒤 공백 제거
-    var duplicateIdMessage = document.getElementById('duplicateIdMessage');
-    var signupButton = document.getElementById('button');
+    const userIdInput = document.getElementById('inputAdress');
+    const userId = userIdInput.value.trim(); // 입력값의 앞뒤 공백 제거
+    const duplicateIdMessage = document.getElementById('duplicateIdMessage');
+    const signupButton = document.getElementById('button');
 
     // 사용자가 입력하지 않은 경우 처리
     if (userId === "") {
@@ -45,10 +45,10 @@ function checkDuplicate() {
 }
 
 function checkDuplicateEmail() {
-    var emailInput = document.getElementById('inputEmail');
-    var email = emailInput.value.trim(); // 입력값의 앞뒤 공백 제거
-    var duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
-    var signupButton = document.getElementById('button');
+    const emailInput = document.getElementById('inputEmail');
+    const email = emailInput.value.trim(); // 입력값의 앞뒤 공백 제거
+    const duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
+    const signupButton = document.getElementById('button');
 
     // 사용자가 입력하지 않은 경우 처리
     if (email === "") {
@@ -81,9 +81,9 @@ function checkDuplicateEmail() {
     });
 }
 function updateButtonState() {
-    var signupButton = document.getElementById('button');
-    var duplicateIdMessage = document.getElementById('duplicateIdMessage');
-    var duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
+    const signupButton = document.getElementById('button');
+    const duplicateIdMessage = document.getElementById('duplicateIdMessage');
+    const duplicateEmailMessage = document.getElementById('duplicateEmailMessage');
 
     if (!duplicateIdMessage.style.color === 'blue' && !duplicateEmailMessage.color === 'blue') {
         signupButton.disabled = true;
