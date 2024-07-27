@@ -61,6 +61,7 @@ public class SignupService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));// 비밀번호를 해시화하여 저장
 		user.setCreatedDate(LocalDateTime.now());
 		user.setUpdateDate(LocalDateTime.now());
+		user.setRole("USER");
 		userDao.save(user);// 사용자 엔티티를 데이터베이스에 저장
 	}
 
