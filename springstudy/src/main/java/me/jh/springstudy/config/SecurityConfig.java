@@ -58,7 +58,7 @@ public class SecurityConfig {
 				return org.springframework.security.core.userdetails.User.builder()
 						.username(user.getUserId())
 						.password(user.getPassword())
-						.roles("USER")// 사용자의 권한을 설정함. 이렇게 설정하면 "ROLE_USER"로 설정.
+						.roles(user.getRole())
 						.build();
 			}
 		};
