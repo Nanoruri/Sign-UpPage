@@ -27,8 +27,9 @@ public class UserTest {
 		String email = "test@example.com";
 		LocalDateTime createdDate = LocalDateTime.now();
 		LocalDateTime updateDate = LocalDateTime.now();
+		String role = "USER";
 
-		User user1 = new User(userId, name, password, phoneNum, birth, email, createdDate, updateDate);
+		User user1 = new User(userId, name, password, phoneNum, birth, email, createdDate, updateDate,role);
 		user1.setSeq(seq);
 
 		// 엔티티 속성 값이 예상대로 설정되었는지 확인
@@ -40,9 +41,10 @@ public class UserTest {
 		assertEquals(email, user1.getEmail());
 		assertEquals(createdDate, user1.getCreatedDate());
 		assertEquals(updateDate, user1.getUpdateDate());
+		assertEquals(role, user1.getRole());
 
 		// 엔티티 동등성 확인
-		User user2 = new User(userId, name, password, phoneNum, birth, email, createdDate, updateDate);
+		User user2 = new User(userId, name, password, phoneNum, birth, email, createdDate, updateDate,role);
 		user2.setSeq(seq);
 
 		assertThat(user1).usingRecursiveComparison().isEqualTo(user2);

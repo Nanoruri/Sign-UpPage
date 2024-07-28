@@ -36,7 +36,7 @@ public class FindServiceTest {
 	@BeforeEach
 	public void setUp() {
 		changePasswordUser = new User("test", "testName", "hashedPassword", "010-1234-5678",
-				LocalDate.of(1990, 1, 1), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 1, 1), "test@test.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 	}
 
 
@@ -44,7 +44,7 @@ public class FindServiceTest {
 	 * 아이디 찾기 성공 테스트
 	 */
 	@Test
-	public void findIdSuccesseTest() {
+	public void findIdSuccessTest() {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 
@@ -82,7 +82,7 @@ public class FindServiceTest {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, "hashedPassword", phoneNum,
-				null, null, null, null);
+				null, null, null, null,"USER");
 
 		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
 
@@ -103,7 +103,7 @@ public class FindServiceTest {
 		String name = "test";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, "hashedPassword", phoneNum,
-				null, null, null, null);
+				null, null, null, null,"USER");
 
 		when(userDao.findByProperties(user)).thenReturn(Optional.empty());
 
@@ -122,7 +122,7 @@ public class FindServiceTest {
 		String name = "testName";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, null, phoneNum,
-				null, null, null, null);
+				null, null, null, null,"USER");
 
 		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
 

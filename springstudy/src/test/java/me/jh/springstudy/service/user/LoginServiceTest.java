@@ -37,10 +37,10 @@ public class LoginServiceTest {
 	@BeforeEach
 	public void setUp() {
 		validTestUser = new User("test", "testName", "validPassword", "010-1234-5678",
-				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 
 		invalidTestUser = new User("test", "testName", "invalidPassword", "010-1234-5678",
-				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 	}
 
 

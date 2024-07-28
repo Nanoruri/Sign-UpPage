@@ -50,7 +50,7 @@ public class SecurityConfigTest {
 	@BeforeEach
 	public void setUp() {// 테스트에 사용할 User 객체 생성
 		user = new User("test", "testName", "validPassword", "010-1234-5678",
-				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 	}
 
 	@Test

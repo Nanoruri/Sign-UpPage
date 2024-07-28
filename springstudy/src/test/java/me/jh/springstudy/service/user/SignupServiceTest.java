@@ -38,10 +38,10 @@ public class SignupServiceTest {
 	@BeforeEach
 	public void setUp() {
 		successTestUser = new User("test", "testName", "hashedPassword", "010-1234-5678",
-				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now(),"USER");
 
 		failTestUser = new User("test", "testName", "unHashedPassword", "010-1234-5678",
-				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now());
+				LocalDate.of(1990, 11, 21), "test@test.com", LocalDateTime.now(), LocalDateTime.now(),"USER");
 	}
 
 	/**

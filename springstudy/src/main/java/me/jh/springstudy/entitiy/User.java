@@ -46,10 +46,13 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 	@Column(name = "UPDATE_DATE")
 	private LocalDateTime updateDate;//YYYY/MM/DD/HH/MM/SS
 
+	@Column(name = "USER_ROLE")
+	private String role;
+
 	public User() {
 	}
 
-	public User(String userId, String name, String password, String phoneNum, LocalDate birth, String email, LocalDateTime createdDate, LocalDateTime updateDate) {
+	public User(String userId, String name, String password, String phoneNum, LocalDate birth, String email, LocalDateTime createdDate, LocalDateTime updateDate, String role) {
 		this.userId = userId;
 		this.name = name;
 		this.password = password;
@@ -57,6 +60,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 		this.email = email;
 		this.createdDate = createdDate;
 		this.updateDate = updateDate;
+		this.role = role;
 	}
 
 
@@ -132,4 +136,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 		this.updateDate = updateDate;
 	}
 
+	public String getRole() {return role;}
+
+	public void setRole(String role) {this.role = role;}
 }
