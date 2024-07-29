@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('passwordChangeForm');
-    const token = sessionStorage.getItem('findPassword');
+    const passwordToken = sessionStorage.getItem('findPassword');
 
     // If token is not present, redirect to an error page
-    if (!token) {
+    if (!passwordToken) {
         window.location.href = '/study/findPassword';
     }
 
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     newPassword: newPassword,
-                    passwordToken: token
+                    passwordToken: passwordToken
                 })
             })
                 .then(function (response) {
@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(function (error) {
                     console.error('비밀번호 변경 중 오류 발생:', error);
-                    alert('비밀번호 변경에 실패했습니다.');
+                    alert('비밀번호 변경에 실패했습니다. 비밀번호 찾기를 다시 진행해주세요.');
+                    window.location.href = '/study/findPassword';
                 });
         }
     });
