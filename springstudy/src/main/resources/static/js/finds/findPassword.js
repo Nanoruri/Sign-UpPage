@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (response) {
                 if (response.status === 404) {
                     alert('해당 정보로 가입한 가입자가 없습니다!');
-                    window.location.href = '/study/findPassword';
                     throw new Error('사용자가 없습니다.');
                 } else {
+                    alert('사용자를 찾았습니다. 비밀번호 변경 페이지로 이동합니다.');
                     return response.json();
                 }
             })
