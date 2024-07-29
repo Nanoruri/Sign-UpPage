@@ -211,7 +211,6 @@ function init() {
         // 폼이 존재할 경우에만 이벤트 리스너 추가
         form.addEventListener('submit', function(event) {
             event.preventDefault(); // 폼 제출의 기본 동작 막기
-            commonValidate(); // 유효성 검사 실행
         });
     }
 

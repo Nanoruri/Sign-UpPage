@@ -136,14 +136,12 @@ public class ApiController {
 	 * @implNote 이 메서드는 {@link SignupService#registerMember(User)}를 사용하여 회원가입을 수행. 예외처리는 서비스 클래스에서 수행.
 	 */
 	@PostMapping("/signup")
-	public String signup(@ModelAttribute("user") @Validated User user) {
+	@ResponseBody
+	public ResponseEntity<String> signup( @RequestBody User user) {
 		signupService.registerMember(user);
-//		if (result.hasErrors()) {
-//			return "redirect:/signupError";
-//		}
 		log.info("회원 정보 저장성공");
-		return "redirect:/signupSuccess";
-	}
+		return ResponseEntity.ok("회원가입 성공");
+	}//todo : 개선하기
 
 	/**
 	 * 사용자 ID가 중복인지 확인하는 API.

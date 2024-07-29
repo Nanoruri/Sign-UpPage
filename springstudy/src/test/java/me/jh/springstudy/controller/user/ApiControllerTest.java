@@ -206,15 +206,17 @@ public class ApiControllerTest {
 		String phoneNum = "010-1212-1212";
 		LocalDate birth = LocalDate.of(1999, 11, 11);
 		String email = "test1234@test.com";
+		String role = "USER";
 
-		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now(), "USER");
+		User user = new User(userId, name, password, phoneNum, birth, email, LocalDateTime.now(), LocalDateTime.now(), role);
 
 		doNothing().when(signupService).registerMember(user);
 
 		mockMvc.perform(post("/user/api/signup")
-						.flashAttr("user", user))
-				.andExpect(status().isFound())
-				.andExpect(redirectedUrl("/signupSuccess"));
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"password\":\"" + password + "\"," +
+								"\"phoneNum\":\"" + phoneNum + "\",\"birth\":\"1999-11-11\",\"email\":\"" + email + "\"}"))
+				.andExpect(status().isOk());
 
 		verify(signupService, times(1)).registerMember(user);
 	}

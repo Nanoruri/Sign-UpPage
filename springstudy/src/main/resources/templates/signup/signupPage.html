@@ -10,11 +10,12 @@
 	<script type="module" th:src="@{/js/handleAuthFetch.js}"></script>
 	<script th:src="@{/js/signup/duplicateCheck.js}"></script>
 	<script th:src="@{/js/validatePassword.js}"></script>
+	<script th:src="@{/js/signup/requestSignup.js}"></script>
 	<title>회원가입 페이지</title>
 </head>
 
 <body>
-	<form method="post" class="joinForm" th:action="@{/user/api/signup}" onsubmit="return commonValidate()" th:object="${user}">
+	<form method="post" id = "joinForm" class="joinForm" th:action="@{/user/api/signup}"  th:object="${user}">
 
 		<h2>회원가입</h2>
 		<div class="textForm"><!--사용자 아이디-->
