@@ -32,7 +32,7 @@ function requestSignup(event) {
                 if (!response.ok) {
                     switch (response.status) {
                         case 400:
-                            alert('입력값을 확인해주세요.');
+                            alert('입력값을 확인해주세요! 아이디나 이메일이 너무 짧거나 잘못된 형식입니다.');
                             break;
                         case 409:
                             alert('이미 가입된 정보입니다.');
