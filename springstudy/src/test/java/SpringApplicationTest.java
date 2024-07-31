@@ -2,6 +2,7 @@ import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = MySpringBootApplication.class)
 public class SpringApplicationTest {
 
-	@Autowired
+	@Mock
 	private UserDao userDao;
 
 	@Autowired
@@ -51,6 +52,7 @@ public class SpringApplicationTest {
 		user.setEmail("kaby1217@gmail.com");
 		user.setCreatedDate(LocalDateTime.now());
 		user.setUpdateDate(LocalDateTime.now());
+		user.setRole("USER");
 
 		userDao.save(user);
 	}
