@@ -18,8 +18,6 @@ import me.jh.springstudy.service.user.SignupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,8 +60,6 @@ public class ApiControllerTest {
 	@MockBean
 	private FindService findService;
 	@MockBean
-	private HttpSession session;
-	@MockBean
 	private UserDetailsService userDetailsService;
 	@MockBean
 	private Authentication authentication;
@@ -80,13 +75,8 @@ public class ApiControllerTest {
 	private TokenService tokenService;
 
 
-	@Captor
-	private ArgumentCaptor<User> userCaptor;
-
 	@Mock
 	private User user;
-	@Mock
-	private Cookie cookie;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
