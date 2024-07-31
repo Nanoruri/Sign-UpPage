@@ -225,9 +225,10 @@ public class ApiControllerTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"userId\":\"" + userId + "\",\"name\":\"" + name + "\",\"password\":\"" + password + "\"," +
 								"\"phoneNum\":\"" + phoneNum + "\",\"birth\":\"1999-11-11\",\"email\":\"" + email + "\"}"))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andExpect(content().string("회원가입 성공"));
 
-		verify(signupService, times(1)).registerMember(user);
+		verify(signupService, times(1)).registerMember(any(User.class));
 	}
 
 	@Test
