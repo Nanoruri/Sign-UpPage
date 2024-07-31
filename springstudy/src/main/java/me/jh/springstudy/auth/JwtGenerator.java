@@ -61,7 +61,6 @@ public class JwtGenerator {
 
 			// Refresh Token 생성
 			String refreshToken = Jwts.builder()
-					.subject(userId)
 					.expiration(refreshTokenExpiresIn)
 					.signWith(getSigningKey())
 					.compact();
