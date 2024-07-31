@@ -113,9 +113,11 @@ public class ApiController {
 		String refreshToken = reqData.get("refreshToken");
 
 		if (jwtProvider.validateToken(refreshToken)) {
-			String userId = jwtProvider.getUserIdFromToken(refreshToken);
+			String tokenId = tokenService.matchRefreshToken(refreshToken);
+			JWToken newJwt = authenticationService.authenticateAndGenerateToken(tokenId);
+			tokenService.saveRefreshToken(tokenId, newJwt.getRefreshToken());//todo:토큰 업데이트 기능 추가하기
 
-			JWToken newJwt = authenticationService.authenticateAndGenerateToken(userId);
+			tokenService.deleteRefreshToken(refreshToken);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + newJwt.getAccessToken());
