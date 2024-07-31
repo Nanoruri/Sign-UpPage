@@ -87,20 +87,8 @@ public class SecurityConfig {
 				.addFilterBefore(new JwtAuthenticationFilter(JwtProvider), UsernamePasswordAuthenticationFilter.class)
 				.userDetailsService(userDetailsService())
 				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 생성 정책 설정.JWT를 사용하게 되면 stateless로 설정해야함.
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-				.and()
-				.logout()
-				.logoutUrl("/user/api/logout")
-				//로그아웃 핸들러 추가
-//				.addLogoutHandler((request, response, authentication) -> { // 핸들러 설정을 하지 않으면 기본 로그아웃 핸들러가 동작
-//					HttpSession session = request.getSession();
-//					if (session != null) {
-//						session.removeAttribute("userId"); // 로그인시 사용했던 userId 세션 속성을 제거
-//					}
-//				})  // 로그아웃 성공핸들러 설정
-				.logoutSuccessUrl("/")
-				.invalidateHttpSession(false);//세션을 다른곳에서도 사용하고 있으니 false로 설정
 		return http.build();
 	}
 
