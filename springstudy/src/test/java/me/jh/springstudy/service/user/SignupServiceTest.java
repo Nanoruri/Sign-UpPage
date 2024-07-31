@@ -92,7 +92,7 @@ public class SignupServiceTest {
 		} catch (UserException e) {
 			// then
 			// 예외가 발생하여 테스트 성공
-			assertEquals("이미 존재하는 아이디입니다.", e.getMessage());
+			assertEquals("해당정보로 가입한 사용자가 이미 있습니다.", e.getMessage());
 
 //			assertThrows(UserException.class, () -> {
 //				signupService.registerMember(testUser);
@@ -119,7 +119,7 @@ public class SignupServiceTest {
 		} catch (UserException e) {
 			// then
 			// 예외가 발생하여 테스트 성공
-			assertEquals("해당정보로 가입한 사용자가 이미 있습니다.", e.getMessage());
+			assertEquals("이미 존재하는 이메일입니다.", e.getMessage());
 		}
 	}
 

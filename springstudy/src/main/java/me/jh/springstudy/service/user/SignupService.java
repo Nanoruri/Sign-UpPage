@@ -45,15 +45,15 @@ public class SignupService {
 	public void registerMember(User user) {//로그인 할때에도 한번더 중복 검사 하게 끔하고 예외가 나오면 Catch하도록
 		if (!assureIdPattern(user.getUserId())) {//user데이터를 가져오기 전에 패턴을 확인하여 예외를 던짐
 			log.warn("아이디 패턴이 일치하지 않습니다.");
-			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);
+			throw new UserException(UserErrorType.PATTERN_NOT_MATCHED);//400 Bad Request
 		} else if (isDuplicateEmail(user.getEmail())) {
 			log.warn("이메일이 이미 존재합니다");
-			throw new UserException(UserErrorType.USER_ALREADY_EXIST);
+			throw new UserException(UserErrorType.EMAIL_ALREADY_EXIST);//409 Conflict
 		}
 
 		if (userDao.findById(user.getUserId()).isPresent()) {
 			log.warn("이미 가입한 사용자가 있습니다.");
-			throw new UserException(UserErrorType.ID_ALREADY_EXIST);// todo : 이미 duplicatId의 매개변수가 pk인데 이 부분이 필요한가??
+			throw new UserException(UserErrorType.USER_ALREADY_EXIST);//409 Conflict
 //		} else if (isDuplicateId(user.getUserId())) { // exists를 쓰면 조회만 하기 때문에 속도면에서 exists가 우위를 가지지만 find는 데이터를 조회하여 가져오기 때문에 목적에 따라 쓰도록.
 //			throw new UserException(UserErrorType.ID_ALREADY_EXIST);
 		}  //isDuplicateId 메서드 findById 기능과 겹치므로 제거 = findById로 대체
