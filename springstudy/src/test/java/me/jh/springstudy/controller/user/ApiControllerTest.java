@@ -33,7 +33,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -152,11 +151,18 @@ public class ApiControllerTest {
 
 
 	@Test
-	public void testLogout() throws Exception {
-		mockMvc.perform(post("/user/api/logout"))
-				.andExpect(status().isFound())
-				.andExpect(redirectedUrl("/"))
-				.andExpect(request().sessionAttributeDoesNotExist("userId"));
+	public void testLogout_happy() throws Exception {
+		String refreshToken="validToken";
+
+		doNothing().when(tokenService).deleteRefreshToken(refreshToken);
+
+		mockMvc.perform(post("/user/api/logout")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"refreshToken\":\"" + refreshToken + "\"}"))
+				.andExpect(status().isOk())
+				.andExpect(content().string("로그아웃 성공"));
+
+		verify(tokenService, times(1)).deleteRefreshToken(refreshToken);
 	}
 
 	@Test
