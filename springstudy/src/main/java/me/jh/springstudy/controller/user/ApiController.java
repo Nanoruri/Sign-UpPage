@@ -21,8 +21,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,6 +134,13 @@ public class ApiController {
 		}
 	}
 
+	@PostMapping("/logout")//todo: DB에 같은 아이디로 여러개의 토큰이 저장되어 있을 경우, 모두 삭제하는 기능 추가
+	public ResponseEntity<?> logout(@RequestBody Map<String, String> reqData) {
+		String refreshToken = reqData.get("refreshToken");
+
+		tokenService.deleteRefreshToken(refreshToken);
+		return ResponseEntity.ok("로그아웃 성공");
+	}
 
 	/**
 	 * .

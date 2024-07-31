@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginLogoutButtonDiv = document.getElementById('loginLogoutButton');
 
     // 초기 로그인 상태 확인
-    const isLoggedIn = sessionStorage.getItem('aToken') !== null;
+    const isLoggedIn = sessionStorage.getItem('aToken') !== null;// todo: 로그인 상태 조건문 수정해야함.존재 여부가 아닌 토큰의 만료시간을 측정하여 로그인 상태를 판단해야함.
     updateLoginStatus(isLoggedIn);
 
     function updateLoginStatus(isLoggedIn) {
@@ -40,13 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleLogout(event) {
         event.preventDefault();
         sessionStorage.removeItem('aToken');
-        sessionStorage.removeItem('rToken');
         fetch('/study/user/api/logout', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({})
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken: sessionStorage.getItem('rToken') }),
         }).then(response => {
             if (response.ok) {
+                sessionStorage.removeItem('rToken');
                 window.location.reload();
             } else {
                 console.error('로그아웃 실패');
