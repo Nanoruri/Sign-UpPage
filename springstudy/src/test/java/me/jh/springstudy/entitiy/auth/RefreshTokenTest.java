@@ -1,4 +1,4 @@
-package me.jh.springstudy.entitiy;
+package me.jh.springstudy.entitiy.auth;
 
 import org.junit.jupiter.api.Test;
 
