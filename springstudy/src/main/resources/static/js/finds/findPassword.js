@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             }),
         })
-            .then(function (response) {
+            .then( function (response) {
                 if (response.status === 404) {
                     alert('해당 정보로 가입한 가입자가 없습니다!');
                     throw new Error('사용자가 없습니다.');
@@ -32,8 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .then(function (data) {
-                console.log('사용자를 찾았습니다:', data);
-                const findPassword = data.passwordToken;
+                const responseData = data;
+                console.log('사용자를 찾았습니다:', responseData);
+                const findPassword = responseData.passwordToken;
                 sessionStorage.setItem('findPassword', findPassword);
                 window.location.href = '/study/passwordChange';
             })
