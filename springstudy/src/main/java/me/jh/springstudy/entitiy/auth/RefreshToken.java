@@ -18,13 +18,11 @@ public class RefreshToken {
 	@Column(nullable = false)
 	private String token;
 
-	@Column(name = "ip_address", nullable = false)
-	private String ipAddress;
 
-	public RefreshToken(String userId, String token, String ipAddress) {
+	public RefreshToken(String userId, String token) {
 		this.userId = userId;
 		this.token = token;
-		this.ipAddress = ipAddress;
+
 	}
 
 	public RefreshToken() {
@@ -54,11 +52,4 @@ public class RefreshToken {
 		this.token = token;
 	}
 
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
 }
