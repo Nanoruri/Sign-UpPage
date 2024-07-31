@@ -11,6 +11,7 @@ import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.token.TokenService;
 import me.jh.springstudy.service.user.AuthenticationService;
 import me.jh.springstudy.service.user.FindService;
 import me.jh.springstudy.service.user.SignupService;
@@ -75,6 +76,8 @@ public class ApiControllerTest {
 	private JwtGenerator jwtGenerator;
 	@MockBean
 	private AuthenticationManager authenticationManager;
+	@MockBean
+	private TokenService tokenService;
 
 
 	@Captor
@@ -97,11 +100,12 @@ public class ApiControllerTest {
 	public void testLoginSuccess() throws Exception {
 		String userId = "validUser";
 		String password = "validPassword";
+		JWToken jwToken = new JWToken("Bearer ", "accessToken", "refreshToken");
 
 
-		when(authenticationService.authenticateAndGenerateToken(userId, password))
-				.thenReturn(new JWToken("Bearer ", "accessToken", "refreshToken"));
-
+		when(jwtGenerator.generateToken(any(Authentication.class))).thenReturn(jwToken);
+		when(authenticationService.authenticateAndGenerateToken(userId, password)).thenReturn(jwToken);
+		doNothing().when(tokenService).saveRefreshToken(userId, jwToken.getRefreshToken());
 
 		mockMvc.perform(post("/user/api/loginCheck")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -168,11 +172,15 @@ public class ApiControllerTest {
 	@Test
 	public void testRefreshToken() throws Exception {
 		String refreshToken = "validToken";
+		String testUserId = "test";
+
 		JWToken jwToken = new JWToken("Bearer ", "newAccessToken", "newRefreshToken");
 
 		when(jwtProvider.validateToken(refreshToken)).thenReturn(true);
-		when(jwtProvider.getUserIdFromToken(refreshToken)).thenReturn("test");
-		when(authenticationService.authenticateAndGenerateToken("test")).thenReturn(jwToken);
+		when(tokenService.matchRefreshToken(refreshToken)).thenReturn(testUserId);
+		when(authenticationService.authenticateAndGenerateToken(testUserId)).thenReturn(jwToken);
+		doNothing().when(tokenService).saveRefreshToken(testUserId, jwToken.getRefreshToken());
+		doNothing().when(tokenService).deleteRefreshToken(refreshToken);
 
 		mockMvc.perform(post("/user/api/refresh")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -181,8 +189,9 @@ public class ApiControllerTest {
 				.andExpect(jsonPath("$.accessToken").value(jwToken.getAccessToken()))
 				.andExpect(jsonPath("$.refreshToken").value(jwToken.getRefreshToken()));
 		verify(jwtProvider, times(1)).validateToken(refreshToken);
-		verify(jwtProvider, times(1)).getUserIdFromToken(refreshToken);
-		verify(authenticationService, times(1)).authenticateAndGenerateToken("test");
+		verify(authenticationService, times(1)).authenticateAndGenerateToken(testUserId);
+		verify(tokenService, times(1)).saveRefreshToken(testUserId, jwToken.getRefreshToken());
+		verify(tokenService, times(1)).deleteRefreshToken(refreshToken);
 	}
 
 	@Test
