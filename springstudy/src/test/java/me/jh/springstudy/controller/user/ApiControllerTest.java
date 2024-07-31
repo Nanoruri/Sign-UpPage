@@ -97,11 +97,12 @@ public class ApiControllerTest {
 	public void testLoginSuccess() throws Exception {
 		String userId = "validUser";
 		String password = "validPassword";
+		JWToken jwToken = new JWToken("Bearer ", "accessToken", "refreshToken");
 
 
-		when(authenticationService.authenticateAndGenerateToken(userId, password))
-				.thenReturn(new JWToken("Bearer ", "accessToken", "refreshToken"));
-
+		when(jwtGenerator.generateToken(any(Authentication.class))).thenReturn(jwToken);
+		when(authenticationService.authenticateAndGenerateToken(userId, password)).thenReturn(jwToken);
+		doNothing().when(tokenService).saveRefreshToken(userId, jwToken.getRefreshToken());
 
 		mockMvc.perform(post("/user/api/loginCheck")
 						.contentType(MediaType.APPLICATION_JSON)

@@ -7,6 +7,7 @@ import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.entitiy.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
+import me.jh.springstudy.service.token.TokenService;
 import me.jh.springstudy.service.user.AuthenticationService;
 import me.jh.springstudy.service.user.FindService;
 import me.jh.springstudy.service.user.SignupService;
@@ -40,6 +41,7 @@ public class ApiController {
 	private final JwtProvider jwtProvider;
 	private final AuthenticationService authenticationService;
 	private final JwtGenerator jwtGenerator;
+	private final TokenService tokenService;
 
 	/**
 	 * 컨트롤러에 의존성을 주입하는 생성자.
@@ -49,12 +51,14 @@ public class ApiController {
 	 * @param findservice           아이디/비밀번호 찾기를 수행하는 서비스
 	 */
 	@Autowired
-	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtProvider jwtProvider, JwtGenerator jwtGenerator) {
+	public ApiController(SignupService signupService, AuthenticationService authenticationService, FindService findservice, JwtProvider jwtProvider, JwtGenerator jwtGenerator,
+	                     TokenService tokenService) {
 		this.signupService = signupService;
 		this.findService = findservice;
 		this.authenticationService = authenticationService;
 		this.jwtProvider = jwtProvider;
 		this.jwtGenerator = jwtGenerator;
+		this.tokenService = tokenService;
 	}
 
 
@@ -76,6 +80,7 @@ public class ApiController {
 
 		try {
 			JWToken jwt = authenticationService.authenticateAndGenerateToken(userId, password);
+			tokenService.saveRefreshToken(userId, jwt.getRefreshToken());
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getAccessToken());
