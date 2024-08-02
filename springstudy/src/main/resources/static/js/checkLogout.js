@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('authFetchCompleted', function () {
     const loginLogoutButtonDiv = document.getElementById('loginLogoutButton');
 
     // 초기 로그인 상태 확인

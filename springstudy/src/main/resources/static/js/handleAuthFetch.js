@@ -52,5 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const url = '/study/';
   fetchWithAuth(url).then(response => {
     console.log('Request made to:', url, 'with response:', response);
+
+    const event = new CustomEvent('authFetchCompleted', { detail: response });
+    document.dispatchEvent(event);
   });
 });
