@@ -1,7 +1,7 @@
 package me.jh.springstudy.filter;
 
 import io.jsonwebtoken.JwtException;
-import me.jh.springstudy.auth.JwtProvider;
+import me.jh.springstudy.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

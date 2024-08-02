@@ -1,7 +1,6 @@
-package me.jh.springstudy.auth;
+package me.jh.springstudy.utils.auth;
 
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Encoders;
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dto.JWToken;
@@ -20,7 +19,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

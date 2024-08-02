@@ -1,4 +1,4 @@
-package me.jh.springstudy.auth;
+package me.jh.springstudy.utils.auth;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

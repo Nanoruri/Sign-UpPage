@@ -1,6 +1,6 @@
-package me.jh.springstudy.service.user;
+package me.jh.springstudy.service.auth;
 
-import me.jh.springstudy.auth.JwtGenerator;
+import me.jh.springstudy.utils.auth.JwtGenerator;
 import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.exception.user.UserException;
 import org.junit.jupiter.api.Test;

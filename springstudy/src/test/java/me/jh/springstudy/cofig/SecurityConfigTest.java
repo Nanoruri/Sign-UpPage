@@ -1,6 +1,6 @@
 package me.jh.springstudy.cofig;
 
-import me.jh.springstudy.auth.JwtProvider;
+import me.jh.springstudy.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entitiy.User;

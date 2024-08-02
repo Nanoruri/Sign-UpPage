@@ -1,4 +1,4 @@
-package me.jh.springstudy.auth;
+package me.jh.springstudy.utils.auth;
 
 
 import io.jsonwebtoken.*;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component

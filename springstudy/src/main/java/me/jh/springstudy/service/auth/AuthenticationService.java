@@ -1,12 +1,11 @@
-package me.jh.springstudy.service.user;
+package me.jh.springstudy.service.auth;
 
-import me.jh.springstudy.auth.JwtGenerator;
+import me.jh.springstudy.utils.auth.JwtGenerator;
 import me.jh.springstudy.dto.JWToken;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.CachingUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

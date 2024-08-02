@@ -1,4 +1,4 @@
-package me.jh.springstudy.service.token;
+package me.jh.springstudy.service.auth.token;
 
 import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.dao.UserDao;

@@ -3,7 +3,7 @@ package me.jh.springstudy.filter;
 
 import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.MySpringBootApplication;
-import me.jh.springstudy.auth.JwtProvider;
+import me.jh.springstudy.utils.auth.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
