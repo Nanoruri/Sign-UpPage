@@ -22,14 +22,7 @@ public class HomeController {
 	 * @return 메인페이지 뷰 반환
 	 */
 	@GetMapping("/")
-	public String index(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-		if (userDetails != null) {//동적으로 로그인/로그아웃 버튼을 보여주기 위해 UserDetails가 null인지 확인
-			log.info("userDetails : {}", userDetails);
-			model.addAttribute("LoggedIn", true);
-		} else {
-			model.addAttribute("LoggedIn", false);
-		}
-
+	public String index() {
 		return "index";
 	}
 }
