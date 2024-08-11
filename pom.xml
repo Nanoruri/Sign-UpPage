@@ -6,7 +6,7 @@
 
     <groupId>me.jh.springstudy</groupId>
     <artifactId>SignUp</artifactId>
-    <version>1.0.2-RELEASE</version>
+    <version>1.0.3-RELEASE</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -19,6 +19,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>2.7.18</spring.boot.version>
+        <skipTests>false</skipTests>
     </properties>
 
 <dependencyManagement>
@@ -251,13 +252,7 @@
 
     <build>
         <plugins>
-            <!-- 메이븐 플러그인 설정 -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
 
-            <!-- Jacoco 플러그인 설정 -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -324,6 +319,14 @@
                 </executions>
 
 
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
+                </configuration>
             </plugin>
 
         </plugins>
