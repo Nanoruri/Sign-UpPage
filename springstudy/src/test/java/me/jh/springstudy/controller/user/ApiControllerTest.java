@@ -30,6 +30,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @WebMvcTest(controllers = ApiController.class) // YourController는 실제 컨트롤러 클래스명으로 대체해야 합니다.
 @Import(SecurityConfig.class)
+@ActiveProfiles("test")
 //@AutoConfigureMockMvc
 //@SpringBootTest(classes = MySpringBootApplication.class)
 public class ApiControllerTest {

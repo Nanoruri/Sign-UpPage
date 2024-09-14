@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = MySpringBootApplication.class)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @TestPropertySource(locations = "classpath:application.yml")
+@ActiveProfiles("test")
 public class JwtGeneratorTest {
 
 

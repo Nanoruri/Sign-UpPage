@@ -1,6 +1,7 @@
 package me.jh.springstudy.entitiy;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * User 엔티티 클래스의 단위 테스트.
  */
 
+@ActiveProfiles("test")
 public class UserTest {
 
 	@Test

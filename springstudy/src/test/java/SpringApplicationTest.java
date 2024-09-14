@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest(classes = MySpringBootApplication.class)
+@ActiveProfiles("test")
 public class SpringApplicationTest {
 
 	@Mock
@@ -71,10 +73,9 @@ public class SpringApplicationTest {
 		String dbPassword = env.getProperty("spring.datasource.password");
 		String dbDriver = env.getProperty("spring.datasource.driver-class-name");
 
-		assertThat(dbUrl).isEqualTo("jdbc:mariadb://127.0.0.1:44327/USERINFO");
-		assertThat(dbUsername).isEqualTo("kaby1217");
-		assertThat(dbPassword).isEqualTo("Cubie159!@");
-		assertThat(dbDriver).isEqualTo("org.mariadb.jdbc.Driver");
+		assertThat(dbUrl).isEqualTo("jdbc:h2:mem:testdb");
+		assertThat(dbUsername).isEqualTo("sa");
+		assertThat(dbDriver).isEqualTo("org.h2.Driver");
 	}
 
 	@Test
@@ -84,7 +85,7 @@ public class SpringApplicationTest {
 		String generateDdl = env.getProperty("spring.jpa.generate-ddl");
 		String openInView = env.getProperty("spring.jpa.open-in-view");
 
-		assertThat(ddlAuto).isEqualTo("update");
+		assertThat(ddlAuto).isEqualTo("create-drop");
 		assertThat(showSql).isEqualTo("true");
 		assertThat(generateDdl).isEqualTo("true");
 		assertThat(openInView).isEqualTo("false");
@@ -95,7 +96,7 @@ public class SpringApplicationTest {
 		String dialect = env.getProperty("spring.jpa.properties.hibernate.dialect");
 		String hibernateShowSql = env.getProperty("spring.jpa.properties.hibernate.show-sql");
 
-		assertThat(dialect).isEqualTo("org.hibernate.dialect.MySQL5Dialect");
+		assertThat(dialect).isEqualTo("org.hibernate.dialect.H2Dialect");
 		assertThat(hibernateShowSql).isEqualTo("true");
 	}
 

@@ -10,6 +10,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.when;
  * 동적 쿼리를 생성해 사용자 정보를 찾는 CustomDAO 테스트 클래스.
  */
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class UserPropertiesDaoTest {
 
 	@Mock
