@@ -136,6 +136,10 @@ ReadMe
 springstudy/target
 springstudy/.idea/workspace.xml
 
+#board submodule Target
+board/target
+board/.idea/workspace.xml
+
 
 SignUp.iml
 springstudy.iml
