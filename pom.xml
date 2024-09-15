@@ -12,6 +12,7 @@
     <modules>
         <module>springstudy</module>
         <module>core</module>
+        <module>board</module>
     </modules>
 
 
