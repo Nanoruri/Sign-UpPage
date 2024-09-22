@@ -139,6 +139,7 @@ springstudy/.idea/workspace.xml
 #board submodule Target
 board/target
 board/.idea/workspace.xml
+board.iml
 
 
 SignUp.iml
