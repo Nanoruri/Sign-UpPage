@@ -24,11 +24,6 @@
             <version>1.0.4-RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>me.jh.page</groupId>
-            <artifactId>springstudy</artifactId>
-            <version>1.0.4-RELEASE</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
