@@ -1,0 +1,11 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /study
+  error:
+    path: /errors
+
+
+spring:
+  thymeleaf:
+    check-template-location: true
