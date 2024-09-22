@@ -4,7 +4,7 @@ import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.utils.auth.JwtGenerator;
 import me.jh.springstudy.utils.auth.JwtProvider;
 import me.jh.springstudy.dto.JWToken;
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import me.jh.springstudy.service.auth.token.TokenService;

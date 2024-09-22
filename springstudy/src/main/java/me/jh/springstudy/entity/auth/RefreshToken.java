@@ -1,4 +1,4 @@
-package me.jh.springstudy.entitiy.auth;
+package me.jh.springstudy.entity.auth;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package me.jh.springstudy.entitiy;
+package me.jh.springstudy.entity;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;

@@ -1,6 +1,6 @@
 package me.jh.springstudy.dao;
 
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 
 import java.util.Optional;
 
