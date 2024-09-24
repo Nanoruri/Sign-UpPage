@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>게시판</title>
+</head>
+<body>
+
+	<header>
+		<h1>게시판</h1>
+	</header>
+
+	<main>
+		<section>
+			<h2>게시글 목록</h2>
+
+
+			<table>
+				<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성일</th>
+				</tr>
+				</thead>
+				<tbody id="boardTableBody">
+				<!-- 게시글 목록이 여기에 동적으로 추가됨 -->
+				</tbody>
+			</table>
+		</section>
+
+		<section id="boardDetail" style="display: none;">
+			<h2>게시글 상세보기</h2>
+			<div>
+				<h3 id="boardTitle"></h3>
+				<p id="boardContent"></p>
+				<p>작성일: <span id="boardDate"></span></p>
+			</div>
+			<button id="backButton">목록으로 돌아가기</button>
+		</section>
+	</main>
+
+	<!-- 검색 영역 -->
+	<div>
+		<label for="searchInput"></label>
+		<input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+		<button id="searchButton">검색</button>
+	</div>
+
+
+	<!-- 글쓰기 버튼 -->
+	<button id="writeButton">글쓰기</button>
+
+	<footer>
+		<p>&copy; NanoRuriStudy</p>
+	</footer>
+
+
+</body>
+</html>
