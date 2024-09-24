@@ -21,13 +21,13 @@ public class BoardPageControllerTest {
 
 
 	@Test
-	public void board() throws Exception {
+	public void boardIndexTest() throws Exception {
 		mockMvc.perform(get("/board/page/boardIndex"))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	public void board2() throws Exception {
+	public void boardCreatePageTest() throws Exception {
 		mockMvc.perform(get("/board/page/postWrite"))
 				.andExpect(status().isOk());
 	}
