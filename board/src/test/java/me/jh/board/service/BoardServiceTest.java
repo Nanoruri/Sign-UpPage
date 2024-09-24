@@ -146,17 +146,14 @@ public class BoardServiceTest {
 
 
 		// 특정 조건으로 게시글을 찾기 위한 변수
-		String title = "title1";
+		Long id = 1L;
 
-		// 삭제할 게시글을 찾아오기
-		when(boardDao.findByTitle(title)).thenReturn(Optional.of(boardList.get(0)));
-
-		// 가져온 게시글을 삭제
+		when(boardDao.findById(id)).thenReturn(Optional.of(boardList.get(0)));
 		doNothing().when(boardDao).delete(boardList.get(0));
 
-		// 게시글 삭제
-		boolean result = boardService.deleteBoard(title);
+		boolean result = boardService.deleteBoard(id);
 
-		verify(boardDao).findByTitle(title);
+		verify(boardDao).findById(id);
+		verify(boardDao).delete(boardList.get(0));
 	}
 }

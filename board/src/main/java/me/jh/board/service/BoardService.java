@@ -58,8 +58,8 @@ public class BoardService {
 		return true;
 	}
 
-	public boolean deleteBoard(String title) {
-		Board board = boardDao.findByTitle(title).orElse(null);
+	public boolean deleteBoard(Long id) {
+		Board board = boardDao.findById(id).orElse(null);
 		if (board == null) {
 			return false;
 		}
