@@ -26,4 +26,10 @@ public class BoardPageControllerTest {
 				.andExpect(status().isOk());
 	}
 
+	@Test
+	public void board2() throws Exception {
+		mockMvc.perform(get("/board/page/postWrite"))
+				.andExpect(status().isOk());
+	}
+
 }

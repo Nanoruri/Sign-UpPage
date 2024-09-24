@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<script th:src="@{/js/writePost.js}"></script>
+	<title>Title</title>
+</head>
+<body>
+
+	<header>
+		<h1>게시판 - 글 작성하기</h1>
+	</header>
+
+	<main>
+		<form id="writeForm">
+			<div>
+				<label for="title">제목</label>
+				<input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+			</div>
+
+			<div>
+				<label for="content">내용</label>
+				<textarea id="content" name="content" placeholder="내용을 입력하세요" required></textarea>
+			</div>
+
+			<div>
+				<button type="submit">작성 완료</button>
+				<button type="button" id="cancelButton">취소</button>
+			</div>
+		</form>
+	</main>
+
+	<footer>
+		<p>&copy; NanoRuriStudy</p>
+	</footer>
+
+</body>
+</html>
