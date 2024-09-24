@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,7 @@ public class BoardService {
 
 
 	public boolean saveBoard(Board board) {
+		board.setDate(LocalDateTime.now());
 		boardDao.save(board);
 		return true;
 	}
