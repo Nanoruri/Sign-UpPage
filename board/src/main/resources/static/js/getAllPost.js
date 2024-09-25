@@ -34,20 +34,20 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading board list:', error));
     }
 
-    // // 게시글 상세보기
-    //
-    // function showBoardDetail(postId) {
-    //     fetch(`/study/board/api/${postId}`)  // TODO : 특정 게시글의 상세 정보를 불러오는 API 엔드포인트 추가하기
-    //         .then(response => response.json())
-    //         .then(post => {
-    //             boardTitle.textContent = post.title;
-    //             boardContent.textContent = post.content;
-    //             boardDate.textContent = new Date(post.date).toLocaleString();
-    //             document.querySelector('table').style.display = 'none';
-    //             boardDetailSection.style.display = 'block';
-    //         })
-    //         .catch(error => console.error('Error loading board detail:', error));
-    // }
+    // 게시글 상세보기
+
+    function showBoardDetail(postId) {
+        fetch(`/study/board/api/detail/${postId}`)  // TODO : 특정 게시글의 상세 정보를 불러오는 API 엔드포인트 추가하기
+            .then(response => response.json())
+            .then(post => {
+                boardTitle.textContent = post.title;
+                boardContent.textContent = post.content;
+                boardDate.textContent = new Date(post.date).toLocaleString();
+                document.querySelector('table').style.display = 'none';
+                boardDetailSection.style.display = 'block';
+            })
+            .catch(error => console.error('Error loading board detail:', error));
+    }
 
     // 목록으로 돌아가기
     backButton.addEventListener('click', function () {
