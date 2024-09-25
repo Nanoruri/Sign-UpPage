@@ -31,14 +31,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 });
             })
-            .catch(error => console.error('Error loading board list:', error));
+            .catch(error => {
+                console.error('Error loading board list:', error);
+                alert('게시글 목록을 불러오는 중 오류가 발생했습니다.');
+                window.location.href = '/study/';
+            });
     }
 
     // 게시글 상세보기
 
     function showBoardDetail(postId) {
         fetch(`/study/board/api/detail/${postId}`)  // TODO : 특정 게시글의 상세 정보를 불러오는 API 엔드포인트 추가하기
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 404) {
+                    throw new Error('NotFound');
+                } else if (!response.ok) {
+                    throw new Error('BadRequest');
+                }
+                return response.json();
+            })
             .then(post => {
                 boardTitle.textContent = post.title;
                 boardContent.textContent = post.content;
@@ -46,7 +57,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelector('table').style.display = 'none';
                 boardDetailSection.style.display = 'block';
             })
-            .catch(error => console.error('Error loading board detail:', error));
+            .catch(error => {
+                if (error.message === 'NotFound') {
+                    alert('존재하지 않는 게시글입니다.');
+                } else {
+                    alert('잘못된 요청입니다. 다시 시도해 주세요.');
+                }
+                window.reload();
+                console.error('Error loading board detail:', error);
+            });
+
     }
 
     // 목록으로 돌아가기
