@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -124,6 +125,20 @@ public class BoardApiControllerTest {
 
 		mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId()))
 				.andExpect(status().isNoContent());
+	}
+
+	//Detail
+	@Test
+	public void getBoardDetailTest() throws Exception {
+		long boardId = 1L;
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now());
+
+		when(boardService.getBoardDetail(boardId)).thenReturn(board);
+
+		mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 }

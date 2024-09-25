@@ -70,4 +70,11 @@ public class BoardApiController {
 	}
 
 
+	@GetMapping("/detail/{boardId}")
+	@ResponseBody
+	public ResponseEntity<Board> getBoardDetail(@PathVariable Long boardId) {
+		Board board = boardService.getBoardDetail(boardId);
+		return ResponseEntity.ok(board);
+	}
+
 }
