@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -155,5 +154,29 @@ public class BoardServiceTest {
 
 		verify(boardDao).findById(id);
 		verify(boardDao).delete(boardList.get(0));
+	}
+
+
+	@Test
+	public void getBoardByIdTest() {
+		long boardId = 1L;
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now());
+
+		when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+
+		Board result = boardService.getBoardDetail(boardId);
+
+		assertEquals(board, result);
+	}
+
+	@Test
+	public void getBoardByIdNotFoundTest() {
+		long boardId = 1L;
+
+		when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+
+		Board result = boardService.getBoardDetail(boardId);
+
+		assertNull(result);
 	}
 }

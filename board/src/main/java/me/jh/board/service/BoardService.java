@@ -69,4 +69,7 @@ public class BoardService {
 		return true;
 	}
 
+	public Board getBoardDetail(Long boardId) {
+		return boardDao.findById(boardId).orElse(null);
+	}
 }
