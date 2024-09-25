@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 게시글 상세보기
 
     function showBoardDetail(postId) {
-        fetch(`/study/board/api/detail/${postId}`)  // TODO : 특정 게시글의 상세 정보를 불러오는 API 엔드포인트 추가하기
+        fetch(`/study/board/api/detail/${postId}`)
             .then(response => {
                 if (response.status === 404) {
                     throw new Error('NotFound');
