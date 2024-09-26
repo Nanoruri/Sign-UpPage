@@ -141,4 +141,23 @@ public class BoardApiControllerTest {
 				.andExpect(status().isOk());
 	}
 
+
+	@Test
+	public void searchPostsTest() throws Exception {
+		String query = "title1";
+		String type = "title";
+		List<Board> boardList = List.of(
+				new Board(1L, "title1", "content1", LocalDateTime.now())
+		);
+
+		when(boardService.searchPosts(query, type)).thenReturn(boardList);
+
+		mockMvc.perform(get("/board/api/search")
+						.param("query", query)
+						.param("type", type)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
 }

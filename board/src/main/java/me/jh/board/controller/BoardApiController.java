@@ -77,4 +77,12 @@ public class BoardApiController {
 		return ResponseEntity.ok(board);
 	}
 
+
+	@GetMapping("/search")
+	public ResponseEntity<List<Board>> searchPosts(@RequestParam("query") String query,
+	                                               @RequestParam("type") String type) {
+
+		List<Board> searchResults = boardService.searchPosts(query, type);
+		return ResponseEntity.ok(searchResults);
+	}
 }
