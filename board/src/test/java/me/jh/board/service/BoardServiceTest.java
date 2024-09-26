@@ -179,4 +179,56 @@ public class BoardServiceTest {
 
 		assertNull(result);
 	}
+
+
+	@Test
+	public void searchPostsByTitle() {
+		String query = "title1";
+		List<Board> boardList = List.of(
+				new Board(1L, "title1", "content1", LocalDateTime.now())
+		);
+
+		when(boardDao.findByTitleContaining(query)).thenReturn(boardList);
+
+		List<Board> result = boardService.searchPosts(query, "title");
+
+		assertEquals(boardList, result);
+	}
+
+	@Test
+	public void searchPostsByContent() {
+		String query = "content1";
+		List<Board> boardList = List.of(
+				new Board(1L, "title1", "content1", LocalDateTime.now())
+		);
+
+		when(boardDao.findByContentContaining(query)).thenReturn(boardList);
+
+		List<Board> result = boardService.searchPosts(query, "content");
+
+		assertEquals(boardList, result);
+	}
+
+	@Test
+	public void searchPostsByTitleAndContent() {
+		String query = "title1";
+		List<Board> boardList = List.of(
+				new Board(1L, "title1", "content1", LocalDateTime.now())
+		);
+
+		when(boardDao.findByTitleContainingOrContentContaining(query, query)).thenReturn(boardList);
+
+		List<Board> result = boardService.searchPosts(query, "titleAndContent");
+
+		assertEquals(boardList, result);
+	}
+
+	@Test
+	public void searchPostsInvalidType() {
+		String query = "title1";
+
+		List<Board> result = boardService.searchPosts(query, "invalidType");
+
+		assertEquals(0, result.size());
+	}
 }

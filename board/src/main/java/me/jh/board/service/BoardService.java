@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +72,18 @@ public class BoardService {
 
 	public Board getBoardDetail(Long boardId) {
 		return boardDao.findById(boardId).orElse(null);
+	}
+
+	public List<Board> searchPosts(String query, String type) {
+		switch (type) {
+			case "title":
+				return boardDao.findByTitleContaining(query);
+			case "content":
+				return boardDao.findByContentContaining(query);
+			case "titleAndContent":
+				return boardDao.findByTitleContainingOrContentContaining(query, query);
+			default:
+				return new ArrayList<>(); // 잘못된 타입이 들어온 경우 빈 리스트 반환
+		}
 	}
 }
