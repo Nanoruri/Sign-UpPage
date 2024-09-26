@@ -13,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,6 +82,52 @@ public class BoardDaoTest {
 
 		// then
 		assertThat(deletedBoard).isNotPresent();
+	}
+
+
+	@Test
+	public void testFindByTitleContaining() {
+		// given
+		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now());
+		Board board2 = new Board(2L, "Spring Data JPA", "Content 2", LocalDateTime.now());
+		boardDao.save(board1);
+		boardDao.save(board2);
+
+		// when
+		List<Board> foundBoards = boardDao.findByTitleContaining("Spring");
+
+		// then
+		assertThat(foundBoards).hasSize(2);
+	}
+
+	@Test
+	public void testFindByContentContaining() {
+		// given
+		Board board1 = new Board(1L, "Title 1", "Spring Boot Content", LocalDateTime.now());
+		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now());
+		boardDao.save(board1);
+		boardDao.save(board2);
+
+		// when
+		List<Board> foundBoards = boardDao.findByContentContaining("Spring");
+
+		// then
+		assertThat(foundBoards).hasSize(2);
+	}
+
+	@Test
+	public void testFindByTitleContainingOrContentContaining() {
+		// given
+		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now());
+		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now());
+		boardDao.save(board1);
+		boardDao.save(board2);
+
+		// when
+		List<Board> foundBoards = boardDao.findByTitleContainingOrContentContaining("Spring", "Spring");
+
+		// then
+		assertThat(foundBoards).hasSize(2);
 	}
 
 }
