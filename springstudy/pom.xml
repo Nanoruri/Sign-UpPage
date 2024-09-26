@@ -41,6 +41,80 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+
+                <configuration>
+                    <excludes><!--테스트 제외설정-->
+                        <exclude>me/jh/springstudy/config/**/CorsConfig.class</exclude>
+                        <exclude>me/jh/springstudy/exception/signup/**</exclude>
+                        <exclude>me/jh/springstudy/exception/signin/**</exclude>
+                        <exclude>me/jh/springstudy/exception/finds/**</exclude>
+                        <exclude>me/jh/springstudy/dto/**</exclude>
+                        <exclude>me/jh/springstudy/dao/MemberDaoEntityManager.class</exclude>
+                        <exclude>me/jh/springstudy/config/JwtProvider.class</exclude>
+                    </excludes>
+                </configuration>
+
+                <executions>
+                    <execution><!--테스트 전 실행 설정-->
+                        <goals><!--목표 설정-->
+                            <goal>prepare-agent</goal><!--Jacoco에이전트 준비-->
+                        </goals>
+                    </execution>
+
+                    <execution><!--테스트 단계-->
+                        <id>jacoco-report</id>
+                        <phase>test</phase><!--테스트 단계에서 실행-->
+                        <goals>
+                            <goal>report</goal><!--리포트 생성-->
+                        </goals>
+                    </execution>
+
+                    <execution><!--테스트 후 커버리지 검증-->
+                        <id>jacoco-check</id>
+                        <phase>verify</phase><!--검증 단계에서 실행-->
+                        <goals>
+                            <goal>check</goal><!--커버리지 체크-->
+                        </goals>
+
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element> <!--전체 코드 커버리지-->
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter><!--명령어 수-->
+                                            <value>COVEREDRATIO</value><!--커버리지 비율-->
+                                            <minimum>0.80</minimum><!--비율 설정-->
+                                        </limit>
+                                    </limits>
+                                    <element>METHOD</element><!--메소드 단위 커버리지-->
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter><!--라인 단위 커버리지-->
+                                            <value>TOTALCOUNT</value><!--전체 코드 수-->
+                                            <maximum>50</maximum><!--최대 코드 수-->
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+
+                </executions>
+
+
+            </plugin>
+
+
+
+
+
+
             <!-- 메이븐 플러그인 설정 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
