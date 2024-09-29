@@ -17,21 +17,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 boardTableBody.innerHTML = '';
                 data.forEach((post, index) => {
                     const row = document.createElement('tr');
+                    row.setAttribute('data-id', post.id); // 게시글 ID 저장
                     row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td><a href="#" class="board-link" data-id="${post.id}">${post.title}</a></td>
-                                <td>${post.content}</td>
-                                <td>${new Date(post.date).toLocaleDateString()}</td>
-                            `;
-                    boardTableBody.appendChild(row);
-                });
+                        <td>${index + 1}</td>
+                        <td>${post.title}</td> <!-- 제목 클릭 없이도 전체 영역 클릭 가능 -->
+                        <td>${post.content}</td> <!-- 게시글 내용도 출력 -->
+                        <td>${new Date(post.date).toLocaleDateString()}</td>
+                    `;
 
-                document.querySelectorAll('.board-link').forEach(link => {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
+                    // 게시글 행 전체에 클릭 이벤트 추가
+                    row.addEventListener('click', function () {
                         const postId = this.getAttribute('data-id');
                         showBoardDetail(postId);
                     });
+
+                    boardTableBody.appendChild(row);
                 });
             })
             .catch(error => {
