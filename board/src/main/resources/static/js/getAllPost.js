@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const boardTableBody = document.getElementById('boardTableBody');
+    const boardTableSection = document.getElementById('generalTabContent'); // 게시글 목록 섹션
     const boardDetailSection = document.getElementById('boardDetail');
     const boardTitle = document.getElementById('boardTitle');
     const boardContent = document.getElementById('boardContent');
@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/study/board/api/read')  // 게시글 목록을 불러오는 API 엔드포인트
             .then(response => response.json())
             .then(data => {
+                const boardTableBody = document.getElementById('boardTableBody'); // 게시글 목록 테이블 바디
                 boardTableBody.innerHTML = '';
                 data.forEach((post, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                                 <td>${index + 1}</td>
                                 <td><a href="#" class="board-link" data-id="${post.id}">${post.title}</a></td>
+                                <td>${post.content}</td>
                                 <td>${new Date(post.date).toLocaleDateString()}</td>
                             `;
                     boardTableBody.appendChild(row);
