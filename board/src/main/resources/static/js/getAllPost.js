@@ -57,7 +57,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 boardTitle.textContent = post.title;
                 boardContent.textContent = post.content;
                 boardDate.textContent = new Date(post.date).toLocaleString();
-                document.querySelector('table').style.display = 'none';
+
+                // 게시글 목록 섹션 숨기기
+                boardTableSection.style.display = 'none';
+                // 게시글 상세보기 섹션 보이기
                 boardDetailSection.style.display = 'block';
             })
             .catch(error => {
@@ -74,8 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 목록으로 돌아가기
     backButton.addEventListener('click', function () {
+        // 게시글 상세보기 섹션 숨기기
         boardDetailSection.style.display = 'none';
-        document.querySelector('table').style.display = 'table';
+        // 게시글 목록 섹션 보이기
+        boardTableSection.style.display = 'block';
     });
 
     // 글쓰기 버튼 클릭 시 글쓰기 페이지로 이동
