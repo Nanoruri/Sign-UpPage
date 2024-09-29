@@ -2,9 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const memberTab = document.getElementById('memberTab');
     const accessToken = sessionStorage.getItem('accessToken');
     const writeButton = document.getElementById('writeButton');
-
-    sessionStorage.setItem('accessToken', 'eyJhbGci');
-
+    
     // 세션 스토리지에 accessToken이 있으면 회원전용 탭을 표시
     if (accessToken) {
         memberTab.style.display = 'inline-block';
