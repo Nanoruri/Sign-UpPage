@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const boardDate = document.getElementById('boardDate');
     const backButton = document.getElementById('backButton');
     const writeButton = document.getElementById('writeButton');
+    const mainPageButton = document.getElementById('mainButton');
 
     // 게시글 목록 불러오기
     function loadBoardList() {
@@ -82,4 +83,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 페이지 로드 시 게시글 목록 로드
     loadBoardList();
+
+
+    // 메인 페이지로 이동
+    mainPageButton.addEventListener('click', function () {
+        window.location.href = '/study/';
+    });
 });
