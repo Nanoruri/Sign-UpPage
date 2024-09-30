@@ -1,9 +1,6 @@
-document.addEventListener('DOMContentLoaded', function () {
+function getAllPost() {
     const boardTableSection = document.getElementById('generalTabContent'); // 게시글 목록 섹션
     const boardDetailSection = document.getElementById('boardDetail');
-    const boardTitle = document.getElementById('boardTitle');
-    const boardContent = document.getElementById('boardContent');
-    const boardDate = document.getElementById('boardDate');
     const backButton = document.getElementById('backButton');
     const writeButton = document.getElementById('writeButton');
     const mainPageButton = document.getElementById('mainButton');
@@ -41,39 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // 게시글 상세보기
 
-    function showBoardDetail(postId) {
-        fetch(`/study/board/api/detail/${postId}`)
-            .then(response => {
-                if (response.status === 404) {
-                    throw new Error('NotFound');
-                } else if (!response.ok) {
-                    throw new Error('BadRequest');
-                }
-                return response.json();
-            })
-            .then(post => {
-                boardTitle.textContent = post.title;
-                boardContent.textContent = post.content;
-                boardDate.textContent = new Date(post.date).toLocaleString();
-
-                // 게시글 목록 섹션 숨기기
-                boardTableSection.style.display = 'none';
-                // 게시글 상세보기 섹션 보이기
-                boardDetailSection.style.display = 'block';
-            })
-            .catch(error => {
-                if (error.message === 'NotFound') {
-                    alert('존재하지 않는 게시글입니다.');
-                } else {
-                    alert('잘못된 요청입니다. 다시 시도해 주세요.');
-                }
-                window.reload();
-                console.error('Error loading board detail:', error);
-            });
-
-    }
 
     // 목록으로 돌아가기
     backButton.addEventListener('click', function () {
@@ -96,4 +61,50 @@ document.addEventListener('DOMContentLoaded', function () {
     mainPageButton.addEventListener('click', function () {
         window.location.href = '/study/';
     });
-});
+}
+
+
+
+// 게시글 상세보기
+function showBoardDetail(postId) {
+    const boardTitle = document.getElementById('boardTitle');
+    const boardContent = document.getElementById('boardContent');
+    const boardDate = document.getElementById('boardDate');
+    const boardTableSection = document.getElementById('generalTabContent'); // 게시글 목록 섹션
+    const boardDetailSection = document.getElementById('boardDetail');
+
+
+    fetch(`/study/board/api/detail/${postId}`)
+        .then(response => {
+            if (response.status === 404) {
+                throw new Error('NotFound');
+            } else if (!response.ok) {
+                throw new Error('BadRequest');
+            }
+            return response.json();
+        })
+        .then(post => {
+            boardTitle.textContent = post.title;
+            boardContent.textContent = post.content;
+            boardDate.textContent = new Date(post.date).toLocaleString();
+
+            // 게시글 목록 섹션 숨기기
+            boardTableSection.style.display = 'none';
+            // 게시글 상세보기 섹션 보이기
+            boardDetailSection.style.display = 'block';
+        })
+        .catch(error => {
+            if (error.message === 'NotFound') {
+                alert('존재하지 않는 게시글입니다.');
+            } else {
+                alert('잘못된 요청입니다. 다시 시도해 주세요.');
+            }
+            window.location.reload();
+            console.error('Error loading board detail:', error);
+        });
+
+}
+
+// 페이지 로드 시 getAllPost 호출
+document.addEventListener('DOMContentLoaded', getAllPost); {
+}
