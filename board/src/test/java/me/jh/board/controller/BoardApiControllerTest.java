@@ -51,8 +51,9 @@ public class BoardApiControllerTest {
 		String title = "title";
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
+        String tab = "testTab";
 
-		Board post = new Board(id, title, content, date);
+		Board post = new Board(id, title, content, date, tab);
 
 		when(boardService.saveBoard(post)).thenReturn(true);
 
@@ -67,7 +68,7 @@ public class BoardApiControllerTest {
 	@Test
 	public void findAllTest() throws Exception {
 
-		Board post = new Board(1L, "title", "content", LocalDateTime.now());
+		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "testTab");
 
 		boardDao.save(post);
 
@@ -83,8 +84,9 @@ public class BoardApiControllerTest {
 		String title = "title";
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
+        String tab = "testTab";
 
-		Board post = new Board(id, title, content, date);
+		Board post = new Board(id, title, content, date,tab);
 
 		when(boardService.getBoardByTitle(title)).thenReturn(post);
 
@@ -100,8 +102,9 @@ public class BoardApiControllerTest {
 		String title = "title";
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
+        String tab = "testTab";
 
-		Board post = new Board(id, title, content, date);
+		Board post = new Board(id, title, content, date, tab);
 
 		when(boardService.updateBoard(post)).thenReturn(true);
 
@@ -118,8 +121,9 @@ public class BoardApiControllerTest {
 		String title = "title";
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
+        String tab = "testTab";
 
-		Board post = new Board(id, title, content, date);
+		Board post = new Board(id, title, content, date,tab);
 
 		when(boardService.deleteBoard(post.getId())).thenReturn(true);
 
@@ -131,7 +135,7 @@ public class BoardApiControllerTest {
 	@Test
 	public void getBoardDetailTest() throws Exception {
 		long boardId = 1L;
-		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now());
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
 
 		when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
@@ -147,7 +151,7 @@ public class BoardApiControllerTest {
 		String query = "title1";
 		String type = "title";
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", LocalDateTime.now())
+				new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab")
 		);
 
 		when(boardService.searchPosts(query, type)).thenReturn(boardList);

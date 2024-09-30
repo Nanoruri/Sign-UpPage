@@ -27,7 +27,7 @@ public class BoardTest {
 	@Test
 	public void testSaveBoard() {
 		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now());
+		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab");
 
 		// when
 		Board savedBoard = entityManager.persistAndFlush(board);
@@ -40,7 +40,7 @@ public class BoardTest {
 	@Test
 	public void testFindById() {
 		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now());
+		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab");
 		entityManager.persistAndFlush(board);
 
 		// when
@@ -54,7 +54,7 @@ public class BoardTest {
 	@Test
 	public void testFindByTitle() {
 		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now());
+		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab");
 		entityManager.persistAndFlush(board);
 
 		// when
@@ -68,7 +68,7 @@ public class BoardTest {
 	@Test
 	public void testDeleteBoard() {
 		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now());
+		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab");
 		entityManager.persistAndFlush(board);
 
 		// when

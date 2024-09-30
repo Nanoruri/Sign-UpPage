@@ -21,11 +21,17 @@ public class Board {
 	@Column(name = "BOARD_DATE")
 	private LocalDateTime date;
 
-	public Board(long id, String title, String content, LocalDateTime date) {
+	@Column(name = "BOARD_TAB")
+	private String tabName;
+
+
+
+	public Board(long id, String title, String content, LocalDateTime date , String tabName) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.date = date;
+		this.tabName = tabName;
 	}
 
 	public Board() {
@@ -64,4 +70,12 @@ public class Board {
 		this.date = date;
 	}
 
+	public String getTabName() {
+		return tabName;
+	}
+
+	public Board setTabName(String tab) {
+		this.tabName = tab;
+		return this;
+	}
 }

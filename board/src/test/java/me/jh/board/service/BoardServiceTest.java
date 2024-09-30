@@ -33,7 +33,7 @@ public class BoardServiceTest {
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
 
-		Board post = new Board(id, title, content, date);
+		Board post = new Board(id, title, content, date,"testTab");
 
 		when(boardDao.save(post)).thenReturn(post);
 
@@ -52,9 +52,9 @@ public class BoardServiceTest {
 		LocalDateTime now = LocalDateTime.now();
 
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", now),
-				new Board(2L, "title2", "content2", now),
-				new Board(3L, "title3", "content3", now)
+				new Board(1L, "title1", "content1", now,"testTab"),
+				new Board(2L, "title2", "content2", now,"testTab"),
+				new Board(3L, "title3", "content3", now,"testTab")
 		);
 
 		when(boardDao.findAll()).thenReturn(boardList);
@@ -74,9 +74,9 @@ public class BoardServiceTest {
 
 		// 기존 게시글 리스트
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", now),
-				new Board(2L, "title2", "content2", now),
-				new Board(3L, "title3", "content3", now)
+				new Board(1L, "title1", "content1", now,"testTab"),
+				new Board(2L, "title2", "content2", now,"testTab"),
+				new Board(3L, "title3", "content3", now,"testTab")
 		);
 
 		// 찾아올 게시글의 제목
@@ -105,14 +105,14 @@ public class BoardServiceTest {
 
 		//기존 게시글 리스트
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", now),
-				new Board(2L, "title2", "content2", now),
-				new Board(3L, "title3", "content3", now)
+				new Board(1L, "title1", "content1", now,"testTab"),
+				new Board(2L, "title2", "content2", now,"testTab"),
+				new Board(3L, "title3", "content3", now,"testTab")
 		);
 
 		// 업데이트할 게시글
 		Board existingBoard = boardList.get(0);
-		Board updatedBoard = new Board(1L, "title1", "updatedContent", now);
+		Board updatedBoard = new Board(1L, "title1", "updatedContent", now,"testTab");
 
 		// 게시글을 찾아오기
 		when(boardDao.findByTitle("title1")).thenReturn(Optional.of(existingBoard));
@@ -138,9 +138,9 @@ public class BoardServiceTest {
 
 		//기존 게시글 리스트
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", now),
-				new Board(2L, "title2", "content2", now),
-				new Board(3L, "title3", "content3", now)
+				new Board(1L, "title1", "content1", now,"testTab"),
+				new Board(2L, "title2", "content2", now,"testTab"),
+				new Board(3L, "title3", "content3", now,"testTab")
 		);
 
 
@@ -160,7 +160,7 @@ public class BoardServiceTest {
 	@Test
 	public void getBoardByIdTest() {
 		long boardId = 1L;
-		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now());
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(),"testTab");
 
 		when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
@@ -185,7 +185,7 @@ public class BoardServiceTest {
 	public void searchPostsByTitle() {
 		String query = "title1";
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", LocalDateTime.now())
+				new Board(1L, "title1", "content1", LocalDateTime.now(),"testTab")
 		);
 
 		when(boardDao.findByTitleContaining(query)).thenReturn(boardList);
@@ -199,7 +199,7 @@ public class BoardServiceTest {
 	public void searchPostsByContent() {
 		String query = "content1";
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", LocalDateTime.now())
+				new Board(1L, "title1", "content1", LocalDateTime.now(),"testTab")
 		);
 
 		when(boardDao.findByContentContaining(query)).thenReturn(boardList);
@@ -213,7 +213,7 @@ public class BoardServiceTest {
 	public void searchPostsByTitleAndContent() {
 		String query = "title1";
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", LocalDateTime.now())
+				new Board(1L, "title1", "content1", LocalDateTime.now(),"testTab")
 		);
 
 		when(boardDao.findByTitleContainingOrContentContaining(query, query)).thenReturn(boardList);
