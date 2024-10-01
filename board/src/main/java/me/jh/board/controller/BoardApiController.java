@@ -85,4 +85,11 @@ public class BoardApiController {
 		List<Board> searchResults = boardService.searchPosts(query, type);
 		return ResponseEntity.ok(searchResults);
 	}
+
+	@GetMapping("/memberBoard")
+	@ResponseBody
+	public ResponseEntity<List<Board>> getMemberBoard() {
+		List<Board> boards = boardService.getBoard("member");
+		return ResponseEntity.ok(boards);
+	}
 }

@@ -163,4 +163,19 @@ public class BoardApiControllerTest {
 				.andExpect(status().isOk());
 	}
 
+
+	@Test
+	public void getMemberBoardTest() throws Exception {
+		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "member");
+
+		when(boardService.getBoard("member")).thenReturn(List.of(post));
+
+		mockMvc.perform(get("/board/api/memberBoard")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(content().json("[{\"id\":1,\"title\":\"title\",\"content\":\"content\",\"tabName\":\"member\"}]"));
+	}
+
+
 }

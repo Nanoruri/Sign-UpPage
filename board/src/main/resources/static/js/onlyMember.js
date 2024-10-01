@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 회원전용 게시글 목록 로드 (예시, 실제 API 경로로 대체 필요)
+    // 회원 게시글 로드 함수
     function loadMemberBoardList() {
-        fetch('/board/api/memberPosts') // 회원전용 게시글 목록 API 엔드포인트
+        fetch('/study/board/api/memberBoard')// 회원전용 게시글 목록 API 엔드포인트
             .then(response => response.json())
             .then(posts => {
                 const memberTableBody = document.getElementById('memberTableBody');
@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     row.innerHTML = `
                         <td>${post.id}</td>
                         <td>${post.title}</td>
-                        <td>${new Date(post.date).toLocaleString()}</td>
+                        <td>${post.content}</td>
+                        <td>${new Date(post.date).toLocaleDateString()}</td>
                     `;
                     memberTableBody.appendChild(row);
                 });
