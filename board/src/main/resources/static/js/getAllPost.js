@@ -7,7 +7,7 @@ function getAllPost() {
 
     // 게시글 목록 불러오기
     function loadBoardList() {
-        fetch('/study/board/api/read')  // 게시글 목록을 불러오는 API 엔드포인트
+        fetch('/study/board/api/generalBoard')  // 게시글 목록을 불러오는 API 엔드포인트
             .then(response => response.json())
             .then(data => {
                 const boardTableBody = document.getElementById('boardTableBody'); // 게시글 목록 테이블 바디

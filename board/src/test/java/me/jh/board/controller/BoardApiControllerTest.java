@@ -65,7 +65,7 @@ public class BoardApiControllerTest {
 
 
 	@Test
-	public void findAllTest() throws Exception {
+	public void findGeneralBoardTest() throws Exception {
 
 		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "testTab");
 
@@ -73,7 +73,7 @@ public class BoardApiControllerTest {
 
 		when(boardService.getBoard("testTab")).thenReturn(List.of(post));
 
-		mockMvc.perform(get("/board/api/read"))
+		mockMvc.perform(get("/board/api/generalBoard"))
 				.andExpect(status().isOk());
 	}
 

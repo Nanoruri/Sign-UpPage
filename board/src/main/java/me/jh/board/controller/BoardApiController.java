@@ -38,9 +38,9 @@ public class BoardApiController {
 
 
 	//Read
-	@GetMapping("/read")
+	@GetMapping("/generalBoard")
 	@ResponseBody
-	public ResponseEntity<List<Board>> getBoard() {
+	public ResponseEntity<List<Board>> getGeneralBoard() {
 		List<Board> boards = boardService.getBoard("general");
 		return ResponseEntity.ok(boards);
 	}
