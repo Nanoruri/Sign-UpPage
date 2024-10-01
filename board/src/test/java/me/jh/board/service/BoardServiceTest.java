@@ -2,7 +2,6 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
-import me.jh.board.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,8 +42,8 @@ public class BoardServiceTest {
 	}
 
 
-	/*
-	 * 모든 게시글 조회 테스트
+	/**
+	 * 일반 게시글 조회 테스트
 	 */
 	@Test//Read
 	public void findAll() {
@@ -57,11 +56,11 @@ public class BoardServiceTest {
 				new Board(3L, "title3", "content3", now,"testTab")
 		);
 
-		when(boardDao.findAll()).thenReturn(boardList);
+		when(boardDao.findByTabName("testTab")).thenReturn(boardList);
 
-		List<Board> result = boardService.getAllBoard();
+		List<Board> result = boardService.getBoard("testTab");
 
-		verify(boardDao).findAll();
+		verify(boardDao).findByTabName("testTab");
 	}
 
 	/**

@@ -35,8 +35,8 @@ public class BoardService {
 		return true;
 	}
 
-	public List<Board> getAllBoard() {
-		return boardDao.findAll();
+	public List<Board> getBoard(String tabName) {
+		return boardDao.findByTabName(tabName);
 	}
 
 	public Board getBoardByTitle(String title) {

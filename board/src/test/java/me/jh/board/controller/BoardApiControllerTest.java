@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -72,7 +71,7 @@ public class BoardApiControllerTest {
 
 		boardDao.save(post);
 
-		when(boardService.getAllBoard()).thenReturn(List.of(post));
+		when(boardService.getBoard("testTab")).thenReturn(List.of(post));
 
 		mockMvc.perform(get("/board/api/read"))
 				.andExpect(status().isOk());
