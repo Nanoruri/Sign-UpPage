@@ -49,6 +49,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${post.content}</td>
                         <td>${new Date(post.date).toLocaleDateString()}</td>
                     `;
+                    row.addEventListener('click', function () {
+                        const postId = this.getAttribute('data-id');
+                        showBoardDetail(postId);
+                    });
+
                     memberTableBody.appendChild(row);
                 });
             })
