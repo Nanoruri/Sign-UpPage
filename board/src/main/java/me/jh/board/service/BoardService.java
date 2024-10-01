@@ -29,6 +29,7 @@ public class BoardService {
 
 
 	public boolean saveBoard(Board board) {
+		board.setTabName(board.getTabName());
 		board.setDate(LocalDateTime.now());
 		boardDao.save(board);
 		return true;
