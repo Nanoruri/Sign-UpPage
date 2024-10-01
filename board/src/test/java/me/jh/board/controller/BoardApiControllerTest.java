@@ -67,14 +67,16 @@ public class BoardApiControllerTest {
 	@Test
 	public void findGeneralBoardTest() throws Exception {
 
-		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "testTab");
+		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "general");
 
-		boardDao.save(post);
+		when(boardService.getBoard("general")).thenReturn(List.of(post));
 
-		when(boardService.getBoard("testTab")).thenReturn(List.of(post));
+		mockMvc.perform(get("/board/api/generalBoard")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(content().json("[{\"id\":1,\"title\":\"title\",\"content\":\"content\",\"tabName\":\"general\"}]"));
 
-		mockMvc.perform(get("/board/api/generalBoard"))
-				.andExpect(status().isOk());
 	}
 
 	@Test
