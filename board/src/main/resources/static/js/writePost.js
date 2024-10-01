@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = {
             title: document.getElementById('title').value,
-            content: document.getElementById('content').value
+            content: document.getElementById('content').value,
+            tabName: document.getElementById('tab').value
         };
 
         fetch('/study/board/api/create', {
