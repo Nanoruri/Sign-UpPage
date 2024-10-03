@@ -271,6 +271,43 @@ tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* 헤더 스타일 */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+    font-size: 36px;
+    font-weight: 200;
+}
+
+header .button-group {
+    display: flex;
+    gap: 20px; /* Adjust this value to change the spacing between buttons */
+}
+
+header .button-group button {
+    background-color: white;
+    color: #53e3a6;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+header .button-group button:hover {
+    background-color: #f5f7f9;
+    transform: scale(1.05);
+}
+
+
 @keyframes square {
     0% {
         transform: translateY(0);
