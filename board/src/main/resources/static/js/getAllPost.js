@@ -70,7 +70,8 @@ function showBoardDetail(postId) {
     const boardTitle = document.getElementById('boardTitle');
     const boardContent = document.getElementById('boardContent');
     const boardDate = document.getElementById('boardDate');
-    const boardTableSection = document.getElementById('generalTabContent'); // 게시글 목록 섹션
+    const boardTableSection = document.getElementById('generalTabContent');
+    const memberTabContent = document.getElementById('memberTabContent');
     const boardDetailSection = document.getElementById('boardDetail');
 
 
@@ -90,6 +91,7 @@ function showBoardDetail(postId) {
 
             // 게시글 목록 섹션 숨기기
             boardTableSection.style.display = 'none';
+            memberTabContent.style.display = 'none';
             // 게시글 상세보기 섹션 보이기
             boardDetailSection.style.display = 'block';
         })
