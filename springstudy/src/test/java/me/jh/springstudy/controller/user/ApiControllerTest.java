@@ -3,11 +3,11 @@ package me.jh.springstudy.controller.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
-import me.jh.springstudy.utils.auth.JwtGenerator;
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.core.utils.auth.JwtGenerator;
+import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.dto.JWToken;
+import me.jh.core.dto.JWToken;
 import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;

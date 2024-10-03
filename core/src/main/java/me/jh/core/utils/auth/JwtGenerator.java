@@ -1,10 +1,10 @@
-package me.jh.springstudy.utils.auth;
+package me.jh.core.utils.auth;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import me.jh.springstudy.dto.JWToken;
+import me.jh.core.dto.JWToken;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

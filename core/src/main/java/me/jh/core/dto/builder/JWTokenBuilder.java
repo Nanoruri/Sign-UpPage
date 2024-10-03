@@ -1,7 +1,7 @@
-package me.jh.springstudy.dto.builder;
+package me.jh.core.dto.builder;
 
 import io.jsonwebtoken.lang.Builder;
-import me.jh.springstudy.dto.JWToken;
+import me.jh.core.dto.JWToken;
 
 public class JWTokenBuilder implements Builder<JWToken> {
 

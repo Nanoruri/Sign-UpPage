@@ -1,9 +1,10 @@
-package me.jh.springstudy.utils.auth;
+package me.jh.core.utils.auth;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.io.Encoders;
+import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.springstudy.MySpringBootApplication;
-import me.jh.springstudy.dto.JWToken;
+import me.jh.core.dto.JWToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

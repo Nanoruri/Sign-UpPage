@@ -1,4 +1,4 @@
-package me.jh.springstudy.utils.auth;
+package me.jh.core.utils.auth;
 
 
 import io.jsonwebtoken.*;

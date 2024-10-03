@@ -1,6 +1,6 @@
-package me.jh.springstudy.dto;
+package me.jh.core.dto;
 
-import me.jh.springstudy.dto.builder.JWTokenBuilder;
+import me.jh.core.dto.builder.JWTokenBuilder;
 
 public class JWToken {
 
