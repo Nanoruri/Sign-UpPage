@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${post.content}</td>
                         <td>${new Date(post.date).toLocaleDateString()}</td>
                     `;
+                    row.setAttribute('data-id', post.id);
+
                     row.addEventListener('click', function () {
                         const postId = this.getAttribute('data-id');
                         showBoardDetail(postId);
