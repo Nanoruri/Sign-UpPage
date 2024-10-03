@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const memberTab = document.getElementById('memberTab');
-    const accessToken = sessionStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem('aToken');
     const writeButton = document.getElementById('writeButton');
 
 
