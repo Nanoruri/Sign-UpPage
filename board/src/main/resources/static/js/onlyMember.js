@@ -36,8 +36,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 회원 게시글 로드 함수
     function loadMemberBoardList() {
-        fetch('/study/board/api/memberBoard')// 회원전용 게시글 목록 API 엔드포인트
-            .then(response => response.json())
+        fetch('/study/board/api/memberBoard', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(posts => {
                 const memberTableBody = document.getElementById('memberTableBody');
                 memberTableBody.innerHTML = '';
