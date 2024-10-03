@@ -2,14 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const memberTab = document.getElementById('memberTab');
     const accessToken = sessionStorage.getItem('accessToken');
     const writeButton = document.getElementById('writeButton');
-    
-    // 세션 스토리지에 accessToken이 있으면 회원전용 탭을 표시
-    if (accessToken) {
-        memberTab.style.display = 'inline-block';
-        writeButton.style.display = 'inline-block';
-    } else {
-        writeButton.style.display = 'none';
-    }
+
+
+    writeButton.style.display = 'none';
 
     // 탭 버튼 클릭 이벤트
     document.querySelectorAll('.tab-button').forEach(button => {
@@ -51,6 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(posts => {
+
+                memberTab.style.display = 'inline-block';
+                writeButton.style.display = 'inline-block';
+
                 const memberTableBody = document.getElementById('memberTableBody');
                 memberTableBody.innerHTML = '';
                 posts.forEach(post => {
