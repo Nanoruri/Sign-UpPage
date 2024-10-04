@@ -6,16 +6,9 @@
     <link rel="stylesheet" th:href="@{/css/postWrite.css}">
     <title>Title</title>
     <!-- Quill CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-    <style>
-        /* Quill editor 배경색 흰색, 글자색 검정 */
-        #editor {
-            background-color: white;
-            color: black;
-            height: 200px;
-        }
-    </style>
+    <script th:src="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'}"></script>
+    <link th:href="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'}" rel="stylesheet">
+
 </head>
 <body>
 
@@ -39,7 +32,7 @@
         </div>
 
         <div>
-            <div id="editor" style="height: 200px;"></div>
+            <div id="editor"></div>
             <textarea id="content" name="content" style="display:none;"></textarea>
         </div>
 
@@ -55,7 +48,5 @@
 </footer>
 
 
-<!-- Quill JS CDN -->
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
 </body>
 </html>
