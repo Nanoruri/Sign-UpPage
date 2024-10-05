@@ -86,7 +86,7 @@ function showBoardDetail(postId) {
         })
         .then(post => {
             boardTitle.textContent = post.title;
-            boardContent.textContent = post.content;
+            boardContent.innerHTML = post.content; // HTML 형태의 내용을 표시
             boardDate.textContent = new Date(post.date).toLocaleString();
 
             // 게시글 목록 섹션 숨기기

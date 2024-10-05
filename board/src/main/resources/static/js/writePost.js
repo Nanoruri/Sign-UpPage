@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     writeForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Quill 에디터에서 내용 가져오기
+        // Quill 에디터에서 HTML 형태의 내용 가져오기
         const editorContent = quill.root.innerHTML;
         const editorText = quill.getText();
 
@@ -22,16 +22,17 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const cleanContent = stripHtmlTags(editorContent);
+        // 숨겨진 textarea에 Quill 에디터 HTML 내용 설정
+        document.getElementById('content').value = editorContent;
 
-        document.getElementById('content').value = cleanContent;
-
+        // 글 제목, 내용, 탭 정보 수집
         const formData = {
             title: document.getElementById('title').value,
-            content: cleanContent, // Quill 에디터에서 가져온 HTML 내용
+            content: editorContent, // HTML 형태로 저장
             tabName: document.getElementById('tab').value
         };
 
+        // 서버로 POST 요청 보내기
         fetch('/study/board/api/create', {
             method: 'POST',
             headers: {
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (response.ok) {
                     alert('글이 성공적으로 작성되었습니다.');
-                    window.location.href = '/study/board/page/boardIndex';
+                    window.location.href = '/study/board/page/boardIndex'; // 글 작성 완료 후 이동
                 } else {
                     throw new Error('글 작성에 실패했습니다.');
                 }
@@ -56,10 +57,4 @@ document.addEventListener('DOMContentLoaded', function () {
     cancelButton.addEventListener('click', function () {
         window.location.href = '/study/board/page/boardIndex';
     });
-
-    // HTML 태그를 벗겨내는 함수
-    function stripHtmlTags(html) {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        return doc.body.textContent || "";
-    }
 });
