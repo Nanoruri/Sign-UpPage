@@ -2,8 +2,6 @@ package me.jh.core.utils.auth;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.io.Encoders;
-import me.jh.core.utils.auth.JwtGenerator;
-import me.jh.springstudy.MySpringBootApplication;
 import me.jh.core.dto.JWToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
@@ -26,9 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-@SpringBootTest(classes = MySpringBootApplication.class)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@TestPropertySource(locations = "classpath:application.yml")
 @ActiveProfiles("test")
 public class JwtGeneratorTest {
 
