@@ -3,15 +3,15 @@ package me.jh.board.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,13 +25,11 @@ public class FileUploadServiceTest {
 	@Mock
 	private MultipartFile multipartFile;
 
-	@Mock
-	private File file;
-
-	@Spy
 	@InjectMocks
 	private FileUploadService fileUploadService;
 
+    @TempDir
+    private Path tempDir;
 
 
 	@BeforeEach
@@ -39,99 +37,6 @@ public class FileUploadServiceTest {
 
 	}
 
-	@Test
-	void testUploadImageSuccessfully() throws IOException {
-		String originalFilename = "test.jpg";
-		String savePath = System.getProperty("user.dir") + "/src/test/files/image";
-
-
-		//테스트용 경로
-		when(fileUploadService.getSavePath()).thenReturn(savePath);
-		when(multipartFile.getOriginalFilename()).thenReturn(originalFilename);
-		doNothing().when(multipartFile).transferTo(any(File.class));
-
-		String result = fileUploadService.uploadImage(new MultipartFile[]{multipartFile});
-
-		assertNotNull(result);
-		assertTrue(result.endsWith("_" + originalFilename)); // 결과 파일 이름이 기대대로 형성되었는지 확인
-		assertEquals(36 + 1 + originalFilename.length(), result.length());
-	}
-
-	@Test
-	void testUploadImageFails() throws IOException {
-		String savePath = System.getProperty("user.dir") + "/src/test/files/image";
-
-
-		when(multipartFile.getOriginalFilename()).thenReturn("test.jpg");
-		when(fileUploadService.getSavePath()).thenReturn(savePath);
-		doThrow(new IOException("File upload error")).when(multipartFile).transferTo(any(File.class));
-
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			fileUploadService.uploadImage(new MultipartFile[]{multipartFile});
-		});
-
-		assertEquals("파일 업로드에 실패했습니다.", exception.getMessage());
-	}
-
-	@Test
-	void downloadImageSuccessfully() throws IOException {
-		String fileName = "test.jpg";
-		String savePath = System.getProperty("user.dir") + "/src/test/files/image";
-		boolean newFile = new File(savePath, fileName).createNewFile();// 실제 파일 생성
-
-		// Mock의 동작 정의
-		when(fileUploadService.getSavePath()).thenReturn(savePath);
-
-
-		// downloadImage 메서드 호출
-		File result = fileUploadService.downloadImage(fileName);
-
-		// 결과 검증
-		assertNotNull(result);
-		assertEquals(fileName, result.getName());
-		assertTrue(result.exists());
-	}
-
-
-	@Test
-	void testDownloadImageFileNotFound() {
-		String fileName = "nonexistent.jpg";
-
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			fileUploadService.downloadImage(fileName);
-		});
-
-		assertEquals("파일을 찾을 수 없습니다.", exception.getMessage());
-	}
-
-	@Test
-	void testGetFileContentSuccessfully() throws IOException {
-		// 테스트 파일 생성 및 내용 작성
-		File file = new File("test.txt");
-		Files.write(file.toPath(), "file content".getBytes());
-
-		// 테스트 수행
-		byte[] expectedContent = "file content".getBytes();
-		byte[] result = fileUploadService.getFileContent(file);
-
-		assertArrayEquals(expectedContent, result);
-
-		// 테스트 후 파일 삭제
-		file.delete();
-	}
-
-	@Test
-	void testGetFileContentFails() throws IOException {
-		// 존재하지 않는 파일 경로
-		File nonExistentFile = new File("non_existent_file.txt");
-
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			fileUploadService.getFileContent(nonExistentFile);
-		});
-
-
-		assertEquals("파일을 읽는 도중 오류가 발생했습니다.", exception.getMessage());
-	}
 
 
 	@Test
@@ -187,4 +92,53 @@ public class FileUploadServiceTest {
 		assertEquals(36, uuid.length()); // UUID의 길이는 항상 36이어야 함
 		assertTrue(uuid.matches("^[a-f0-9\\-]{36}$"));  // UUID 형식이 맞는지 확인
 	}
+
+    @Test
+    void testSaveImageSuccessfully() throws IOException {
+        String originalFilename = "test.jpg";
+        String savePath = "E:/uploadTest";
+        File destFile = new File(savePath, UUID.randomUUID() + "_" + originalFilename.replaceAll("[^a-zA-Z0-9.]", "_"));
+
+        when(multipartFile.isEmpty()).thenReturn(false);
+        when(multipartFile.getOriginalFilename()).thenReturn(originalFilename);
+        doNothing().when(multipartFile).transferTo(any(File.class));
+
+        String result = fileUploadService.saveImage(multipartFile);
+
+        assertNotNull(result);
+        assertTrue(result.contains("/study/images/"));
+        assertTrue(result.endsWith("_" + originalFilename.replaceAll("[^a-zA-Z0-9.]", "_")));
+    }
+
+    @Test
+    void testSaveImageFailsDueToEmptyFile() {
+        when(multipartFile.isEmpty()).thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            fileUploadService.saveImage(multipartFile);
+        });
+
+        assertEquals("파일이 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    void testSaveImageFailsDueToIOException() throws IOException {
+        String originalFilename = "test.jpg";
+        String savePath = tempDir.resolve("image").toString();
+        File destFile = new File(savePath, UUID.randomUUID() + "_" + originalFilename.replaceAll("[^a-zA-Z0-9.]", "_"));
+
+        when(multipartFile.isEmpty()).thenReturn(false);
+        when(multipartFile.getOriginalFilename()).thenReturn(originalFilename);
+        doThrow(new IOException("File transfer error")).when(multipartFile).transferTo(any(File.class));
+
+        IOException exception = assertThrows(IOException.class, () -> {
+            fileUploadService.saveImage(multipartFile);
+        });
+
+        assertEquals("File transfer error", exception.getMessage());
+    }
+
+
+
+
 }

@@ -3,7 +3,6 @@ package me.jh.board.service;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -14,48 +13,8 @@ import java.util.UUID;
 public class FileUploadService {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FileUploadService.class);
+    private final String uploadDir = "E:/uploadTest";
 
-
-    public String uploadImage(MultipartFile[] uploadFile) {
-        String savePath = getSavePath();
-        File uploadPath = new File(savePath);
-
-        // 파일 저장 경로가 없으면 신규 생성
-        if (!uploadPath.exists()) {
-            uploadPath.mkdirs();
-        }
-
-        for (MultipartFile multipartFile : uploadFile) {
-            String uploadFileName = multipartFile.getOriginalFilename();
-            String uuid = UUID.randomUUID().toString();
-
-            // 파일명 저장
-            uploadFileName = uuid + "_" + uploadFileName;
-            File saveFile = new File(uploadPath, uploadFileName);
-
-            try {
-                multipartFile.transferTo(saveFile);
-                return uploadFileName;
-            } catch (Exception e) {
-                throw new RuntimeException("파일 업로드에 실패했습니다.", e);
-            }
-        }
-        throw new RuntimeException("파일 업로드에 실패했습니다.");
-    }
-
-
-    public File downloadImage(String fileName) {
-        String savePath = getSavePath();
-
-        File file = new File(savePath, fileName);
-
-        // 파일이 존재하지 않을 경우 RuntimeException을 발생시킵니다.
-        if (!file.exists()) {
-            throw new RuntimeException("파일을 찾을 수 없습니다.");
-        }
-
-        return file;
-    }
 
 
     public String getSavePath() {
@@ -71,13 +30,29 @@ public class FileUploadService {
         return savePath;
     }
 
-    public byte[] getFileContent(File file) {
-        try {
-            return FileCopyUtils.copyToByteArray(file);
-        } catch (IOException e) {
-            log.error("Error reading file: {}", e.getMessage());
-            throw new RuntimeException("파일을 읽는 도중 오류가 발생했습니다.");
+    
+    public String saveImage(MultipartFile file) throws IOException {
+
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("파일이 없습니다.");
         }
+
+        // 파일 이름 생성 (특수문자와 공백을 _로 대체)
+        String originalFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.]", "_");
+        String fileName = UUID.randomUUID() + "_" + originalFileName;
+
+        // 파일 경로 설정
+        File destFile = new File(uploadDir, fileName);
+
+        // 파일 저장
+        file.transferTo(destFile);
+
+        // 저장 경로 확인용 로그 출력
+        System.out.println("File saved at: " + destFile.getAbsolutePath());
+
+
+        // 이미지 URL 리턴
+        return "/study/images/" + fileName;
     }
 
 
