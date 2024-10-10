@@ -2,13 +2,23 @@ package me.jh.board.controller;
 
 import me.jh.board.entity.Board;
 import me.jh.board.service.BoardService;
+import me.jh.board.service.FileUploadService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/board/api")
@@ -20,10 +30,12 @@ public class BoardApiController {
 	}
 
 	private final BoardService boardService;
+    private final FileUploadService fileUploadService;
 
 	@Autowired
-	public BoardApiController(BoardService boardService) {
+	public BoardApiController(BoardService boardService, FileUploadService fileUploadService) {
 		this.boardService = boardService;
+        this.fileUploadService = fileUploadService;
 	}
 
 
@@ -92,4 +104,16 @@ public class BoardApiController {
 		List<Board> boards = boardService.getBoard("member");
 		return ResponseEntity.ok(boards);
 	}
+
+    @PostMapping("/upload-image")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile file) {
+        try {
+            String imageUrl = fileUploadService.saveImage(file);
+            Map<String, String> response = new HashMap<>();
+            response.put("imageUrl", imageUrl);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }

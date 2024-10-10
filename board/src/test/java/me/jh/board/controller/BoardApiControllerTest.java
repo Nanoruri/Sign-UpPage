@@ -3,23 +3,37 @@ package me.jh.board.controller;
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
 import me.jh.board.service.BoardService;
+import me.jh.board.service.FileUploadService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.spi.FileTypeDetector;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 
@@ -37,9 +51,17 @@ public class BoardApiControllerTest {
 	@MockBean
 	private BoardService boardService;
 
+	@MockBean
+	private FileUploadService fileUploadService;
+
+	@Mock
+	private MockMultipartFile mockMultipartFile;
+
+
 	@BeforeEach
-	void setup() {
-		mockMvc = standaloneSetup(new BoardApiController(boardService)).build();
+	void setup() throws IOException {
+		mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService)).build();
+
 	}
 
 
@@ -178,6 +200,33 @@ public class BoardApiControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json("[{\"id\":1,\"title\":\"title\",\"content\":\"content\",\"tabName\":\"member\"}]"));
 	}
+
+	@Test
+	void uploadImageSuccessfully() throws Exception {
+		String imageUrl = "http://localhost/images/test.jpg";
+		mockMultipartFile = new MockMultipartFile( "image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "image content".getBytes());
+
+
+		when(fileUploadService.saveImage(mockMultipartFile)).thenReturn(imageUrl);
+
+		mockMvc.perform(multipart("/board/api/upload-image")
+						.file(mockMultipartFile))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.imageUrl").value(imageUrl));
+	}
+
+	@Test
+	void uploadImageFailsDueToException() throws Exception {
+		mockMultipartFile = new MockMultipartFile("image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "image content".getBytes());
+
+		when(fileUploadService.saveImage(mockMultipartFile)).thenThrow(new IOException("File upload error"));
+
+		mockMvc.perform(multipart("/board/api/upload-image")
+						.file(mockMultipartFile))
+				.andExpect(status().isInternalServerError());
+	}
+
+
 
 
 }
