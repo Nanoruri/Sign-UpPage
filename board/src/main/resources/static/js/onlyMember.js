@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/study/board/api/memberBoard', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
             }
         })
