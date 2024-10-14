@@ -1,7 +1,12 @@
 package me.jh.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "board")
@@ -24,7 +29,8 @@ public class Board {
 	@Column(name = "BOARD_TAB")
 	private String tabName;
 
-
+	@OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+	private List<Comment> comments;
 
 	public Board(long id, String title, String content, LocalDateTime date , String tabName) {
 		this.id = id;
@@ -74,8 +80,15 @@ public class Board {
 		return tabName;
 	}
 
-	public Board setTabName(String tab) {
+	public void setTabName(String tab) {
 		this.tabName = tab;
-		return this;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 }
