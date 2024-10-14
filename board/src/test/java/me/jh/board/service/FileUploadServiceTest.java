@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,9 +59,10 @@ public class FileUploadServiceTest {
 		String os = System.getProperty("os.name").toLowerCase();
 		System.setProperty("os.name", "Linux");
 
-		String expectedPath = System.getProperty("user.dir") + "\\files\\image";
+		String expectedPath = System.getProperty("user.dir") + "/files/image";
+		expectedPath = expectedPath.replace("\\", "/");
 
-		String result = fileUploadService.getSavePath();
+		String result = fileUploadService.getSavePath().replace("\\", "/");
 
 		assertEquals(expectedPath, result);
 
@@ -72,9 +74,10 @@ public class FileUploadServiceTest {
 		String os = System.getProperty("os.name").toLowerCase();
 		System.setProperty("os.name", "Mac OS X");
 
-		String expectedPath = System.getProperty("user.dir") + "\\files\\image";;
+		String expectedPath = System.getProperty("user.dir") + "/files/image";
+		expectedPath = expectedPath.replace("\\", "/");
 
-		String result = fileUploadService.getSavePath();
+		String result = fileUploadService.getSavePath().replace("\\", "/");
 
 		assertEquals(expectedPath, result);
 
