@@ -89,6 +89,8 @@ function showBoardDetail(postId) {
             boardContent.innerHTML = post.content; // HTML 형태의 내용을 표시
             boardDate.textContent = new Date(post.date).toLocaleString();
 
+            displayComments(post.comments);
+
             // 게시글 목록 섹션 숨기기
             boardTableSection.style.display = 'none';
             memberTabContent.style.display = 'none';
@@ -105,6 +107,30 @@ function showBoardDetail(postId) {
             console.error('Error loading board detail:', error);
         });
 
+    function displayComments(comments) {
+        const commentSection = document.getElementById('commentSection');
+        commentSection.innerHTML = ''; // 기존 댓글 초기화
+
+        if (comments && comments.length > 0) {
+            comments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+
+                const commentContent = document.createElement('p');
+                commentContent.textContent = comment.content; // 댓글 내용 표시
+
+                const commentDate = document.createElement('span');
+                commentDate.textContent = new Date(comment.date).toLocaleString(); // 작성일 표시
+                commentDate.classList.add('comment-date');
+
+                commentDiv.appendChild(commentContent);
+                commentDiv.appendChild(commentDate);
+                commentSection.appendChild(commentDiv);
+            });
+        } else {
+            commentSection.innerHTML = '<p>댓글이 없습니다.</p>'; // 댓글이 없을 경우 메시지 표시
+        }
+    }
 }
 
 // 페이지 로드 시 getAllPost 호출
