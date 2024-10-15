@@ -2,6 +2,7 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
+import me.jh.board.entity.Comment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +57,7 @@ public class BoardServiceTest {
 				new Board(2L, "title2", "content2", now,"testTab"),
 				new Board(3L, "title3", "content3", now,"testTab")
 		);
+		boardList.forEach(board -> board.setComments(new ArrayList<>()));
 
 		when(boardDao.findByTabName("testTab")).thenReturn(boardList);
 
@@ -160,12 +163,16 @@ public class BoardServiceTest {
 	public void getBoardByIdTest() {
 		long boardId = 1L;
 		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(),"testTab");
+		Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board);
+		board.setComments(List.of(comment));
 
 		when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
 		Board result = boardService.getBoardDetail(boardId);
 
 		assertEquals(board, result);
+		assertEquals(1, result.getComments().size());
+		assertEquals("Test Comment", result.getComments().get(0).getContent());
 	}
 
 	@Test
