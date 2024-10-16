@@ -17,5 +17,5 @@ public interface BoardDao extends JpaRepository<Board,Long> {
 
 	List<Board> findByTitleContainingOrContentContaining(String query, String query1);
 
-    List<Board> findByTabName(String boardType);
+	List<Board> findByTabName(String tabName);
 }
