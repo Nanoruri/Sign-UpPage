@@ -63,7 +63,7 @@ function getAllPost() {
     });
 }
 
-
+let currentPostId = null;
 
 // 게시글 상세보기
 function showBoardDetail(postId) {
@@ -73,7 +73,7 @@ function showBoardDetail(postId) {
     const boardTableSection = document.getElementById('generalTabContent');
     const memberTabContent = document.getElementById('memberTabContent');
     const boardDetailSection = document.getElementById('boardDetail');
-
+    currentPostId = postId;
 
     fetch(`/study/board/api/detail/${postId}`)
         .then(response => {
@@ -88,6 +88,7 @@ function showBoardDetail(postId) {
             boardTitle.textContent = post.title;
             boardContent.innerHTML = post.content; // HTML 형태의 내용을 표시
             boardDate.textContent = new Date(post.date).toLocaleString();
+            post.comments = post.comments || [];
 
             displayComments(post.comments);
 
