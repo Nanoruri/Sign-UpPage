@@ -65,10 +65,10 @@ public class BoardApiController {
 	}
 
 	//Update
-	@PutMapping("/update")
+	@PutMapping("/update/{id}")
 	@ResponseBody
-	public ResponseEntity<Board> updateBoard(@RequestBody Board board) {
-		boardService.updateBoard(board);
+	public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
+		boardService.updateBoard(id, board);
 		return ResponseEntity.ok().build();
 	}
 

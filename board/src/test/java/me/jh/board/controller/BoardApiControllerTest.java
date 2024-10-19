@@ -129,9 +129,9 @@ public class BoardApiControllerTest {
 
 		Board post = new Board(id, title, content, date, tab);
 
-		when(boardService.updateBoard(post)).thenReturn(true);
+		when(boardService.updateBoard(id, post)).thenReturn(true);
 
-		mockMvc.perform(put("/board/api/update")
+		mockMvc.perform(put("/board/api/update/{id}", id)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
 				.andExpect(status().isOk());
