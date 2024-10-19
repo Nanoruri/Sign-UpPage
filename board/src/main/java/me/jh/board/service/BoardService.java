@@ -55,9 +55,9 @@ public class BoardService {
 
 
 
-	public boolean updateBoard(Board board) {
+	public boolean updateBoard(Long id, Board board) {
 
-		Board oldBoard = boardDao.findByTitle(board.getTitle()).orElse(null);
+		Board oldBoard = boardDao.findById(id).orElse(null);
 		if (oldBoard == null) {
 			return false;
 		}
@@ -65,6 +65,7 @@ public class BoardService {
 		oldBoard.setTitle(board.getTitle());
 		oldBoard.setContent(board.getContent());
 		oldBoard.setDate(board.getDate());
+		oldBoard.setComments(board.getComments());
 
 		boardDao.save(oldBoard);
 		return true;

@@ -117,14 +117,15 @@ public class BoardServiceTest {
 		Board updatedBoard = new Board(1L, "title1", "updatedContent", now,"testTab");
 
 		// 게시글을 찾아오기
-		when(boardDao.findByTitle("title1")).thenReturn(Optional.of(existingBoard));
+		Long id = 1L;
+		when(boardDao.findById(1L)).thenReturn(Optional.of(existingBoard));
 		when(boardDao.save(existingBoard)).thenReturn(existingBoard);
 
 		// 게시글 수정
-		boolean result = boardService.updateBoard(updatedBoard);
+		boolean result = boardService.updateBoard(id, updatedBoard);
 
 		// 검증
-		verify(boardDao).findByTitle("title1");
+		verify(boardDao).findById(1L);
 		verify(boardDao).save(existingBoard);
 
 		assertTrue(result);
