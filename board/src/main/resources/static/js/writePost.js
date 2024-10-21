@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     writeForm.addEventListener('submit', function (e) {
         e.preventDefault();  // 기본 폼 제출 동작을 막습니다.
         const content = quill.root.innerHTML;  // Quill 에디터에서 작성된 내용
+        const accessToken = sessionStorage.getItem('aToken');
         const formData = {
             tabName: document.getElementById('tab').value,
             title: document.getElementById('title').value,
@@ -68,7 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/study/board/api/create', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
             },
             body: JSON.stringify(formData)
         })
