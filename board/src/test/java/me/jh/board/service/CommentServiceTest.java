@@ -34,7 +34,7 @@ public class CommentServiceTest {
     @Test//게시글에 대해서 댓글을 저장
     void testSaveComment() {
         Long boardId = 1L;
-        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab");
+        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", "testUser");
         Comment comment = new Comment();
         comment.setContent("testCommentContent");
 

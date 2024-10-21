@@ -32,13 +32,13 @@ public class BoardDaoTest {
 
 	@BeforeEach
 	public void setUp() {
-		board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab");
+		board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
 		boardDao.save(board);
 	}
 	@Test
 	public void testSaveBoard() {
 		// given
-		board = new Board(2L, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab");
+		board = new Board(2L, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
 
 		// when
 		Board savedBoard = boardDao.save(board);
@@ -88,8 +88,8 @@ public class BoardDaoTest {
 	@Test
 	public void testFindByTitleContaining() {
 		// given
-		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(),"testTab");
-		Board board2 = new Board(2L, "Spring Data JPA", "Content 2", LocalDateTime.now(),"testTab");
+		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(),"testTab", "testUser");
+		Board board2 = new Board(2L, "Spring Data JPA", "Content 2", LocalDateTime.now(),"testTab", "testUser");
 		boardDao.save(board1);
 		boardDao.save(board2);
 
@@ -103,8 +103,8 @@ public class BoardDaoTest {
 	@Test
 	public void testFindByContentContaining() {
 		// given
-		Board board1 = new Board(1L, "Title 1", "Spring Boot Content", LocalDateTime.now(),"testTab");
-		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(),"testTab");
+		Board board1 = new Board(1L, "Title 1", "Spring Boot Content", LocalDateTime.now(),"testTab", "testUser");
+		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(),"testTab", "testUser");
 		boardDao.save(board1);
 		boardDao.save(board2);
 
@@ -118,8 +118,8 @@ public class BoardDaoTest {
 	@Test
 	public void testFindByTitleContainingOrContentContaining() {
 		// given
-		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(),"testTab");
-		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(),"testTab");
+		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(),"testTab", "testUser");
+		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(),"testTab", "testUser");
 		boardDao.save(board1);
 		boardDao.save(board2);
 

@@ -43,7 +43,7 @@ public class CommnetApiControllerTest {
 
     @Test
     public void testSaveCommentReturnsOk() throws Exception {
-        Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
+        Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
         when(commentService.saveComment(eq(board.getId()), any(Comment.class))).thenReturn(true);
 
@@ -55,7 +55,7 @@ public class CommnetApiControllerTest {
 
     @Test
     public void testSaveCommentReturnsNotFound() throws Exception {
-        Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
+        Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
         when(commentService.saveComment(eq(board.getId()), any(Comment.class))).thenReturn(false);
 

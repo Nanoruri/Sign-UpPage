@@ -26,7 +26,7 @@ public class CommentTest {
     @Test
     public void testSaveComment() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
         entityManager.persist(board);
 
         Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), board);
@@ -43,7 +43,7 @@ public class CommentTest {
     @Test
     public void testFindById() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
         entityManager.persistAndFlush(board);
 
         Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), board);
@@ -60,7 +60,7 @@ public class CommentTest {
     @Test
     public void testDeleteComment() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab" ,"testUser");
         entityManager.persistAndFlush(board);
 
         Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), board); // Ensure ID is null
