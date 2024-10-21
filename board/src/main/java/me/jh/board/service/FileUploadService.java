@@ -16,7 +16,6 @@ public class FileUploadService {
     private final String uploadDir = "E:/uploadTest";
 
 
-
     public String getSavePath() {
         String savePath;
 
@@ -30,7 +29,7 @@ public class FileUploadService {
         return savePath;
     }
 
-    
+
     public String saveImage(MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {

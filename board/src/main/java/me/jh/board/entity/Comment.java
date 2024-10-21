@@ -38,7 +38,7 @@ public class Comment {
         return id;
     }
 
-    public void setId (long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -63,7 +63,7 @@ public class Comment {
         return board;
     }
 
-    public  void setBoard(Board board) {
+    public void setBoard(Board board) {
         this.board = board;
     }
 }

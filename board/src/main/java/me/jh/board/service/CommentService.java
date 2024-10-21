@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 
 
 @Service
-public class CommentService {
+public class CommentService {//TODO: 댓글 D 구현
+
 
     private final CommentDao commentDao;
     private final BoardDao boardDao;
@@ -36,5 +37,16 @@ public class CommentService {
         return true;
     }
 
+    @Transactional
+    public boolean updateComment(Long commentId, Comment comment) {
+        Comment oldcomment = commentDao.findById(commentId).orElse(null);
+        if (oldcomment == null) {
+            return false;
+        }
+        oldcomment.setContent(comment.getContent());
+        oldcomment.setDate(LocalDateTime.now());
 
+        commentDao.save(oldcomment);
+        return true;
+    }
 }

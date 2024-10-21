@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BoardDao extends JpaRepository<Board,Long> {
-	Optional<Board> findByTitle(String title);
+public interface BoardDao extends JpaRepository<Board, Long>, BoardWtihCommentDao {
+    Optional<Board> findByTitle(String title);
 
-	List<Board> findByTitleContaining(String query);
+    List<Board> findByTitleContaining(String query);
 
-	List<Board> findByContentContaining(String query);
+    List<Board> findByContentContaining(String query);
 
-	List<Board> findByTitleContainingOrContentContaining(String query, String query1);
+    List<Board> findByTitleContainingOrContentContaining(String query, String query1);
 
-	List<Board> findByTabName(String tabName);
+    List<Board> findByTabName(String tabName);
 }
