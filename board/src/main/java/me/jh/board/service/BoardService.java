@@ -29,9 +29,11 @@ public class BoardService {
     }
 
 
-    public boolean saveBoard(Board board) {
+    public boolean saveBoard(String userId, Board board) {
         board.setTabName(board.getTabName());
         board.setDate(LocalDateTime.now());
+        board.setCreator(userId);
+
         boardDao.save(board);
         return true;
     }

@@ -33,12 +33,13 @@ public class BoardServiceTest {
 		String title = "title";
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
+		String user = "testUser";
 
-		Board post = new Board(id, title, content, date,"testTab");
+		Board post = new Board(id, title, content, date,"testTab", user);
 
 		when(boardDao.save(post)).thenReturn(post);
 
-		boolean result = boardService.saveBoard(post);
+		boolean result = boardService.saveBoard(user,post);
 
 		verify(boardDao).save(post);
 	}
