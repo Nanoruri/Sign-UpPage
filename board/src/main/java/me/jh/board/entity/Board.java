@@ -25,15 +25,19 @@ public class Board {
     @Column(name = "BOARD_TAB")
     private String tabName;
 
+    @Column(name = "CREATED_USER")
+    private String creator;
+
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    public Board(long id, String title, String content, LocalDateTime date, String tabName) {
+    public Board(long id, String title, String content, LocalDateTime date, String tabName, String creator) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.date = date;
         this.tabName = tabName;
+        this.creator = creator;
     }
 
     public Board() {
@@ -86,5 +90,13 @@ public class Board {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }
