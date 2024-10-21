@@ -77,7 +77,9 @@ public class BoardApiControllerTest {
 		Board post = new Board(id, title, content, date, tab);
 
 		when(boardService.saveBoard(post)).thenReturn(true);
+		Board post = new Board(id, title, content, date, tab, userId);
 
+		when(boardService.saveBoard(userId, post)).thenReturn(true);
 
 		mockMvc.perform(post("/board/api/create")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -89,7 +91,7 @@ public class BoardApiControllerTest {
 	@Test
 	public void findGeneralBoardTest() throws Exception {
 
-		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "general");
+		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
 
 		when(boardService.getBoard("general")).thenReturn(List.of(post));
 
@@ -108,8 +110,9 @@ public class BoardApiControllerTest {
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
+		String user = "testUser";
 
-		Board post = new Board(id, title, content, date,tab);
+		Board post = new Board(id, title, content, date, tab, user);
 
 		when(boardService.getBoardByTitle(title)).thenReturn(post);
 
@@ -126,8 +129,9 @@ public class BoardApiControllerTest {
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
+		String user = "testUser";
 
-		Board post = new Board(id, title, content, date, tab);
+		Board post = new Board(id, title, content, date, tab , user);
 
 		when(boardService.updateBoard(id, post)).thenReturn(true);
 
@@ -145,8 +149,9 @@ public class BoardApiControllerTest {
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
+		String user = "testUser";
 
-		Board post = new Board(id, title, content, date,tab);
+		Board post = new Board(id, title, content, date,tab, user);
 
 		when(boardService.deleteBoard(post.getId())).thenReturn(true);
 
@@ -158,7 +163,7 @@ public class BoardApiControllerTest {
 	@Test
 	public void getBoardDetailTest() throws Exception {
 		long boardId = 1L;
-		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab");
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
 		when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
@@ -174,7 +179,7 @@ public class BoardApiControllerTest {
 		String query = "title1";
 		String type = "title";
 		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab")
+				new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
 		);
 
 		when(boardService.searchPosts(query, type)).thenReturn(boardList);
@@ -190,7 +195,7 @@ public class BoardApiControllerTest {
 
 	@Test
 	public void getMemberBoardTest() throws Exception {
-		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "member");
+		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
 
 		when(boardService.getBoard("member")).thenReturn(List.of(post));
 
