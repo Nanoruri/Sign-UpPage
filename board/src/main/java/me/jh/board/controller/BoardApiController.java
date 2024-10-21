@@ -3,6 +3,7 @@ package me.jh.board.controller;
 import me.jh.board.entity.Board;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
+import me.jh.core.utils.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/board/api")
-public class BoardApiController {//TODO: 게시글 작성 시 작성자 정보도 함께 저장하게 하기
+public class BoardApiController {
+
 
     @PostConstruct
     public void init() {
@@ -26,20 +28,27 @@ public class BoardApiController {//TODO: 게시글 작성 시 작성자 정보�
 
     private final BoardService boardService;
     private final FileUploadService fileUploadService;
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    public BoardApiController(BoardService boardService, FileUploadService fileUploadService) {
+    public BoardApiController(BoardService boardService, FileUploadService fileUploadService, JwtProvider jwtProvider) {
         this.boardService = boardService;
         this.fileUploadService = fileUploadService;
+        this.jwtProvider = jwtProvider;
     }
 
 
     //CRUD에 대한 API 작성
     //Create
+    // 토큰 내 정보를 이용하여 작성자 정보를 함께 저장하게 하기
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Board> saveBoard(@RequestBody Board board) {
-        boardService.saveBoard(board);
+    public ResponseEntity<Board> saveBoard(@RequestHeader("Authorization") String token, @RequestBody Board board) {
+        String substringToken =  token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+
+        String userId = jwtProvider.getUserIdFromToken(substringToken);
+
+        boardService.saveBoard(userId,board);
         return ResponseEntity.ok().build();
     }
 

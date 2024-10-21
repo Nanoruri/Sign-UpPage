@@ -4,6 +4,7 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
+import me.jh.core.utils.auth.JwtProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,13 +55,17 @@ public class BoardApiControllerTest {
 	@MockBean
 	private FileUploadService fileUploadService;
 
+	@MockBean
+	private JwtProvider jwtProvider;
+
 	@Mock
 	private MockMultipartFile mockMultipartFile;
 
 
+
 	@BeforeEach
 	void setup() throws IOException {
-		mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService)).build();
+		mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService , jwtProvider)).build();
 
 	}
 
@@ -73,16 +78,18 @@ public class BoardApiControllerTest {
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
+		String userId = "testUser";
 
-		Board post = new Board(id, title, content, date, tab);
+		String token = "Bearer MockToken";
 
-		when(boardService.saveBoard(post)).thenReturn(true);
 		Board post = new Board(id, title, content, date, tab, userId);
 
+		when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(userId);
 		when(boardService.saveBoard(userId, post)).thenReturn(true);
 
 		mockMvc.perform(post("/board/api/create")
 						.contentType(MediaType.APPLICATION_JSON)
+						.header("Authorization", token)
 						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
 				.andExpect(status().isOk());
 	}
