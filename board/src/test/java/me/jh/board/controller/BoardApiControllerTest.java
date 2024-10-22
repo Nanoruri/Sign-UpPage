@@ -135,17 +135,40 @@ public class BoardApiControllerTest {
 		String title = "title";
 		String content = "content";
 		LocalDateTime date = LocalDateTime.now();
-        String tab = "testTab";
 		String user = "testUser";
+		String token = "Bearer testToken"; // JWT 토큰 형식 맞추기
 
-		Board post = new Board(id, title, content, date, tab , user);
 
-		when(boardService.updateBoard(id, post)).thenReturn(true);
+		// 'testToken'에 대한 Mocking 설정
+		when(jwtProvider.getUserIdFromToken("testToken")).thenReturn(user);
+		when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(true);
 
 		mockMvc.perform(put("/board/api/update/{id}", id)
 						.contentType(MediaType.APPLICATION_JSON)
+						.header("Authorization", token) // JWT 토큰을 헤더에 추가
 						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
 				.andExpect(status().isOk());
+	}
+
+
+	@Test
+	public void updateBoard_FailTest() throws Exception {
+		long id = 1L;
+		String title = "title";
+		String content = "content";
+		LocalDateTime date = LocalDateTime.now();
+		String user = "testUser";
+		String token = "testToken";
+
+
+		when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(user);
+		when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(false);
+
+		mockMvc.perform(put("/board/api/update/{id}", id)
+						.contentType(MediaType.APPLICATION_JSON)
+						.header("Authorization", token)
+						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
+				.andExpect(status().isForbidden());
 	}
 
 	//Delete

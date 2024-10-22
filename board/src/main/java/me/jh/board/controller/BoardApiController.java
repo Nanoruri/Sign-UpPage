@@ -71,8 +71,14 @@ public class BoardApiController {
     //Update
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
-        boardService.updateBoard(id, board);
+    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestHeader("Authorization") String token, @RequestBody Board board) {
+        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+        String userId = jwtProvider.getUserIdFromToken(substringToken);
+
+        if (!boardService.updateBoard(id, userId, board)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.ok().build();
     }
 
