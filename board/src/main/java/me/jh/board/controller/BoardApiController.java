@@ -126,4 +126,23 @@ public class BoardApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+    //todo: boardId를 받아서 해당 게시글을 찾아주는 API 구현
+    //todo: Token 내 아이디와 게시글 작성자 아이디가 일치하는지 확인 후 게시글을 찾아 반환
+    @GetMapping("/getBoardInfo/{boardId}")
+    @ResponseBody
+    public ResponseEntity<Board> findBoard(@RequestHeader("Authorization") String token, @PathVariable Long boardId) {
+        String substringToken =  token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+
+            String userId = jwtProvider.getUserIdFromToken(substringToken);
+
+            Board board = boardService.findBoard(userId, boardId);
+
+            if (board == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            return ResponseEntity.ok(board);
+        }
 }

@@ -261,7 +261,37 @@ public class BoardApiControllerTest {
 				.andExpect(status().isInternalServerError());
 	}
 
+	@Test
+	public void findBoardSuccessTest() throws Exception {
+		long boardId = 1L;
+		String token = "Bearer validToken";
+		String userId = "testUser";
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
 
+		when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+		when(boardService.findBoard(userId, boardId)).thenReturn(board);
 
+		mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
+						.header("Authorization", token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(boardId))
+				.andExpect(jsonPath("$.title").value("Test Title"))
+				.andExpect(jsonPath("$.content").value("Test Content"))
+				.andExpect(jsonPath("$.tabName").value("testTab"))
+				.andExpect(jsonPath("$.creator").value(userId));
+	}
 
+	@Test
+	public void findBoardFailTest() throws Exception {
+		long boardId = 1L;
+		String token = "Bearer validToken";
+		String userId = "testUser";
+
+		when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+		when(boardService.findBoard(userId, boardId)).thenReturn(null);
+
+		mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
+						.header("Authorization", token))
+				.andExpect(status().isForbidden());
+	}
 }
