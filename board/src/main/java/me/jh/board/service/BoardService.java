@@ -52,12 +52,12 @@ public class BoardService {
     }
 
 
-    public boolean updateBoard(Long id, Board board) {
+    public boolean updateBoard(Long id, String userId , Board board) {
 
         Board oldBoard = boardDao.findById(id).orElse(null);
-        if (oldBoard == null) {
+        if (oldBoard == null ||!oldBoard.getCreator().equals(userId)) {
             return false;
-        }
+        }// todo: 게시글 변경 사항에 대해서만 변경하도록 수정하기
 
         oldBoard.setTitle(board.getTitle());
         oldBoard.setContent(board.getContent());

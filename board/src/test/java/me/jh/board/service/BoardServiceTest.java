@@ -123,7 +123,7 @@ public class BoardServiceTest {
 		when(boardDao.save(existingBoard)).thenReturn(existingBoard);
 
 		// 게시글 수정
-		boolean result = boardService.updateBoard(id, updatedBoard);
+		boolean result = boardService.updateBoard(id, "testUser",updatedBoard);
 
 		// 검증
 		verify(boardDao).findById(1L);
@@ -132,6 +132,45 @@ public class BoardServiceTest {
 		assertTrue(result);
 		assertEquals("updatedContent", existingBoard.getContent());
 	}
+
+
+	@Test
+	void updateBoardWithInvalidUserTest() {
+		Long id = 1L;
+		String userId = "testUser";
+		String invalidUserId = "invalidUser";
+		Board existingBoard = new Board(id, "oldTitle", "oldContent", LocalDateTime.now(), "testTab", userId);
+		Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", invalidUserId);
+
+		when(boardDao.findById(id)).thenReturn(Optional.of(existingBoard));
+
+		boolean result = boardService.updateBoard(id, invalidUserId, updatedBoard);
+
+		assertFalse(result);
+
+		verify(boardDao).findById(id);
+		verify(boardDao, never()).save(existingBoard);
+	}
+
+
+	@Test
+	void updateBoardNotFoundTest() {
+		Long id = 1L;
+		String userId = "testUser";
+		Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", userId);
+
+		when(boardDao.findById(id)).thenReturn(Optional.empty());
+
+		boolean result = boardService.updateBoard(id, userId, updatedBoard);
+
+		assertFalse(result);
+
+		verify(boardDao).findById(id);
+		verify(boardDao, never()).save(any(Board.class));
+	}
+
+
+
 
 	/**
 	 * 특정 게시글 삭제 테스트
