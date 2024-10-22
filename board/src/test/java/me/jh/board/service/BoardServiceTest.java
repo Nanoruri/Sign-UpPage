@@ -278,4 +278,61 @@ public class BoardServiceTest {
 
 		assertEquals(0, result.size());
 	}
+
+
+	@Test
+	public void testFindBoard_Success() {
+		// Arrange
+		String userId = "user123";
+		Long boardId = 1L;
+		Board board = new Board();
+		board.setId(boardId);
+		board.setCreator(userId);
+
+		when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+
+		// Act
+		Board result = boardService.findBoard(userId, boardId);
+
+		// Assert
+		assertNotNull(result);
+		assertEquals(boardId, result.getId());
+		assertEquals(userId, result.getCreator());
+	}
+
+	@Test
+	public void testFindBoard_BoardNotFound() {
+		// Arrange
+		String userId = "user123";
+		Long boardId = 1L;
+
+		when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+
+		// Act & Assert
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			boardService.findBoard(userId, boardId);
+		});
+
+		assertEquals("게시글이 존재하지 않거나 권한이 없습니다.", exception.getMessage());
+	}
+
+	@Test
+	public void testFindBoard_UserMismatch() {
+		// Arrange
+		String userId = "user123";
+		Long boardId = 1L;
+		Board board = new Board();
+		board.setId(boardId);
+		board.setCreator("anotherUser");
+
+		when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+
+		// Act & Assert
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			boardService.findBoard(userId, boardId);
+		});
+
+		assertEquals("게시글이 존재하지 않거나 권한이 없습니다.", exception.getMessage());
+	}
+
 }

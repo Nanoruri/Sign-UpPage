@@ -106,4 +106,15 @@ public class BoardService {
                 return new ArrayList<>(); // 잘못된 타입이 들어온 경우 빈 리스트 반환
         }
     }
+
+    //todo: 토큰의 사용자 ID와 게시판 아이디를 받아  DB 내 작성자 ID와 비교하여 일치하면 게시글 반환
+    @Transactional
+    public Board findBoard(String userId, Long boardId) {
+        Optional<Board> board = boardDao.findById(boardId);
+
+        if (board.isPresent() && board.get().getCreator().equals(userId)) {
+            return board.get();
+        }
+        throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");
+    }
 }
