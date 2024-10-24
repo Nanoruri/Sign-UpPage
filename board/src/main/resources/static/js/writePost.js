@@ -5,7 +5,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const quill = initializeQuill();
     setupImageUploadHandler(quill);
 
-    writeForm.addEventListener('submit', createPost);
+    const board = JSON.parse(sessionStorage.getItem('boardToEdit'));
+    if (board) {
+        // 수정 모드
+        populateBoardForm(board, quill);
+        writeForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            updateBoard(board.id, quill);
+        });
+    } else {
+        // 작성 모드
+        writeForm.addEventListener('submit', createPost);
+    }
+
     cancelButton.addEventListener('click', () => window.location.href = redirectIndex);
 });
 
@@ -87,4 +99,34 @@ function createPost(event) {
     })
     .catch(error => console.error('Error submitting post:', error));
 }
-//todo: 이벤트 중복 처리 문제, 업데이트 시 에디터 내용 불러오기, 이미지 업로드 로직 gpt참고하여 수정
+
+function populateBoardForm(board, quill) {
+    document.getElementById('title').value = board.title;
+    quill.root.innerHTML = board.content;  // Quill 에디터에 가져온 게시글 내용 삽입
+}
+
+function updateBoard(boardId, quill) {
+    const token = sessionStorage.getItem('aToken');
+    const updatedBoard = {
+        title: document.getElementById('title').value,
+        content: quill.root.innerHTML  // Get content from Quill editor
+    };
+
+    fetch(`/study/board/api/update/${boardId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedBoard)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('게시글 수정에 실패했습니다.');
+        }
+        alert('게시글이 수정되었습니다.');
+        sessionStorage.removeItem('boardToEdit');
+        window.location.href = '/study/board/page/boardIndex';
+    })
+    .catch(error => console.error('Error updating post:', error));
+}
