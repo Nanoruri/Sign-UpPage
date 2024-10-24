@@ -61,7 +61,7 @@ public class BoardService {
 
         oldBoard.setTitle(board.getTitle());
         oldBoard.setContent(board.getContent());
-        oldBoard.setDate(board.getDate());
+        oldBoard.setDate(LocalDateTime.now());
 
         boardDao.save(oldBoard);
         return true;
