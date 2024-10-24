@@ -16,7 +16,7 @@ public class Board {
     @Column(name = "BOARD_TITLE")
     private String title;
 
-    @Column(name = "BOARD_CONTENT")
+    @Column(name = "BOARD_CONTENT", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "BOARD_DATE")
