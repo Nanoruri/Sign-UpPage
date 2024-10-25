@@ -16,7 +16,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
@@ -31,7 +30,8 @@ public class CommentServiceTest {
     private CommentService commentService;
 
 
-    @Test//게시글에 대해서 댓글을 저장
+    @Test
+//게시글에 대해서 댓글을 저장
     void testSaveComment() {
         Long boardId = 1L;
         Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", "testUser");

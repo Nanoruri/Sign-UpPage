@@ -44,11 +44,11 @@ public class BoardApiController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<Board> saveBoard(@RequestHeader("Authorization") String token, @RequestBody Board board) {
-        String substringToken =  token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
 
         String userId = jwtProvider.getUserIdFromToken(substringToken);
 
-        boardService.saveBoard(userId,board);
+        boardService.saveBoard(userId, board);
         return ResponseEntity.ok().build();
     }
 
@@ -94,11 +94,11 @@ public class BoardApiController {
 
     @GetMapping("/detail/{boardId}")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> getBoardDetail(@PathVariable Long boardId,
-                                                             @RequestHeader(value = "Authorization", required = false) String token) {
+    public ResponseEntity<Map<String, Object>> getBoardDetail(@PathVariable Long boardId,
+                                                              @RequestHeader(value = "Authorization", required = false) String token) {
         String userId = null;
 
-        if(token != null){
+        if (token != null) {
             String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
             userId = jwtProvider.getUserIdFromToken(substringToken);
         }
@@ -147,16 +147,16 @@ public class BoardApiController {
     @GetMapping("/getBoardInfo/{boardId}")
     @ResponseBody
     public ResponseEntity<Board> findBoard(@RequestHeader("Authorization") String token, @PathVariable Long boardId) {
-        String substringToken =  token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
 
-            String userId = jwtProvider.getUserIdFromToken(substringToken);
+        String userId = jwtProvider.getUserIdFromToken(substringToken);
 
-            Board board = boardService.findBoard(userId, boardId);
+        Board board = boardService.findBoard(userId, boardId);
 
-            if (board == null) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            return ResponseEntity.ok(board);
+        if (board == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
+        return ResponseEntity.ok(board);
+    }
 }

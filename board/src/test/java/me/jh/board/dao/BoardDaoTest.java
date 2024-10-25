@@ -24,111 +24,112 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 public class BoardDaoTest {
 
-	@Autowired
-	private BoardDao boardDao;
+    @Autowired
+    private BoardDao boardDao;
 
-	@Mock
-	private Board board;
+    @Mock
+    private Board board;
 
-	@BeforeEach
-	public void setUp() {
-		board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
-		boardDao.save(board);
-	}
-	@Test
-	public void testSaveBoard() {
-		// given
-		board = new Board(2L, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
+    @BeforeEach
+    public void setUp() {
+        board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
+        boardDao.save(board);
+    }
 
-		// when
-		Board savedBoard = boardDao.save(board);
+    @Test
+    public void testSaveBoard() {
+        // given
+        board = new Board(2L, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
 
-		// then
-		assertThat(savedBoard).isNotNull();
-		assertThat(savedBoard.getTitle()).isEqualTo("Test Title");
-	}
+        // when
+        Board savedBoard = boardDao.save(board);
 
-
-	@Test
-	public void testFindById() {
+        // then
+        assertThat(savedBoard).isNotNull();
+        assertThat(savedBoard.getTitle()).isEqualTo("Test Title");
+    }
 
 
-		Optional<Board> foundBoard = boardDao.findById(board.getId());
-
-		// then
-		assertThat(foundBoard).isPresent();
-		assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
-	}
-
-	@Test
-	public void testFindByTitle() {
+    @Test
+    public void testFindById() {
 
 
-		// when
-		Optional<Board> foundBoard = boardDao.findByTitle("Test Title");
+        Optional<Board> foundBoard = boardDao.findById(board.getId());
 
-		// then
-		assertThat(foundBoard).isPresent();
-		assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
-	}
+        // then
+        assertThat(foundBoard).isPresent();
+        assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
+    }
 
-	@Test
-	public void testDeleteBoard() {
-
-
-		// when
-		boardDao.deleteById(board.getId());
-		Optional<Board> deletedBoard = boardDao.findById(board.getId());
-
-		// then
-		assertThat(deletedBoard).isNotPresent();
-	}
+    @Test
+    public void testFindByTitle() {
 
 
-	@Test
-	public void testFindByTitleContaining() {
-		// given
-		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(),"testTab", "testUser");
-		Board board2 = new Board(2L, "Spring Data JPA", "Content 2", LocalDateTime.now(),"testTab", "testUser");
-		boardDao.save(board1);
-		boardDao.save(board2);
+        // when
+        Optional<Board> foundBoard = boardDao.findByTitle("Test Title");
 
-		// when
-		List<Board> foundBoards = boardDao.findByTitleContaining("Spring");
+        // then
+        assertThat(foundBoard).isPresent();
+        assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
+    }
 
-		// then
-		assertThat(foundBoards).hasSize(2);
-	}
+    @Test
+    public void testDeleteBoard() {
 
-	@Test
-	public void testFindByContentContaining() {
-		// given
-		Board board1 = new Board(1L, "Title 1", "Spring Boot Content", LocalDateTime.now(),"testTab", "testUser");
-		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(),"testTab", "testUser");
-		boardDao.save(board1);
-		boardDao.save(board2);
 
-		// when
-		List<Board> foundBoards = boardDao.findByContentContaining("Spring");
+        // when
+        boardDao.deleteById(board.getId());
+        Optional<Board> deletedBoard = boardDao.findById(board.getId());
 
-		// then
-		assertThat(foundBoards).hasSize(2);
-	}
+        // then
+        assertThat(deletedBoard).isNotPresent();
+    }
 
-	@Test
-	public void testFindByTitleContainingOrContentContaining() {
-		// given
-		Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(),"testTab", "testUser");
-		Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(),"testTab", "testUser");
-		boardDao.save(board1);
-		boardDao.save(board2);
 
-		// when
-		List<Board> foundBoards = boardDao.findByTitleContainingOrContentContaining("Spring", "Spring");
+    @Test
+    public void testFindByTitleContaining() {
+        // given
+        Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(), "testTab", "testUser");
+        Board board2 = new Board(2L, "Spring Data JPA", "Content 2", LocalDateTime.now(), "testTab", "testUser");
+        boardDao.save(board1);
+        boardDao.save(board2);
 
-		// then
-		assertThat(foundBoards).hasSize(2);
-	}
+        // when
+        List<Board> foundBoards = boardDao.findByTitleContaining("Spring");
+
+        // then
+        assertThat(foundBoards).hasSize(2);
+    }
+
+    @Test
+    public void testFindByContentContaining() {
+        // given
+        Board board1 = new Board(1L, "Title 1", "Spring Boot Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(), "testTab", "testUser");
+        boardDao.save(board1);
+        boardDao.save(board2);
+
+        // when
+        List<Board> foundBoards = boardDao.findByContentContaining("Spring");
+
+        // then
+        assertThat(foundBoards).hasSize(2);
+    }
+
+    @Test
+    public void testFindByTitleContainingOrContentContaining() {
+        // given
+        Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(), "testTab", "testUser");
+        Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(), "testTab", "testUser");
+        boardDao.save(board1);
+        boardDao.save(board2);
+
+        // when
+        List<Board> foundBoards = boardDao.findByTitleContainingOrContentContaining("Spring", "Spring");
+
+        // then
+        assertThat(foundBoards).hasSize(2);
+    }
 
 }
 

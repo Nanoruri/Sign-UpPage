@@ -19,7 +19,7 @@ public class WebConfigTest {
 
     @Autowired
     private ApplicationContext applicationContext;
-    
+
     @MockBean
     private JwtProvider jwtProvider;
 

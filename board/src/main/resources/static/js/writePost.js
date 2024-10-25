@@ -60,12 +60,12 @@ function uploadImage(file, quill) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(result => {
-        const range = quill.getSelection();
-        quill.insertEmbed(range.index, 'image', result.imageUrl);
-    })
-    .catch(error => console.error('Error uploading image:', error));
+        .then(response => response.json())
+        .then(result => {
+            const range = quill.getSelection();
+            quill.insertEmbed(range.index, 'image', result.imageUrl);
+        })
+        .catch(error => console.error('Error uploading image:', error));
 }
 
 function createPost(event) {
@@ -87,17 +87,17 @@ function createPost(event) {
         },
         body: JSON.stringify(formData)
     })
-    .then(response => {
-        if (response.ok) {
-            alert('게시글이 작성되었습니다.');
-            window.location.href = '/study/board/page/boardIndex';
-        } else {
-            return response.json().then(errorData => {
-                throw new Error(errorData.message || '게시글 작성에 실패했습니다.');
-            });
-        }
-    })
-    .catch(error => console.error('Error submitting post:', error));
+        .then(response => {
+            if (response.ok) {
+                alert('게시글이 작성되었습니다.');
+                window.location.href = '/study/board/page/boardIndex';
+            } else {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || '게시글 작성에 실패했습니다.');
+                });
+            }
+        })
+        .catch(error => console.error('Error submitting post:', error));
 }
 
 function populateBoardForm(board, quill) {
@@ -120,13 +120,13 @@ function updateBoard(boardId, quill) {
         },
         body: JSON.stringify(updatedBoard)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('게시글 수정에 실패했습니다.');
-        }
-        alert('게시글이 수정되었습니다.');
-        sessionStorage.removeItem('boardToEdit');
-        window.location.href = '/study/board/page/boardIndex';
-    })
-    .catch(error => console.error('Error updating post:', error));
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('게시글 수정에 실패했습니다.');
+            }
+            alert('게시글이 수정되었습니다.');
+            sessionStorage.removeItem('boardToEdit');
+            window.location.href = '/study/board/page/boardIndex';
+        })
+        .catch(error => console.error('Error updating post:', error));
 }

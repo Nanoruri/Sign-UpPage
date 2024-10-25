@@ -39,7 +39,6 @@ function getAllPost() {
     }
 
 
-
     // 목록으로 돌아가기
     backButton.addEventListener('click', function () {
         // 게시글 상세보기 섹션 숨기기
@@ -158,5 +157,6 @@ function showBoardDetail(postId) {
 }
 
 // 페이지 로드 시 getAllPost 호출
-document.addEventListener('DOMContentLoaded', getAllPost); {
+document.addEventListener('DOMContentLoaded', getAllPost);
+{
 }

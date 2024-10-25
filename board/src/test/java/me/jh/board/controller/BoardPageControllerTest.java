@@ -16,20 +16,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)// csrf 비활성화
 public class BoardPageControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
 
-	@Test
-	public void boardIndexTest() throws Exception {
-		mockMvc.perform(get("/board/page/boardIndex"))
-				.andExpect(status().isOk());
-	}
+    @Test
+    public void boardIndexTest() throws Exception {
+        mockMvc.perform(get("/board/page/boardIndex"))
+                .andExpect(status().isOk());
+    }
 
-	@Test
-	public void boardCreatePageTest() throws Exception {
-		mockMvc.perform(get("/board/page/postWrite"))
-				.andExpect(status().isOk());
-	}
+    @Test
+    public void boardCreatePageTest() throws Exception {
+        mockMvc.perform(get("/board/page/postWrite"))
+                .andExpect(status().isOk());
+    }
 
 }

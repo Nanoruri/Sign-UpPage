@@ -15,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +36,7 @@ public class CommentDaoTest {
     public void setUp() {
         board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
 
-        comment = new Comment(0, "Test Comment", LocalDateTime.now() ,board);
+        comment = new Comment(0, "Test Comment", LocalDateTime.now(), board);
 
     }
 

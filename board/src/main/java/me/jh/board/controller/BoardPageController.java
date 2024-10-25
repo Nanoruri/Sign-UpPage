@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/board/page")
 public class BoardPageController {
 
-	@GetMapping("/{path}")
-	public String board(@PathVariable String path)
-	{
-		return path;
-	}
+    @GetMapping("/{path}")
+    public String board(@PathVariable String path) {
+        return path;
+    }
 }

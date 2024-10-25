@@ -18,66 +18,66 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class BoardTest {
 
-	@Autowired
-	private TestEntityManager entityManager;
+    @Autowired
+    private TestEntityManager entityManager;
 
-	@Autowired
-	private BoardDao boardDao;
+    @Autowired
+    private BoardDao boardDao;
 
-	@Test
-	public void testSaveBoard() {
-		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab", "testUser");
+    @Test
+    public void testSaveBoard() {
+        // given
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
-		// when
-		Board savedBoard = entityManager.persistAndFlush(board);
+        // when
+        Board savedBoard = entityManager.persistAndFlush(board);
 
-		// then
-		assertThat(savedBoard).isNotNull();
-		assertThat(savedBoard.getTitle()).isEqualTo("Test Title");
-	}
+        // then
+        assertThat(savedBoard).isNotNull();
+        assertThat(savedBoard.getTitle()).isEqualTo("Test Title");
+    }
 
-	@Test
-	public void testFindById() {
-		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab", "testUser");
-		entityManager.persistAndFlush(board);
+    @Test
+    public void testFindById() {
+        // given
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        entityManager.persistAndFlush(board);
 
-		// when
-		Optional<Board> foundBoard = boardDao.findById(board.getId());
+        // when
+        Optional<Board> foundBoard = boardDao.findById(board.getId());
 
-		// then
-		assertThat(foundBoard).isPresent();
-		assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
-	}
+        // then
+        assertThat(foundBoard).isPresent();
+        assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
+    }
 
-	@Test
-	public void testFindByTitle() {
-		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab", "testUser");
-		entityManager.persistAndFlush(board);
+    @Test
+    public void testFindByTitle() {
+        // given
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        entityManager.persistAndFlush(board);
 
-		// when
-		Optional<Board> foundBoard = boardDao.findByTitle("Test Title");
+        // when
+        Optional<Board> foundBoard = boardDao.findByTitle("Test Title");
 
-		// then
-		assertThat(foundBoard).isPresent();
-		assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
-	}
+        // then
+        assertThat(foundBoard).isPresent();
+        assertThat(foundBoard.get().getTitle()).isEqualTo("Test Title");
+    }
 
-	@Test
-	public void testDeleteBoard() {
-		// given
-		Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(),"testTab", "testUser");
-		entityManager.persistAndFlush(board);
+    @Test
+    public void testDeleteBoard() {
+        // given
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        entityManager.persistAndFlush(board);
 
-		// when
-		boardDao.deleteById(board.getId());
-		Optional<Board> deletedBoard = boardDao.findById(board.getId());
+        // when
+        boardDao.deleteById(board.getId());
+        Optional<Board> deletedBoard = boardDao.findById(board.getId());
 
-		// then
-		assertThat(deletedBoard).isNotPresent();
-	}
+        // then
+        assertThat(deletedBoard).isNotPresent();
+    }
 
 
 }

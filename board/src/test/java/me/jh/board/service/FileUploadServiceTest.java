@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,78 +22,77 @@ import static org.mockito.Mockito.*;
 public class FileUploadServiceTest {
 
 
-	@Mock
-	private MultipartFile multipartFile;
+    @Mock
+    private MultipartFile multipartFile;
 
-	@InjectMocks
-	private FileUploadService fileUploadService;
+    @InjectMocks
+    private FileUploadService fileUploadService;
 
     @TempDir
     private Path tempDir;
 
 
-	@BeforeEach
-	void setUp() {
+    @BeforeEach
+    void setUp() {
 
-	}
-
-
-
-	@Test
-	void testGetSavePathWindows() {
-		String os = System.getProperty("os.name").toLowerCase();
-		System.setProperty("os.name", "Windows 10");
-
-		String expectedPath = System.getProperty("user.dir") + "\\files\\image";
-
-		String result = fileUploadService.getSavePath();
-
-		assertEquals(expectedPath, result);
-
-		System.setProperty("os.name", os);
-	}
-
-	@Test
-	void testGetSavePathLinux() {
-		String os = System.getProperty("os.name").toLowerCase();
-		System.setProperty("os.name", "Linux");
-
-		String expectedPath = System.getProperty("user.dir") + "/files/image";
-		expectedPath = expectedPath.replace("\\", "/");
-
-		String result = fileUploadService.getSavePath().replace("\\", "/");
-
-		assertEquals(expectedPath, result);
-
-		System.setProperty("os.name", os);
-	}
-
-	@Test
-	void testGetSavePathMac() {
-		String os = System.getProperty("os.name").toLowerCase();
-		System.setProperty("os.name", "Mac OS X");
-
-		String expectedPath = System.getProperty("user.dir") + "/files/image";
-		expectedPath = expectedPath.replace("\\", "/");
-
-		String result = fileUploadService.getSavePath().replace("\\", "/");
-
-		assertEquals(expectedPath, result);
-
-		System.setProperty("os.name", os);
-	}
+    }
 
 
-	@Test
-	public void testUUIDGeneration() {
-		// When
-		String uuid = UUID.randomUUID().toString();
+    @Test
+    void testGetSavePathWindows() {
+        String os = System.getProperty("os.name").toLowerCase();
+        System.setProperty("os.name", "Windows 10");
 
-		// Then
-		assertNotNull(uuid);  // UUID가 null이 아닌지 확인
-		assertEquals(36, uuid.length()); // UUID의 길이는 항상 36이어야 함
-		assertTrue(uuid.matches("^[a-f0-9\\-]{36}$"));  // UUID 형식이 맞는지 확인
-	}
+        String expectedPath = System.getProperty("user.dir") + "\\files\\image";
+
+        String result = fileUploadService.getSavePath();
+
+        assertEquals(expectedPath, result);
+
+        System.setProperty("os.name", os);
+    }
+
+    @Test
+    void testGetSavePathLinux() {
+        String os = System.getProperty("os.name").toLowerCase();
+        System.setProperty("os.name", "Linux");
+
+        String expectedPath = System.getProperty("user.dir") + "/files/image";
+        expectedPath = expectedPath.replace("\\", "/");
+
+        String result = fileUploadService.getSavePath().replace("\\", "/");
+
+        assertEquals(expectedPath, result);
+
+        System.setProperty("os.name", os);
+    }
+
+    @Test
+    void testGetSavePathMac() {
+        String os = System.getProperty("os.name").toLowerCase();
+        System.setProperty("os.name", "Mac OS X");
+
+        String expectedPath = System.getProperty("user.dir") + "/files/image";
+        expectedPath = expectedPath.replace("\\", "/");
+
+        String result = fileUploadService.getSavePath().replace("\\", "/");
+
+        assertEquals(expectedPath, result);
+
+        System.setProperty("os.name", os);
+    }
+
+
+    @Test
+    public void testUUIDGeneration() {
+        // When
+        String uuid = UUID.randomUUID().toString();
+
+        // Then
+        assertNotNull(uuid);  // UUID가 null이 아닌지 확인
+        assertEquals(36, uuid.length()); // UUID의 길이는 항상 36이어야 함
+        assertTrue(uuid.matches("^[a-f0-9\\-]{36}$"));  // UUID 형식이 맞는지 확인
+    }
 
     @Test
     void testSaveImageSuccessfully() throws IOException {
@@ -140,8 +138,6 @@ public class FileUploadServiceTest {
 
         assertEquals("File transfer error", exception.getMessage());
     }
-
-
 
 
 }
