@@ -1,6 +1,8 @@
 package me.jh.board.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOARD_NO")
+    @JsonBackReference
     private Board board;  // 댓글이 속한 게시글
 
 

@@ -1,5 +1,7 @@
 package me.jh.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,7 @@ public class Board {
     private String creator;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> comments;
 
     public Board(long id, String title, String content, LocalDateTime date, String tabName, String creator) {
