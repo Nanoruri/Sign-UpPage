@@ -73,9 +73,23 @@ function showBoardDetail(postId) {
     const boardTableSection = document.getElementById('generalTabContent');
     const memberTabContent = document.getElementById('memberTabContent');
     const boardDetailSection = document.getElementById('boardDetail');
+
+    const editButton = document.getElementById('editButton');
+    const token = sessionStorage.getItem('aToken'); // JWT 토큰 가져오기
+
+
     currentPostId = postId;
 
-    fetch(`/study/board/api/detail/${postId}`)
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`; // 토큰이 존재하면 헤더에 추가
+    }
+
+    fetch(`/study/board/api/detail/${postId}`,
+        {
+            method: 'GET',// 생략 가능
+            headers: headers
+        })
         .then(response => {
             if (response.status === 404) {
                 throw new Error('NotFound');
@@ -84,13 +98,22 @@ function showBoardDetail(postId) {
             }
             return response.json();
         })
-        .then(post => {
-            boardTitle.textContent = post.title;
-            boardContent.innerHTML = post.content; // HTML 형태의 내용을 표시
-            boardDate.textContent = new Date(post.date).toLocaleString();
+        .then(data => {
+            const post = data.board;
+            boardTitle.textContent = post.title; // 제목 표시
+            boardContent.innerHTML = post.content; // 내용 표시
+            boardDate.textContent = new Date(post.date).toLocaleString(); // 작성일 표시
             post.comments = post.comments || [];
+            data.isCreator = data.isCreator || false;
 
             displayComments(post.comments);
+
+            if (data.isCreator === true) {  // 'data.isCreator'가 true일 때만 수정 버튼 표시
+                editButton.style.display = 'inline-block';
+            } else {
+                editButton.style.display = 'none';
+            }
+
 
             // 게시글 목록 섹션 숨기기
             boardTableSection.style.display = 'none';
