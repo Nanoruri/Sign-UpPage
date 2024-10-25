@@ -193,16 +193,38 @@ public class BoardApiControllerTest {
 	@Test
 	public void getBoardDetailTest() throws Exception {
 		long boardId = 1L;
+		String token = "Bearer validToken";
+		String userId = "testUser";
+		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+
+		when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+		when(boardService.getBoardDetail(boardId)).thenReturn(board);
+
+		mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+						.header("Authorization", token)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.board.id").value(boardId))
+				.andExpect(jsonPath("$.board.title").value("Test Title"))
+				.andExpect(jsonPath("$.board.content").value("Test Content"))
+				.andExpect(jsonPath("$.isLogin").value(true));
+	}
+
+	@Test
+	public void getBoardDetailNoTokenTest() throws Exception {
+		long boardId = 1L;
 		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
 		when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
 		mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
 						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.board.id").value(boardId))
+				.andExpect(jsonPath("$.board.title").value("Test Title"))
+				.andExpect(jsonPath("$.board.content").value("Test Content"))
+				.andExpect(jsonPath("$.isLogin").value(false));
 	}
-
 
 	@Test
 	public void searchPostsTest() throws Exception {

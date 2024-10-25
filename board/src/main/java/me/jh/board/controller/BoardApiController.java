@@ -94,9 +94,23 @@ public class BoardApiController {
 
     @GetMapping("/detail/{boardId}")
     @ResponseBody
-    public ResponseEntity<Board> getBoardDetail(@PathVariable Long boardId) {
+    public ResponseEntity<Map<String,Object>> getBoardDetail(@PathVariable Long boardId,
+                                                             @RequestHeader(value = "Authorization", required = false) String token) {
+        String userId = null;
+
+        if(token != null){
+            String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+            userId = jwtProvider.getUserIdFromToken(substringToken);
+        }
         Board board = boardService.getBoardDetail(boardId);
-        return ResponseEntity.ok(board);
+
+        boolean isCreator = board.getCreator().equals(userId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("board", board);
+        response.put("isLogin", isCreator);
+
+        return ResponseEntity.ok(response);
     }
 
 
