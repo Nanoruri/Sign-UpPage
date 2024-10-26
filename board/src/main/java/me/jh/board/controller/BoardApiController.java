@@ -108,7 +108,7 @@ public class BoardApiController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("board", board);
-        response.put("isLogin", isCreator);
+        response.put("isCreator", isCreator);
 
         return ResponseEntity.ok(response);
     }
