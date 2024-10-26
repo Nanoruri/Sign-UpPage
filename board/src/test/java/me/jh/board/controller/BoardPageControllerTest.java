@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ContextConfiguration(classes = {BoardPageController.class})
 @WebMvcTest(controllers = BoardPageController.class)
@@ -32,4 +33,10 @@ public class BoardPageControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void boardDetailPageTest() throws Exception {
+        mockMvc.perform(get("/board/page/detail? postId= 1"))
+                .andExpect(view().name("postDetail"))
+                .andExpect(status().isOk());
+    }
 }

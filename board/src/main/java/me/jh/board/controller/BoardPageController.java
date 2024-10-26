@@ -13,4 +13,9 @@ public class BoardPageController {
     public String board(@PathVariable String path) {
         return path;
     }
+
+    @GetMapping("/detail")
+    public String getBoardDetailPage() {
+        return "postDetail";
+    }
 }
