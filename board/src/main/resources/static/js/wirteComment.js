@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();  // Prevent default form submission
 
         const accessToken = sessionStorage.getItem('aToken');
-        const boardId = currentPostId;
+        const boardId = new URLSearchParams(window.location.search).get('postId');
         const commentContent = document.getElementById('commentContent').value;
 
         const formData = {
