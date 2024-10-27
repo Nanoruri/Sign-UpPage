@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const editButton = document.getElementById('editButton');
 
     editButton.addEventListener('click', function () {
-        fetchBoardDetails(currentPostId);
+        const postId = getPostId();
+        fetchBoardDetails(postId);
     });
 });
 
