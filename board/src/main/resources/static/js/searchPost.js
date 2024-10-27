@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // 게시글 클릭 시 상세보기
             row.addEventListener('click', function () {
                 const postId = this.getAttribute('data-id');
-                showBoardDetail(postId);
+                window.location.href = `/study/board/page/detail?postId=${postId}`;
             });
 
             tableBody.appendChild(row);

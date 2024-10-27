@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     row.addEventListener('click', function () {
                         const postId = this.getAttribute('data-id');
-                        showBoardDetail(postId);
+                        window.location.href = `/study/board/page/detail?postId=${postId}`;
                     });
 
                     memberTableBody.appendChild(row);
