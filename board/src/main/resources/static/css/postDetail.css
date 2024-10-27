@@ -166,3 +166,40 @@ footer {
 #commentSection {
     margin-top: 20px;
 }
+
+/* 댓글 박스 스타일 */
+.comment-box {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+/* 댓글 헤더 스타일 (작성자와 작성일) */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd; /* 구분선 추가 */
+}
+
+/* 댓글 작성자 */
+.comment-author {
+    font-weight: bold;
+    color: #333;
+}
+
+/* 댓글 작성일 */
+.comment-date {
+    color: #777;
+    font-size: 0.9em;
+}
+
+/* 댓글 내용 */
+.comment-content {
+    font-size: 1em;
+    color: #555;
+    padding-top: 5px; /* 구분선과 내용 사이 여백 */
+}
