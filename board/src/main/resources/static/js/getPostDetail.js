@@ -81,8 +81,12 @@ function displayComments(comments) {
     }
 }
 
+function getPostId(){
+    return new URLSearchParams(window.location.search).get('postId');
+}
+
 // 페이지 로드 시 showBoardDetail 호출
 document.addEventListener('DOMContentLoaded', () => {
-    const postId = new URLSearchParams(window.location.search).get('postId');
+    const postId = getPostId();
     showBoardDetail(postId);
 });
