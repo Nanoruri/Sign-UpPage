@@ -72,6 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading member board list:', error));
     }
 
+    // 글쓰기 버튼 클릭 시 글쓰기 페이지로 이동
+    writeButton.addEventListener('click', function () {
+        window.location.href = '/study/board/page/postWrite';  // 글쓰기 페이지로 이동
+    });
+
     // 페이지 로드 시 회원전용 게시글 목록 로드
     if (accessToken) {
         loadMemberBoardList();

@@ -1,5 +1,4 @@
 function getAllPost() {
-    const writeButton = document.getElementById('writeButton');
     const mainPageButton = document.getElementById('mainButton');
 
     // 게시글 목록 불러오기
@@ -35,10 +34,7 @@ function getAllPost() {
             });
     }
 
-    // 글쓰기 버튼 클릭 시 글쓰기 페이지로 이동
-    writeButton.addEventListener('click', function () {
-        window.location.href = '/study/board/page/postWrite';  // 글쓰기 페이지로 이동
-    });
+
 
     // 페이지 로드 시 게시글 목록 로드
     loadBoardList();
