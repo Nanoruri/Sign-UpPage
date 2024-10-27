@@ -4,6 +4,7 @@ package me.jh.board.controller;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.board.service.CommentService;
+import me.jh.core.utils.auth.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -33,10 +35,12 @@ public class CommnetApiControllerTest {
 
     @MockBean
     private CommentService commentService;
+    @MockBean
+    private JwtProvider jwtProvider;
 
     @BeforeEach
     void setup() throws IOException {
-        mockMvc = standaloneSetup(new CommentApiController(commentService)).build();
+        mockMvc = standaloneSetup(new CommentApiController(commentService, jwtProvider)).build();
 
     }
 
@@ -62,6 +66,43 @@ public class CommnetApiControllerTest {
         mockMvc.perform(post("/comment/api/create-comment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"content\":\"Test Comment\",\"board\":{\"id\":1}}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCommentUpdateSuccessful() throws Exception {
+        String token = "token";
+        String userId = "testUser";
+        long commentId = 1L;
+
+        Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+
+        when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
+        when(commentService.updateComment(eq(commentId), any(Comment.class))).thenReturn(true);
+
+        mockMvc.perform(put("/comment/api/update-comment")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":1,\"content\":\"Test Comment\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUpdateCommentFail() throws Exception {
+        String token = "token";
+        String userId = "testUser";
+        long commentId = 1L;
+
+        Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+
+
+        when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
+        when(commentService.updateComment(eq(commentId), any(Comment.class))).thenReturn(false);
+
+        mockMvc.perform(put("/comment/api/update-comment")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":1,\"content\":\"Test Comment\"}"))
                 .andExpect(status().isNotFound());
     }
 
