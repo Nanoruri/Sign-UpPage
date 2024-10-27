@@ -63,17 +63,28 @@ function displayComments(comments) {
     if (comments && comments.length > 0) {
         comments.forEach(comment => {
             const commentDiv = document.createElement('div');
-            commentDiv.classList.add('comment');
+            commentDiv.classList.add('comment-box');
 
-            const commentContent = document.createElement('p');
-            commentContent.textContent = comment.content; // 댓글 내용 표시
+            const headerDiv = document.createElement('div');
+            headerDiv.classList.add('comment-header');
 
-            const commentDate = document.createElement('span');
-            commentDate.textContent = new Date(comment.date).toLocaleString(); // 작성일 표시
-            commentDate.classList.add('comment-date');
+            // const creator = document.createElement('span');//todo: comments.creator 필드 구현 예정
+            // creator.textContent = comment.creatorId; // 댓글 작성자 아이디 표시
+            // creator.classList.add('comment-creator');
 
-            commentDiv.appendChild(commentContent);
-            commentDiv.appendChild(commentDate);
+            const date = document.createElement('span');
+            date.textContent = new Date(comment.date).toLocaleString(); // 작성일 표시
+            date.classList.add('comment-date');
+
+            // headerDiv.appendChild(creator);
+            headerDiv.appendChild(date);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('comment-content');
+            contentDiv.textContent = comment.content; // 댓글 내용 표시
+
+            commentDiv.appendChild(headerDiv);
+            commentDiv.appendChild(contentDiv);
             commentSection.appendChild(commentDiv);
         });
     } else {
