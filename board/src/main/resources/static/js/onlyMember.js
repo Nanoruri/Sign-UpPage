@@ -74,6 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 글쓰기 버튼 클릭 시 글쓰기 페이지로 이동
     writeButton.addEventListener('click', function () {
+        if(sessionStorage.getItem('boardToEdit')){
+            sessionStorage.removeItem('boardToEdit')
+           }
         window.location.href = '/study/board/page/postWrite';  // 글쓰기 페이지로 이동
     });
 
