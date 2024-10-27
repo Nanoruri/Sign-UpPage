@@ -43,7 +43,7 @@ public class CommentService {//TODO: 댓글 D 구현
         if (oldcomment == null) {
             return false;
         }
-        oldcomment.setContent(comment.getContent());
+        oldcomment.setContent("(수정됨)"+ comment.getContent());
         oldcomment.setDate(LocalDateTime.now());
 
         commentDao.save(oldcomment);
