@@ -113,6 +113,7 @@ public class BoardService {
         Optional<Board> board = boardDao.findById(boardId);
 
         if (board.isPresent() && board.get().getCreator().equals(userId)) {
+            board.get().setComments(null);// todo: 임시 comment 강제초기화
             return board.get();
         }
         throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");
