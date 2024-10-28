@@ -47,7 +47,10 @@ public class CommnetApiControllerTest {
 
     @Test
     public void testSaveCommentReturnsOk() throws Exception {
+        String token = "Bearer token";
+        String userId = "testUser";
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, userId);
 
         when(commentService.saveComment(eq(board.getId()), any(Comment.class))).thenReturn(true);
 
@@ -59,7 +62,10 @@ public class CommnetApiControllerTest {
 
     @Test
     public void testSaveCommentReturnsNotFound() throws Exception {
+        String token = "Bearer token";
+        String userId = "testUser";
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, userId);
 
         when(commentService.saveComment(eq(board.getId()), any(Comment.class))).thenReturn(false);
 

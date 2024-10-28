@@ -26,15 +26,19 @@ public class Comment {
     @JsonBackReference
     private Board board;  // 댓글이 속한 게시글
 
+    @Column(name = "COMMENT_CREATOR")
+    private String creator;
+
 
     public Comment() {
     }
 
-    public Comment(long id, String content, LocalDateTime date, Board board) {
+    public Comment(long id, String content, LocalDateTime date, Board board, String creator) {
         this.id = id;
         this.content = content;
         this.date = date;
         this.board = board;
+        this.creator = creator;
     }
 
     public long getId() {
@@ -68,5 +72,13 @@ public class Comment {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }
