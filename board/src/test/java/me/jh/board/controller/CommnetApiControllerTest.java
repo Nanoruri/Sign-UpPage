@@ -52,9 +52,11 @@ public class CommnetApiControllerTest {
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, userId);
 
-        when(commentService.saveComment(eq(board.getId()), any(Comment.class))).thenReturn(true);
+        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(true);
 
         mockMvc.perform(post("/comment/api/create-comment")
+                        .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"content\":\"Test Comment\",\"board\":{\"id\":1}}"))
                 .andExpect(status().isOk());
@@ -67,9 +69,11 @@ public class CommnetApiControllerTest {
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, userId);
 
-        when(commentService.saveComment(eq(board.getId()), any(Comment.class))).thenReturn(false);
+        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(false);
 
         mockMvc.perform(post("/comment/api/create-comment")
+                        .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"content\":\"Test Comment\",\"board\":{\"id\":1}}"))
                 .andExpect(status().isNotFound());
@@ -84,7 +88,7 @@ public class CommnetApiControllerTest {
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
         when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
-        when(commentService.updateComment(eq(commentId), any(Comment.class))).thenReturn(true);
+        when(commentService.updateComment(eq(commentId), any(Comment.class), eq(userId))).thenReturn(true);
 
         mockMvc.perform(put("/comment/api/update-comment")
                         .header("Authorization", "Bearer " + token)
@@ -98,12 +102,13 @@ public class CommnetApiControllerTest {
         String token = "token";
         String userId = "testUser";
         long commentId = 1L;
+        String commentUserId = "testCommentUser";
 
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
 
         when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
-        when(commentService.updateComment(eq(commentId), any(Comment.class))).thenReturn(false);
+        when(commentService.updateComment(eq(commentId), any(Comment.class),eq(commentUserId))).thenReturn(false);
 
         mockMvc.perform(put("/comment/api/update-comment")
                         .header("Authorization", "Bearer " + token)

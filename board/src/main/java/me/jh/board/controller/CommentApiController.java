@@ -29,9 +29,12 @@ public class CommentApiController {//todo: 댓글 CUD API 구현
     //create
     @PostMapping("/create-comment")
     @ResponseBody
-    public ResponseEntity<Comment> saveComment(@RequestBody Comment comment) {
+    public ResponseEntity<Comment> saveComment(@RequestBody Comment comment, @RequestHeader("Authorization") String token) {
+        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+        String userId = jwtProvider.getUserIdFromToken(substringToken);
+
         Long boardId = comment.getBoard().getId();
-        if (!commentService.saveComment(boardId, comment)) {
+        if (!commentService.saveComment(boardId, comment, userId)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
@@ -39,10 +42,12 @@ public class CommentApiController {//todo: 댓글 CUD API 구현
 
     @PutMapping("/update-comment")
     @ResponseBody//todo: 토큰과 함께 받아 사용자 검증 로직 추가하기
-    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
+    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment, @RequestHeader("Authorization") String token) {
+        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+        String userId = jwtProvider.getUserIdFromToken(substringToken);
 
         Long commentId = comment.getId();
-        if (!commentService.updateComment(commentId, comment)) {
+        if (!commentService.updateComment(commentId, comment, userId)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
