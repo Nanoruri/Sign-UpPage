@@ -31,8 +31,9 @@ function showBoardDetail(postId) {
             boardDate.textContent = new Date(post.date).toLocaleString(); // 작성일 표시
             post.comments = post.comments || [];
             data.isCreator = data.isCreator || false;
+            data.currentUserId = data.currentUserId || null
 
-            displayComments(post.comments);
+            displayComments(post.comments, token, data.currentUserId);
 
             if (data.isCreator) {  // 'data.isCreator'가 true일 때만 수정 버튼 표시
                 editButton.style.display = 'inline-block';
@@ -56,9 +57,9 @@ function showBoardDetail(postId) {
 }
 
 // 댓글 표시 함수
-function displayComments(comments) {
+function displayComments(comments,token, currentUserId) {
     const commentSection = document.getElementById('commentSection');
-    commentSection.innerHTML = ''; // 기존 댓글 초기화
+    commentSection.innerHTML = '';
 
     if (comments && comments.length > 0) {
         comments.forEach(comment => {
@@ -68,23 +69,30 @@ function displayComments(comments) {
             const headerDiv = document.createElement('div');
             headerDiv.classList.add('comment-header');
 
-            // const creator = document.createElement('span');//todo: comments.creator 필드 구현 예정
-            // creator.textContent = comment.creatorId; // 댓글 작성자 아이디 표시
-            // creator.classList.add('comment-creator');
-
             const date = document.createElement('span');
-            date.textContent = new Date(comment.date).toLocaleString(); // 작성일 표시
+            date.textContent = new Date(comment.date).toLocaleString();
             date.classList.add('comment-date');
 
-            // headerDiv.appendChild(creator);
             headerDiv.appendChild(date);
 
             const contentDiv = document.createElement('div');
             contentDiv.classList.add('comment-content');
-            contentDiv.textContent = comment.content; // 댓글 내용 표시
+            contentDiv.textContent = comment.content;
+
+            // 수정 버튼 생성
+            const commentEditButton = document.createElement('button');
+            commentEditButton.textContent = '수정';
+
+            // 댓글 작성자와 현재 사용자가 같은 경우에만 수정 버튼 활성화
+            if (comment.creator === currentUserId) {
+                commentEditButton.addEventListener('click', () => editComment(comment.id, contentDiv, commentEditButton, token));
+            } else {
+                commentEditButton.style.display = 'none';
+            }
 
             commentDiv.appendChild(headerDiv);
             commentDiv.appendChild(contentDiv);
+            commentDiv.appendChild(commentEditButton);
             commentSection.appendChild(commentDiv);
         });
     } else {
