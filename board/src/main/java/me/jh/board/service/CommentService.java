@@ -25,12 +25,13 @@ public class CommentService {//TODO: 댓글 D 구현
     }
 
     @Transactional
-    public boolean saveComment(Long boardId, Comment comment) {
+    public boolean saveComment(Long boardId, Comment comment, String userId) {
         Board board = boardDao.findById(boardId).orElse(null);
 
         Comment saveComment = new Comment();
         saveComment.setContent(comment.getContent());
         saveComment.setDate(LocalDateTime.now());
+        saveComment.setCreator(userId);
         saveComment.setBoard(board);
 
         commentDao.save(saveComment);
@@ -38,9 +39,9 @@ public class CommentService {//TODO: 댓글 D 구현
     }
 
     @Transactional
-    public boolean updateComment(Long commentId, Comment comment) {
+    public boolean updateComment(Long commentId, Comment comment, String userId) {
         Comment oldcomment = commentDao.findById(commentId).orElse(null);
-        if (oldcomment == null) {
+        if (oldcomment == null|| !oldcomment.getCreator().equals(userId)) {
             return false;
         }
         oldcomment.setContent("(수정됨)"+ comment.getContent());
