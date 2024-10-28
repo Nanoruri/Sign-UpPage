@@ -106,6 +106,10 @@ function getPostId(){
 
 // 페이지 로드 시 showBoardDetail 호출
 document.addEventListener('DOMContentLoaded', () => {
+    const mainPageButton = document.getElementById("mainButton");
+    mainPageButton.addEventListener('click', function () {
+        window.location.href = '/study/';
+    });
     const postId = getPostId();
     showBoardDetail(postId);
 });
