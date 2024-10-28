@@ -37,3 +37,56 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 });
+
+function editComment(commentId, contentDiv, commentEditButton, token) {
+    const originalContent = contentDiv.textContent;
+    contentDiv.innerHTML = `<input type="text" value="${originalContent}" style="width: 100%;">`;
+    const inputField = contentDiv.querySelector('input');
+
+    const saveButton = document.createElement('button');
+    saveButton.textContent = '저장';
+    saveButton.addEventListener('click', () => updateComment(commentId, inputField.value, contentDiv, token, commentEditButton));
+
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = '취소';
+    cancelButton.addEventListener('click', () => {
+        contentDiv.innerHTML = originalContent; // 원래 내용으로 되돌리기
+        commentEditButton.style.display = 'inline'; // 수정 버튼 다시 보이기
+    });
+
+    contentDiv.appendChild(saveButton);
+    contentDiv.appendChild(cancelButton);
+    commentEditButton.style.display = 'none'; // 수정 버튼 숨기기
+}
+
+function updateComment(commentId, newContent, contentDiv, token, commentEditButton) {
+    const formData = {
+        id: commentId,
+        content: newContent
+    };
+
+    fetch('/study/comment/api/update-comment', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('댓글 업데이트에 실패했습니다.');
+            }else{
+            contentDiv.innerHTML = newContent; // DOM에서 내용 업데이트
+            alert('댓글이 성공적으로 업데이트되었습니다.');
+            window.location.reload()
+            }
+        })
+        .catch(error => {
+            console.error('댓글 업데이트 중 오류 발생:', error);
+            alert('댓글 업데이트에 실패했습니다.');
+            contentDiv.innerHTML = newContent; // 실패하더라도 입력 필드를 원래 내용으로 되돌리기
+            commentEditButton.style.display = 'inline'; // 수정 버튼 다시 보이기
+        });
+
+}
