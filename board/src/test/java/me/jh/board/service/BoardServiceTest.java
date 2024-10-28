@@ -199,7 +199,7 @@ public class BoardServiceTest {
 
 
     @Test
-    public void getBoardByIdTest() {
+    public void testGetBoarDetailSuccessful() {
         long boardId = 1L;
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
@@ -215,7 +215,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void getBoardByIdNotFoundTest() {
+    public void testGetBoarDetailNotFoundTest() {
         long boardId = 1L;
 
         when(boardDao.findById(boardId)).thenReturn(Optional.empty());
