@@ -223,7 +223,7 @@ public class BoardApiControllerTest {
 				.andExpect(jsonPath("$.board.id").value(boardId))
 				.andExpect(jsonPath("$.board.title").value("Test Title"))
 				.andExpect(jsonPath("$.board.content").value("Test Content"))
-				.andExpect(jsonPath("$.isLogin").value(false));
+				.andExpect(jsonPath("$.isCreator").value(false));
 	}
 
 	@Test
