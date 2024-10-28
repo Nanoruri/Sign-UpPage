@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @WebMvcTest(controllers = CommentApiController.class)
 @AutoConfigureMockMvc(addFilters = false)// csrf 비활성화
-public class CommnetApiControllerTest {
+public class CommentApiControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
