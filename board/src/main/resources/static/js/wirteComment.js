@@ -79,7 +79,7 @@ function updateComment(commentId, newContent, contentDiv, token, commentEditButt
             }else{
             contentDiv.innerHTML = newContent; // DOM에서 내용 업데이트
             alert('댓글이 성공적으로 업데이트되었습니다.');
-            window.location.reload()
+                loadComments(); // 댓글 목록을 다시 불러오는 함수 호출
             }
         })
         .catch(error => {
@@ -88,5 +88,22 @@ function updateComment(commentId, newContent, contentDiv, token, commentEditButt
             contentDiv.innerHTML = newContent; // 실패하더라도 입력 필드를 원래 내용으로 되돌리기
             commentEditButton.style.display = 'inline'; // 수정 버튼 다시 보이기
         });
+
+    function loadComments() {
+        const postId = getPostId();// todo: API 나누는 방식도 고려해보기
+        fetch(`/study/board/api/detail/${postId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                displayComments(data.board.comments, token, data.currentUserId); // 댓글 표시 함수 호출
+            })
+            .catch(error => {
+                console.error("Error loading comments:", error);
+            });
+    }
 
 }
