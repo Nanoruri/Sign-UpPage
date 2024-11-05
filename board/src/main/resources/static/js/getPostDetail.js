@@ -29,6 +29,13 @@ function showBoardDetail(postId) {
             boardTitle.textContent = post.title; // 제목 표시
             boardContent.innerHTML = post.content; // 내용 표시
             boardDate.textContent = new Date(post.date).toLocaleString(); // 작성일 표시
+            // 게시글 작성자 표시
+            const postAuthor = document.createElement('span');
+            postAuthor.textContent = `작성자: ${post.creator}`; // 작성자 표시
+            postAuthor.classList.add('post-author'); // TODO: 필요한 경우 스타일 클래스 추가
+            boardContent.appendChild(postAuthor); // 내용 아래에 작성자 추가
+            
+            
             post.comments = post.comments || [];
             data.isCreator = data.isCreator || false;
             data.currentUserId = data.currentUserId || null
@@ -73,7 +80,14 @@ function displayComments(comments,token, currentUserId) {
             date.textContent = new Date(comment.date).toLocaleString();
             date.classList.add('comment-date');
 
+            // 댓글 작성자 표시
+            const commentAuthor = document.createElement('span');
+            commentAuthor.textContent = `작성자: ${comment.creator}`;
+            commentAuthor.classList.add('comment-author');
+
+
             headerDiv.appendChild(date);
+            headerDiv.appendChild(commentAuthor); // 댓글 작성자 추가
 
             const contentDiv = document.createElement('div');
             contentDiv.classList.add('comment-content');
