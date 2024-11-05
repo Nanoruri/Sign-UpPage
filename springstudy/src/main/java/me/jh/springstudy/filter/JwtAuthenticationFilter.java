@@ -8,11 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.persistence.Entity;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 /**
@@ -43,8 +46,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				// 리프레시 토큰일 경우, 인증 정보 설정 없이 계속 진행
 				Authentication authentication = jwtTokenProvider.getAuthentication(token);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+				filterChain.doFilter(request, response);
 			}
-			filterChain.doFilter(request, response);
 		} catch (JwtException e) {
 			SecurityContextHolder.clearContext();
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
@@ -60,4 +63,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		return null;
 	}
 
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        //todo: 해당 경로들은 인증이 필요한 authController를 만들어 빼도록 하기
+		String[] notExcludePath = {"/study/board/api/memberBoard","/study/board/api/getBoardInfo/**",
+				"/study/board/api//update/**","/study/board/api/create","/study/board/api/upload-image"};
+		String path = request.getRequestURI();
+
+		return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
+	}
 }

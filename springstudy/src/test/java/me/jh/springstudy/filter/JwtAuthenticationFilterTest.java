@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -42,6 +44,7 @@ public class JwtAuthenticationFilterTest {
 	public void testDoFilterInternal_ValidToken() throws ServletException, IOException {
 		String token = "valid_token";
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
 		when(jwtProvider.validateToken(token)).thenReturn(true);
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken("user123", null);
@@ -58,6 +61,7 @@ public class JwtAuthenticationFilterTest {
 	public void testDoFilterInternal_InvalidToken() throws ServletException, IOException {
 		String token = "invalid_token";
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
 		doThrow(new JwtException("유효하지 않은 토큰입니다.")).when(jwtProvider).validateToken(token);
 
 
@@ -72,44 +76,69 @@ public class JwtAuthenticationFilterTest {
 	@Test
 	public void testDoFilterInternal_NoToken() throws ServletException, IOException {
 		when(request.getHeader("Authorization")).thenReturn(null);
-
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(jwtProvider, never()).validateToken(any());
-		verify(chain, times(1)).doFilter(request, response);
+		verify(chain, never()).doFilter(request, response);
 	}
 
 	@Test
-	public void testDoFilterInternal_TokenMotStartWithBearer() throws ServletException, IOException {
+	public void testDoFilterInternal_TokenNotStartWithBearer() throws ServletException, IOException {
 
 		when(request.getHeader("Authorization")).thenReturn("invalid_token");
-
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(jwtProvider, never()).validateToken(any());
-		verify(chain, times(1)).doFilter(request, response);
+		verify(chain, never()).doFilter(request, response);
 	}
 
 	@Test
 	public void testDoFilterInternal_NoHeader() throws ServletException, IOException {
 		when(request.getHeader(null)).thenReturn(null);
-
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
-		verify(chain, times(1)).doFilter(request, response);
+		verify(chain, never()).doFilter(request, response);
 	}
 
 	@Test
 	public void testDoFilterInternal_TokenInvalid() throws ServletException, IOException {
 		String token = "invalid_token_but_not_null";
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
 		when(jwtProvider.validateToken(token)).thenReturn(false);
 
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(jwtProvider, times(1)).validateToken(token);
-		verify(chain, times(1)).doFilter(request, response);
+		verify(chain, never()).doFilter(request, response);
 	}
+
+
+	@Test
+	void shouldNotFilterForExcludedPaths() throws ServletException {
+		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+
+		boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
+
+		assertFalse(result);
+
+		verify(request,times(1)).getRequestURI();
+	}
+
+	@Test
+	void shouldFilterForNonExcludedPaths() throws ServletException {
+		when(request.getRequestURI()).thenReturn("/study/board/api/otherPath");
+
+		boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
+
+		assertTrue(result);
+
+		verify(request,times(1)).getRequestURI();
+	}
+
 }
 
 
