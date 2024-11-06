@@ -38,9 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
             .then(response => {
-                if (!response.ok) {
-
-                    throw new Error('Network response was not ok');
+                if (response.status === 401) {
+                    throw new Error('Network response was 401');
+                }else if (response.status === 500){
+                    alert('서버에러!')
+                    throw new Error('Network response was 500')
                 }
                 return response.json();
             })
