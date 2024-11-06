@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         //todo: 해당 경로들은 인증이 필요한 authController를 만들어 빼도록 하기
 		String[] notExcludePath = {"/study/board/api/memberBoard","/study/board/api/getBoardInfo/**",
-				"/study/board/api//update/**","/study/board/api/create","/study/board/api/upload-image"};
+				"/study/board/api//update/**","/study/board/api/create","/study/board/api/upload-image", "/study/comment/api"};
 		String path = request.getRequestURI();
 
 		return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
