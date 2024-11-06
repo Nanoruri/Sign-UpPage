@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     row.innerHTML = `
                         <td>${post.id}</td>
                         <td>${post.title}</td>
-                        <td>${post.content}</td>
                         <td>${new Date(post.date).toLocaleDateString()}</td>
                     `;
                     row.setAttribute('data-id', post.id);

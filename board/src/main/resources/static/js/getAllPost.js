@@ -14,7 +14,6 @@ function getAllPost() {
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${post.title}</td> <!-- 제목 클릭 없이도 전체 영역 클릭 가능 -->
-                        <td>${post.content}</td> <!-- 게시글 내용도 출력 -->
                         <td>${new Date(post.date).toLocaleDateString()}</td>
                     `;
 
