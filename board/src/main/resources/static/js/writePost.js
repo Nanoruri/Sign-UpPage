@@ -53,11 +53,15 @@ function selectLocalImage(quill) {
 }
 
 function uploadImage(file, quill) {
+    const accessToken = sessionStorage.getItem('aToken')
     const formData = new FormData();
     formData.append('image', file);
 
     fetch('/study/board/api/upload-image', {
         method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        },
         body: formData
     })
         .then(response => response.json())
