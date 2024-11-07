@@ -4,6 +4,8 @@ package me.jh.board.service;
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +41,8 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Board> getBoard(String tabName) {
-        List<Board> boards = boardDao.findByTabName(tabName);
+    public Page<Board> getBoard(String tabName, Pageable pageable) {
+        Page<Board> boards = boardDao.findByTabName(tabName, pageable);
 //		boards.forEach(board -> board.getComments().size());//todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
         boards.forEach(board -> board.setComments(null));
         return boards;
@@ -86,24 +88,24 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Board> searchPosts(String query, String type) { //todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
-        List<Board> boards;
+    public Page<Board> searchPosts(String query, String type, Pageable pageable) { //todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
+        Page<Board> boards;
 
         switch (type) {
             case "title":
-                boards = boardDao.findByTitleContaining(query);
+                boards = boardDao.findByTitleContaining(query,pageable);
                 boards.forEach(board -> board.setComments(null));
                 return boards;
             case "content":
-                boards = boardDao.findByContentContaining(query);
+                boards = boardDao.findByContentContaining(query,pageable);
                 boards.forEach(board -> board.setComments(null));
                 return boards;
             case "titleAndContent":
-                boards = boardDao.findByTitleContainingOrContentContaining(query, query);
+                boards = boardDao.findByTitleContainingOrContentContaining(query, query,pageable);
                 boards.forEach(board -> board.setComments(null));
                 return boards;
             default:
-                return new ArrayList<>(); // 잘못된 타입이 들어온 경우 빈 리스트 반환
+                return Page.empty(pageable); // 잘못된 타입이 들어온 경우 빈 리스트 반환
         }
     }
 

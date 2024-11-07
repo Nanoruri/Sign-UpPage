@@ -8,6 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,19 +56,21 @@ public class BoardServiceTest {
     public void findAll() {
 
         LocalDateTime now = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(0, 10);
 
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", now, "testTab", "testUser"),
                 new Board(2L, "title2", "content2", now, "testTab", "testUser"),
                 new Board(3L, "title3", "content3", now, "testTab", "testUser")
         );
-        boardList.forEach(board -> board.setComments(new ArrayList<>()));
+        Page<Board> boardPage = new PageImpl<>(boardList,pageable,boardList.size());
 
-        when(boardDao.findByTabName("testTab")).thenReturn(boardList);
+        when(boardDao.findByTabName("testTab",pageable)).thenReturn(boardPage);
 
-        List<Board> result = boardService.getBoard("testTab");
+        Page<Board> result = boardService.getBoard("testTab",pageable);
 
-        verify(boardDao).findByTabName("testTab");
+        assertEquals(boardPage,result);
+        verify(boardDao).findByTabName("testTab",pageable);
     }
 
     /**
@@ -229,52 +235,62 @@ public class BoardServiceTest {
     @Test
     public void searchPostsByTitle() {
         String query = "title1";
+        Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
         );
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByTitleContaining(query)).thenReturn(boardList);
+        when(boardDao.findByTitleContaining(query, pageable)).thenReturn(boardPage);
 
-        List<Board> result = boardService.searchPosts(query, "title");
+        Page<Board> result = boardService.searchPosts(query, "title", pageable);
 
-        assertEquals(boardList, result);
+        assertEquals(boardList, result.getContent());
+        verify(boardDao).findByTitleContaining(query, pageable);
     }
 
     @Test
     public void searchPostsByContent() {
         String query = "content1";
+        Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
         );
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByContentContaining(query)).thenReturn(boardList);
+        when(boardDao.findByContentContaining(query, pageable)).thenReturn(boardPage);
 
-        List<Board> result = boardService.searchPosts(query, "content");
+        Page<Board> result = boardService.searchPosts(query, "content", pageable);
 
-        assertEquals(boardList, result);
+        assertEquals(boardPage, result);
+        verify(boardDao).findByContentContaining(query, pageable);
     }
 
     @Test
     public void searchPostsByTitleAndContent() {
         String query = "title1";
+        Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
         );
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByTitleContainingOrContentContaining(query, query)).thenReturn(boardList);
+        when(boardDao.findByTitleContainingOrContentContaining(query, query, pageable)).thenReturn(boardPage);
 
-        List<Board> result = boardService.searchPosts(query, "titleAndContent");
+        Page<Board> result = boardService.searchPosts(query, "titleAndContent", pageable);
 
-        assertEquals(boardList, result);
+        assertEquals(boardPage, result);
+        verify(boardDao).findByTitleContainingOrContentContaining(query, query, pageable);
     }
 
     @Test
     public void searchPostsInvalidType() {
         String query = "title1";
+        Pageable pageable = PageRequest.of(0, 10);
 
-        List<Board> result = boardService.searchPosts(query, "invalidType");
+        Page<Board> result = boardService.searchPosts(query, "invalidType", pageable);
 
-        assertEquals(0, result.size());
+        assertTrue(result.isEmpty());
     }
 
 
