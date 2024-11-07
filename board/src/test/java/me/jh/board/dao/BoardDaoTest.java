@@ -8,6 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -95,7 +98,8 @@ public class BoardDaoTest {
         boardDao.save(board2);
 
         // when
-        List<Board> foundBoards = boardDao.findByTitleContaining("Spring");
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Board> foundBoards = boardDao.findByTitleContaining("Spring",pageable);
 
         // then
         assertThat(foundBoards).hasSize(2);
@@ -110,7 +114,8 @@ public class BoardDaoTest {
         boardDao.save(board2);
 
         // when
-        List<Board> foundBoards = boardDao.findByContentContaining("Spring");
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Board> foundBoards = boardDao.findByContentContaining("Spring",pageable);
 
         // then
         assertThat(foundBoards).hasSize(2);
@@ -125,7 +130,8 @@ public class BoardDaoTest {
         boardDao.save(board2);
 
         // when
-        List<Board> foundBoards = boardDao.findByTitleContainingOrContentContaining("Spring", "Spring");
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Board> foundBoards = boardDao.findByTitleContainingOrContentContaining("Spring", "Spring",pageable);
 
         // then
         assertThat(foundBoards).hasSize(2);

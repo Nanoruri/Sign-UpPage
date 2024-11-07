@@ -1,6 +1,8 @@
 package me.jh.board.dao;
 
 import me.jh.board.entity.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,11 +13,12 @@ import java.util.Optional;
 public interface BoardDao extends JpaRepository<Board, Long>, BoardWtihCommentDao {
     Optional<Board> findByTitle(String title);
 
-    List<Board> findByTitleContaining(String query);
+    Page<Board> findByTitleContaining(String query, Pageable pageable);
 
-    List<Board> findByContentContaining(String query);
+    Page<Board> findByContentContaining(String query, Pageable pageable);
 
-    List<Board> findByTitleContainingOrContentContaining(String query, String query1);
+    Page<Board> findByTitleContainingOrContentContaining(String query, String query1, Pageable pageable);
 
-    List<Board> findByTabName(String tabName);
+    Page<Board> findByTabName(String tabName, Pageable pageable);
+
 }
