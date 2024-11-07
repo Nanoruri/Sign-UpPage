@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchType = document.getElementById('searchType');
     const boardTableBody = document.getElementById('boardTableBody');
     const memberTableBody = document.getElementById('memberTableBody');
+    const pageSize = 5; // 페이지 당 표시할 게시글 수
+    let currentPage = 0; // 현재 페이지 번호 초기화
 
     // 검색 버튼 클릭 시 검색 실행
     searchButton.addEventListener('click', function () {
@@ -23,16 +25,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 검색 API 호출
     function searchPosts(query, type, tab) {
-        const url = `/study/board/api/search?query=${encodeURIComponent(query)}&type=${type}`;
+        const url = `/study/board/api/search?query=${encodeURIComponent(query)}&type=${type}&page=${currentPage}&size=${pageSize}`;
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 // 검색 결과를 해당 탭에 맞게 표시
                 if (tab === 'general') {
-                    renderPosts(data, boardTableBody);  // 일반탭에 게시글 렌더링
+                    renderPosts(data.content, boardTableBody);  // 일반탭에 게시글 렌더링
+                    updatePagination(data); // 페이징 정보 업데이트
                 } else if (tab === 'member') {
-                    renderPosts(data, memberTableBody);  // 자유탭에 게시글 렌더링
+                    renderPosts(data.content, memberTableBody);  // 자유탭에 게시글 렌더링
+                    updatePagination(data); // 페이징 정보 업데이트
                 }
             })
             .catch(error => console.error('Error searching posts:', error));
@@ -45,9 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const row = document.createElement('tr');
             row.setAttribute('data-id', post.id); // 게시글 ID 저장
             row.innerHTML = `
-                <td>${index + 1}</td>
+                <td>${index + 1 + (currentPage * pageSize)}</td>
                 <td>${post.title}</td>
-                <td>${post.content}</td>
                 <td>${new Date(post.date).toLocaleDateString()}</td>
             `;
 
@@ -60,4 +63,22 @@ document.addEventListener('DOMContentLoaded', function () {
             tableBody.appendChild(row);
         });
     }
+
+    // 페이지 변경 시 호출되는 함수
+    function changePage(page) {
+        if (page < 0) return; // 페이지가 0보다 작아지지 않도록
+        currentPage = page;  // 현재 페이지 업데이트
+        searchPosts(searchInput.value, searchType.value, 'general');  // 다시 검색하여 표시
+    }
+
+    // '이전' 버튼 클릭 시 페이지 변경
+    document.getElementById('prev-btn').addEventListener('click', function () {
+        changePage(currentPage - 1);
+    });
+
+    // '다음' 버튼 클릭 시 페이지 변경
+    document.getElementById('next-btn').addEventListener('click', function () {
+        changePage(currentPage + 1);
+    });
+
 });
