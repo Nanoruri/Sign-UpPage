@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const memberTab = document.getElementById('memberTab');
     const accessToken = sessionStorage.getItem('aToken');
     const writeButton = document.getElementById('writeButton');
-
+    const pageSize = 5; // 페이지 당 게시글 수
+    let currentPage = 0; // 현재 페이지 초기화
 
     writeButton.style.display = 'none';
 
@@ -30,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 회원 게시글 로드 함수
-    function loadMemberBoardList() {
-        fetch('/study/board/api/memberBoard', {
+    function loadMemberBoardList(page =0) {
+        fetch(`/study/board/api/memberBoard?page=${page}&size=${pageSize}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -39,24 +40,24 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (response.status === 401) {
-                    throw new Error('Network response was 401');
-                }else if (response.status === 500){
-                    alert('서버에러!')
-                    throw new Error('Network response was 500')
+                    throw new Error('Unauthorized');
+                } else if (response.status === 500) {
+                    alert('서버 오류 발생!');
+                    throw new Error('Server Error');
                 }
                 return response.json();
             })
-            .then(posts => {
-
+            .then(data => {
                 memberTab.style.display = 'inline-block';
                 writeButton.style.display = 'inline-block';
 
+                // 게시글 목록 표시
                 const memberTableBody = document.getElementById('memberTableBody');
                 memberTableBody.innerHTML = '';
-                posts.forEach(post => {
+                data.content.forEach((post, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${post.id}</td>
+                        <td>${index + 1 + (currentPage * pageSize)}</td>
                         <td>${post.title}</td>
                         <td>${new Date(post.date).toLocaleDateString()}</td>
                     `;
@@ -69,20 +70,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     memberTableBody.appendChild(row);
                 });
+
+                // 페이징 정보 업데이트
+                updatePagination(data);
             })
             .catch(error => console.error('Error loading member board list:', error));
     }
 
-    // 글쓰기 버튼 클릭 시 글쓰기 페이지로 이동
-    writeButton.addEventListener('click', function () {
-        if(sessionStorage.getItem('boardToEdit')){
-            sessionStorage.removeItem('boardToEdit')
-           }
-        window.location.href = '/study/board/page/postWrite';  // 글쓰기 페이지로 이동
+
+    // 페이지 변경 시 호출되는 함수
+    function changePage(page) {
+        if (page < 0) return; // 페이지가 0보다 작아지지 않도록
+        loadMemberBoardList(page);
+    }
+
+    // '이전' 버튼 클릭 시 페이지 변경
+    document.getElementById('prev-btn').addEventListener('click', function () {
+        changePage(currentPage - 1);
     });
 
-    // 페이지 로드 시 회원전용 게시글 목록 로드
+    // '다음' 버튼 클릭 시 페이지 변경
+    document.getElementById('next-btn').addEventListener('click', function () {
+        changePage(currentPage + 1);
+    });
+
+    // 글쓰기 버튼 클릭 시 글쓰기 페이지로 이동
+    writeButton.addEventListener('click', function () {
+        if (sessionStorage.getItem('boardToEdit')) {
+            sessionStorage.removeItem('boardToEdit');
+        }
+        window.location.href = '/study/board/page/postWrite';
+    });
+
+    // 페이지 로드 시 회원 전용 게시글 목록 로드
     if (accessToken) {
-        loadMemberBoardList();
+        loadMemberBoardList(currentPage);
     }
 });
