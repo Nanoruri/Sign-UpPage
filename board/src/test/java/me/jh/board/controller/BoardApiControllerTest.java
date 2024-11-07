@@ -13,12 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,7 +71,9 @@ public class BoardApiControllerTest {
 
 	@BeforeEach
 	void setup() throws IOException {
-		mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService , jwtProvider)).build();
+		mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService , jwtProvider))
+				.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+				.build();
 
 	}
 
@@ -96,19 +104,22 @@ public class BoardApiControllerTest {
 
 
 	@Test
-	public void findGeneralBoardTest() throws Exception {
+	public void getGeneralBoard_returnsPagedResults() throws Exception {
 
-		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
+		Pageable pageable = PageRequest.of(0,10);
+		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
 
-		when(boardService.getBoard("general")).thenReturn(List.of(post));
+		when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
 
 		mockMvc.perform(get("/board/api/generalBoard")
+						.param("page", "0")  // 페이지 번호
+						.param("size", "10")  // 페이지 크기
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(content().json("[{\"id\":1,\"title\":\"title\",\"content\":\"content\",\"tabName\":\"general\"}]"));
-
+				.andExpect(jsonPath("$.content[0].title").value("title"));
 	}
+
 
 	@Test
 	public void findByTitleTest() throws Exception {
@@ -227,35 +238,38 @@ public class BoardApiControllerTest {
 	}
 
 	@Test
-	public void searchPostsTest() throws Exception {
-		String query = "title1";
-		String type = "title";
-		List<Board> boardList = List.of(
-				new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
-		);
+	public void searchPosts_returnsPagedResults() throws Exception {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
 
-		when(boardService.searchPosts(query, type)).thenReturn(boardList);
+		when(boardService.searchPosts("title", "title", pageable)).thenReturn(boardPage);
 
 		mockMvc.perform(get("/board/api/search")
-						.param("query", query)
-						.param("type", type)
+						.param("query", "title")
+						.param("type", "title")
+						.param("page", "0")
+						.param("size", "10")
 						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+				.andExpect(jsonPath("$.content[0].title").value("title"));
 	}
 
 
 	@Test
-	public void getMemberBoardTest() throws Exception {
-		Board post = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+	public void getMemberBoard_returnsPagedResults() throws Exception {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser")));
 
-		when(boardService.getBoard("member")).thenReturn(List.of(post));
+		when(boardService.getBoard("member", pageable)).thenReturn(boardPage);
 
 		mockMvc.perform(get("/board/api/memberBoard")
+						.param("page", "0")
+						.param("size", "10")
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(content().json("[{\"id\":1,\"title\":\"title\",\"content\":\"content\",\"tabName\":\"member\"}]"));
+				.andExpect(jsonPath("$.content[0].title").value("title"));
 	}
 
 	@Test

@@ -5,6 +5,9 @@ import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
 import me.jh.core.utils.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -56,8 +59,8 @@ public class BoardApiController {
     //Read
     @GetMapping("/generalBoard")
     @ResponseBody
-    public ResponseEntity<List<Board>> getGeneralBoard() {
-        List<Board> boards = boardService.getBoard("general");
+    public ResponseEntity<Page<Board>> getGeneralBoard(Pageable pageable) {
+        Page<Board> boards = boardService.getBoard("general", pageable);
         return ResponseEntity.ok(boards);//TODO: board.comments필드 JSON 직렬화 이슈 수정 필요
     }
 
@@ -116,17 +119,17 @@ public class BoardApiController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<Board>> searchPosts(@RequestParam("query") String query,
-                                                   @RequestParam("type") String type) {
+    public ResponseEntity<Page<Board>> searchPosts(@RequestParam("query") String query,
+                                                   @RequestParam("type") String type, Pageable pageable) {
 
-        List<Board> searchResults = boardService.searchPosts(query, type);
+        Page<Board> searchResults = boardService.searchPosts(query, type, pageable);
         return ResponseEntity.ok(searchResults);
     }
 
     @GetMapping("/memberBoard")
     @ResponseBody
-    public ResponseEntity<List<Board>> getMemberBoard() {
-        List<Board> boards = boardService.getBoard("member");
+    public ResponseEntity<Page<Board>> getMemberBoard(Pageable pageable) {
+        Page<Board> boards = boardService.getBoard("member", pageable);
         return ResponseEntity.ok(boards);
     }
 
