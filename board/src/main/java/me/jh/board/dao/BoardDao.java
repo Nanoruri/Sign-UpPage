@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BoardDao extends JpaRepository<Board, Long>, BoardWtihCommentDao {
+public interface BoardDao extends JpaRepository<Board, Long>, BoardWtihCommentDao, BoardSearchDao {
     Optional<Board> findByTitle(String title);
 
     Page<Board> findByTitleContaining(String query, Pageable pageable);
