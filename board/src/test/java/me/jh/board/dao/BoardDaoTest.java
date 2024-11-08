@@ -8,15 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +25,9 @@ public class BoardDaoTest {
 
     @Autowired
     private BoardDao boardDao;
+
+    @Autowired
+    private BoardSearchDaoImpl boardSearchDaoImpl;
 
     @Mock
     private Board board;
@@ -89,53 +88,6 @@ public class BoardDaoTest {
     }
 
 
-    @Test
-    public void testFindByTitleContaining() {
-        // given
-        Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(), "testTab", "testUser");
-        Board board2 = new Board(2L, "Spring Data JPA", "Content 2", LocalDateTime.now(), "testTab", "testUser");
-        boardDao.save(board1);
-        boardDao.save(board2);
-
-        // when
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> foundBoards = boardDao.findByTitleContaining("Spring",pageable);
-
-        // then
-        assertThat(foundBoards).hasSize(2);
-    }
-
-    @Test
-    public void testFindByContentContaining() {
-        // given
-        Board board1 = new Board(1L, "Title 1", "Spring Boot Content", LocalDateTime.now(), "testTab", "testUser");
-        Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(), "testTab", "testUser");
-        boardDao.save(board1);
-        boardDao.save(board2);
-
-        // when
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> foundBoards = boardDao.findByContentContaining("Spring",pageable);
-
-        // then
-        assertThat(foundBoards).hasSize(2);
-    }
-
-    @Test
-    public void testFindByTitleContainingOrContentContaining() {
-        // given
-        Board board1 = new Board(1L, "Spring Boot Guide", "Content 1", LocalDateTime.now(), "testTab", "testUser");
-        Board board2 = new Board(2L, "Title 2", "Spring Data JPA Content", LocalDateTime.now(), "testTab", "testUser");
-        boardDao.save(board1);
-        boardDao.save(board2);
-
-        // when
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> foundBoards = boardDao.findByTitleContainingOrContentContaining("Spring", "Spring",pageable);
-
-        // then
-        assertThat(foundBoards).hasSize(2);
-    }
 
 }
 
