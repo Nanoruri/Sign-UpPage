@@ -1,12 +1,15 @@
 package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,8 +29,13 @@ public class BoardServiceTest {
 
     @Mock
     private BoardDao boardDao;
+
+    @Mock
+    private BoardSearchDaoImpl boardSearchDaoImpl;
+
     @InjectMocks
     private BoardService boardService;
+
 
 
     @Test//Create
@@ -235,52 +243,55 @@ public class BoardServiceTest {
     @Test
     public void searchPostsByTitle() {
         String query = "title1";
+        String type = "title";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByTitleContaining(query, pageable)).thenReturn(boardPage);
+        when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
 
-        Page<Board> result = boardService.searchPosts(query, "title", pageable);
+        Page<Board> result = boardService.searchPosts(query, "title", pageable, "testTab");
 
         assertEquals(boardList, result.getContent());
-        verify(boardDao).findByTitleContaining(query, pageable);
+        verify(boardDao).searchPosts(query, type, pageable, "testTab");
     }
 
     @Test
     public void searchPostsByContent() {
         String query = "content1";
+        String type = "content";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByContentContaining(query, pageable)).thenReturn(boardPage);
+        when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
 
-        Page<Board> result = boardService.searchPosts(query, "content", pageable);
+        Page<Board> result = boardService.searchPosts(query, type, pageable, "testTab");
 
         assertEquals(boardPage, result);
-        verify(boardDao).findByContentContaining(query, pageable);
+        verify(boardDao).searchPosts(query, type, pageable, "testTab");
     }
 
     @Test
     public void searchPostsByTitleAndContent() {
         String query = "title1";
+        String type = "titleAndContent";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
                 new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByTitleContainingOrContentContaining(query, query, pageable)).thenReturn(boardPage);
+        when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
 
-        Page<Board> result = boardService.searchPosts(query, "titleAndContent", pageable);
+        Page<Board> result = boardService.searchPosts(query, type, pageable, "testTab");
 
         assertEquals(boardPage, result);
-        verify(boardDao).findByTitleContainingOrContentContaining(query, query, pageable);
+        verify(boardDao).searchPosts(query, type, pageable, "testTab");
     }
 
     @Test
@@ -288,9 +299,9 @@ public class BoardServiceTest {
         String query = "title1";
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Board> result = boardService.searchPosts(query, "invalidType", pageable);
+        Page<Board> result = boardService.searchPosts(query, "invalidType", pageable, "testTab");
 
-        assertTrue(result.isEmpty());
+        assertNull(result);
     }
 
 

@@ -88,25 +88,8 @@ public class BoardService {
     }
 
     @Transactional
-    public Page<Board> searchPosts(String query, String type, Pageable pageable) { //todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
-        Page<Board> boards;
-
-        switch (type) {
-            case "title":
-                boards = boardDao.findByTitleContaining(query,pageable);
-                boards.forEach(board -> board.setComments(null));
-                return boards;
-            case "content":
-                boards = boardDao.findByContentContaining(query,pageable);
-                boards.forEach(board -> board.setComments(null));
-                return boards;
-            case "titleAndContent":
-                boards = boardDao.findByTitleContainingOrContentContaining(query, query,pageable);
-                boards.forEach(board -> board.setComments(null));
-                return boards;
-            default:
-                return Page.empty(pageable); // 잘못된 타입이 들어온 경우 빈 리스트 반환
-        }
+    public Page<Board> searchPosts(String query, String type, Pageable pageable, String tabName) {
+        return boardDao.searchPosts(query, type, pageable, tabName) ;
     }
 
     //todo: 토큰의 사용자 ID와 게시판 아이디를 받아  DB 내 작성자 ID와 비교하여 일치하면 게시글 반환
