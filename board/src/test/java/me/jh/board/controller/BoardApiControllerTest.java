@@ -239,16 +239,18 @@ public class BoardApiControllerTest {
 
 	@Test
 	public void searchPosts_returnsPagedResults() throws Exception {
+		String thisTab = "general";
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
 
-		when(boardService.searchPosts("title", "title", pageable)).thenReturn(boardPage);
+		when(boardService.searchPosts("title", "title", pageable, thisTab)).thenReturn(boardPage);
 
 		mockMvc.perform(get("/board/api/search")
 						.param("query", "title")
 						.param("type", "title")
 						.param("page", "0")
 						.param("size", "10")
+						.param("tabName", thisTab)// qurry문으로 날려주는 부분
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))

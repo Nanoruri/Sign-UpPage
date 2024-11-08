@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/board/api")
+@RequestMapping("/board/api")// todo: 로직중 인증이 필요한 로직들은 인증용 컨트롤러에 넣기.
 public class BoardApiController {
 
 
@@ -120,9 +120,10 @@ public class BoardApiController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<Board>> searchPosts(@RequestParam("query") String query,
-                                                   @RequestParam("type") String type, Pageable pageable) {
+                                                   @RequestParam("type") String type,
+                                                   @RequestParam("tabName") String tabName, Pageable pageable) {
 
-        Page<Board> searchResults = boardService.searchPosts(query, type, pageable);
+        Page<Board> searchResults = boardService.searchPosts(query, type, pageable,tabName);
         return ResponseEntity.ok(searchResults);
     }
 
