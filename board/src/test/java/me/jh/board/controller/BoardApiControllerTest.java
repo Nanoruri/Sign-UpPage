@@ -108,26 +108,6 @@ public class BoardApiControllerTest {
                 .andExpect(jsonPath("$.content[0].title").value("title"));
     }
 
-
-    @Test
-    public void findByTitleTest() throws Exception {
-        long id = 1L;
-        String title = "title";
-        String content = "content";
-        LocalDateTime date = LocalDateTime.now();
-        String tab = "testTab";
-        String user = "testUser";
-
-        Board post = new Board(id, title, content, date, tab, user);
-
-        when(boardService.getBoardByTitle(title)).thenReturn(post);
-
-        mockMvc.perform(get("/board/api/search_content")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"title\":\"" + title + "\"}"))//title만 으로 검색하였을 때..
-                .andExpect(status().isOk());
-    }
-
     @Test
     public void updateBoardTest() throws Exception {
         long id = 1L;

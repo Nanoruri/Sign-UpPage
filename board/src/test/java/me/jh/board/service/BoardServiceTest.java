@@ -77,35 +77,6 @@ public class BoardServiceTest {
         verify(boardDao).findByTabName("testTab", pageable);
     }
 
-    /**
-     * 특정 제목의 게시글 조회 테스트
-     */
-    @Test//Read2
-    public void findByTitle() {
-
-        LocalDateTime now = LocalDateTime.now();
-
-        // 기존 게시글 리스트
-        List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
-        );
-
-        // 찾아올 게시글의 제목
-        String title = "title1";
-
-        // 특정 제목의 게시글을 찾아오기
-        when(boardDao.findByTitle(title)).thenReturn(Optional.of(boardList.get(0)));
-
-        // 게시글 찾아오기
-        Board result = boardService.getBoardByTitle(title);
-
-        // 검증
-        verify(boardDao).findByTitle(title);
-
-        // Optional로 찾아서 만약 여러게시글이 있을 경우(Optional은 하나만을 반환하니 false일 경우) List로 변환해서 반환하도록 하기
-    }
 
 
     /**

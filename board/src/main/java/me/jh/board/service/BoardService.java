@@ -46,14 +46,7 @@ public class BoardService {
         return boards;
     }
 
-    public Board getBoardByTitle(String title) {
-        Optional<Board> board = boardDao.findByTitle(title);
-        return board.orElse(null);
-    }
-
-
     public boolean updateBoard(Long id, String userId, Board board) {
-
         Board oldBoard = boardDao.findById(id).orElse(null);
         if (oldBoard == null || !oldBoard.getCreator().equals(userId)) {
             return false;

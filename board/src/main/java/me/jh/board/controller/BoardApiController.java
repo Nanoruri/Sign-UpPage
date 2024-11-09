@@ -62,13 +62,6 @@ public class BoardApiController {
         return ResponseEntity.ok(boards);//TODO: board.comments필드 JSON 직렬화 이슈 수정 필요
     }
 
-    @GetMapping("/search_content")
-    @ResponseBody
-    public ResponseEntity<Board> getBoardByContent(@RequestBody Board board) {
-        boardService.getBoardByTitle(board.getTitle());
-        return ResponseEntity.ok().build();
-    }
-
     //Update
     @PutMapping("/update/{id}")
     @ResponseBody
