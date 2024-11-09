@@ -7,6 +7,7 @@
     <title>Title</title>
     <!-- Quill CSS CDN -->
     <script th:src="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'}"></script>
+    <script th:src="${'https://cdn.jsdelivr.net/gh/hunghg255/quill-resize-module/dist/quill-resize-image.min.js'}"></script>
     <link th:href="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'}" rel="stylesheet">
 
 </head>
@@ -46,6 +47,10 @@
 <footer>
     <p>&copy; NanoRuriStudy</p>
 </footer>
+
+<script>
+    Quill.register("modules/resize", window.QuillResizeImage);
+</script>
 
 
 </body>

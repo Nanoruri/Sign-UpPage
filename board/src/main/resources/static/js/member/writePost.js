@@ -21,19 +21,27 @@ document.addEventListener('DOMContentLoaded', function () {
     cancelButton.addEventListener('click', () => window.location.href = redirectIndex);
 });
 
+
 function initializeQuill() {
+
+    const toolbarOption = [
+        [{'header': [1, 2, false]}],
+        ['bold', 'italic', 'underline'],
+        ['image']]
+
+
     return new Quill('#editor', {
         theme: 'snow',
         modules: {
-            toolbar: [
-                [{'header': [1, 2, false]}],
-                ['bold', 'italic', 'underline'],
-                ['image']
-            ]
+            toolbar: toolbarOption,
+            resize: {
+                locale: {
+                    center: "center",
+                },
+            },
         }
     });
 }
-
 function setupImageUploadHandler(quill) {
     quill.getModule('toolbar').addHandler('image', () => selectLocalImage(quill));
 }
