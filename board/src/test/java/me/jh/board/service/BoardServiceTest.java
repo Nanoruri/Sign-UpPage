@@ -4,12 +4,10 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +32,6 @@ public class BoardServiceTest {
 
     @InjectMocks
     private BoardService boardService;
-
 
 
     @Test//Create
@@ -71,14 +67,14 @@ public class BoardServiceTest {
                 new Board(2L, "title2", "content2", now, "testTab", "testUser"),
                 new Board(3L, "title3", "content3", now, "testTab", "testUser")
         );
-        Page<Board> boardPage = new PageImpl<>(boardList,pageable,boardList.size());
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.findByTabName("testTab",pageable)).thenReturn(boardPage);
+        when(boardDao.findByTabName("testTab", pageable)).thenReturn(boardPage);
 
-        Page<Board> result = boardService.getBoard("testTab",pageable);
+        Page<Board> result = boardService.getBoard("testTab", pageable);
 
-        assertEquals(boardPage,result);
-        verify(boardDao).findByTabName("testTab",pageable);
+        assertEquals(boardPage, result);
+        verify(boardDao).findByTabName("testTab", pageable);
     }
 
     /**

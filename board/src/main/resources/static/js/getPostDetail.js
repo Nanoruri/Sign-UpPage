@@ -34,8 +34,8 @@ function showBoardDetail(postId) {
             postAuthor.textContent = `작성자: ${post.creator}`; // 작성자 표시
             postAuthor.classList.add('post-author'); // TODO: 필요한 경우 스타일 클래스 추가
             boardContent.appendChild(postAuthor); // 내용 아래에 작성자 추가
-            
-            
+
+
             post.comments = post.comments || [];
             data.isCreator = data.isCreator || false;
             data.currentUserId = data.currentUserId || null
@@ -64,7 +64,7 @@ function showBoardDetail(postId) {
 }
 
 // 댓글 표시 함수
-function displayComments(comments,token, currentUserId) {
+function displayComments(comments, token, currentUserId) {
     const commentSection = document.getElementById('commentSection');
     commentSection.innerHTML = '';
 
@@ -114,7 +114,7 @@ function displayComments(comments,token, currentUserId) {
     }
 }
 
-function getPostId(){
+function getPostId() {
     return new URLSearchParams(window.location.search).get('postId');
 }
 

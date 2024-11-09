@@ -36,7 +36,7 @@ public class CommentDaoTest {
     public void setUp() {
         board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", "testUser");
 
-        comment = new Comment(0, "Test Comment", LocalDateTime.now(), board,"testCommentUser");
+        comment = new Comment(0, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
 
     }
 

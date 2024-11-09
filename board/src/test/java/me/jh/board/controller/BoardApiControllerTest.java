@@ -5,7 +5,6 @@ import me.jh.board.entity.Board;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
 import me.jh.core.utils.auth.JwtProvider;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,23 +21,14 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.spi.FileTypeDetector;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -49,287 +39,285 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @AutoConfigureMockMvc(addFilters = false)// csrf 비활성화
 public class BoardApiControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private BoardDao boardDao;
+    @MockBean
+    private BoardDao boardDao;
 
-	@MockBean
-	private BoardService boardService;
+    @MockBean
+    private BoardService boardService;
 
-	@MockBean
-	private FileUploadService fileUploadService;
+    @MockBean
+    private FileUploadService fileUploadService;
 
-	@MockBean
-	private JwtProvider jwtProvider;
+    @MockBean
+    private JwtProvider jwtProvider;
 
-	@Mock
-	private MockMultipartFile mockMultipartFile;
-
-
-
-	@BeforeEach
-	void setup() throws IOException {
-		mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService , jwtProvider))
-				.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-				.build();
-
-	}
+    @Mock
+    private MockMultipartFile mockMultipartFile;
 
 
+    @BeforeEach
+    void setup() throws IOException {
+        mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService, jwtProvider))
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
 
-	@Test
-	public void saveBoardTest() throws Exception {
-		long id = 1L;
-		String title = "title";
-		String content = "content";
-		LocalDateTime date = LocalDateTime.now();
+    }
+
+
+    @Test
+    public void saveBoardTest() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
-		String userId = "testUser";
+        String userId = "testUser";
 
-		String token = "Bearer MockToken";
+        String token = "Bearer MockToken";
 
-		Board post = new Board(id, title, content, date, tab, userId);
+        Board post = new Board(id, title, content, date, tab, userId);
 
-		when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(userId);
-		when(boardService.saveBoard(userId, post)).thenReturn(true);
+        when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(userId);
+        when(boardService.saveBoard(userId, post)).thenReturn(true);
 
-		mockMvc.perform(post("/board/api/create")
-						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", token)
-						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
-				.andExpect(status().isOk());
-	}
-
-
-	@Test
-	public void getGeneralBoard_returnsPagedResults() throws Exception {
-
-		Pageable pageable = PageRequest.of(0,10);
-		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
-
-		when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
-
-		mockMvc.perform(get("/board/api/generalBoard")
-						.param("page", "0")  // 페이지 번호
-						.param("size", "10")  // 페이지 크기
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.content[0].title").value("title"));
-	}
+        mockMvc.perform(post("/board/api/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
+                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
+                .andExpect(status().isOk());
+    }
 
 
-	@Test
-	public void findByTitleTest() throws Exception {
-		long id = 1L;
-		String title = "title";
-		String content = "content";
-		LocalDateTime date = LocalDateTime.now();
+    @Test
+    public void getGeneralBoard_returnsPagedResults() throws Exception {
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
+
+        when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
+
+        mockMvc.perform(get("/board/api/generalBoard")
+                        .param("page", "0")  // 페이지 번호
+                        .param("size", "10")  // 페이지 크기
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content[0].title").value("title"));
+    }
+
+
+    @Test
+    public void findByTitleTest() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
-		String user = "testUser";
+        String user = "testUser";
 
-		Board post = new Board(id, title, content, date, tab, user);
+        Board post = new Board(id, title, content, date, tab, user);
 
-		when(boardService.getBoardByTitle(title)).thenReturn(post);
+        when(boardService.getBoardByTitle(title)).thenReturn(post);
 
-		mockMvc.perform(get("/board/api/search_content")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"id\":1,\"title\":\"" + title + "\"}"))//title만 으로 검색하였을 때..
-				.andExpect(status().isOk());
-	}
+        mockMvc.perform(get("/board/api/search_content")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":1,\"title\":\"" + title + "\"}"))//title만 으로 검색하였을 때..
+                .andExpect(status().isOk());
+    }
 
-	@Test
-	public void updateBoardTest() throws Exception {
-		long id = 1L;
-		String title = "title";
-		String content = "content";
-		LocalDateTime date = LocalDateTime.now();
-		String user = "testUser";
-		String token = "Bearer testToken"; // JWT 토큰 형식 맞추기
-
-
-		// 'testToken'에 대한 Mocking 설정
-		when(jwtProvider.getUserIdFromToken("testToken")).thenReturn(user);
-		when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(true);
-
-		mockMvc.perform(put("/board/api/update/{id}", id)
-						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", token) // JWT 토큰을 헤더에 추가
-						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
-				.andExpect(status().isOk());
-	}
+    @Test
+    public void updateBoardTest() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
+        String user = "testUser";
+        String token = "Bearer testToken"; // JWT 토큰 형식 맞추기
 
 
-	@Test
-	public void updateBoard_FailTest() throws Exception {
-		long id = 1L;
-		String title = "title";
-		String content = "content";
-		LocalDateTime date = LocalDateTime.now();
-		String user = "testUser";
-		String token = "testToken";
+        // 'testToken'에 대한 Mocking 설정
+        when(jwtProvider.getUserIdFromToken("testToken")).thenReturn(user);
+        when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(true);
+
+        mockMvc.perform(put("/board/api/update/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token) // JWT 토큰을 헤더에 추가
+                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
+                .andExpect(status().isOk());
+    }
 
 
-		when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(user);
-		when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(false);
+    @Test
+    public void updateBoard_FailTest() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
+        String user = "testUser";
+        String token = "testToken";
 
-		mockMvc.perform(put("/board/api/update/{id}", id)
-						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", token)
-						.content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
-				.andExpect(status().isForbidden());
-	}
 
-	//Delete
-	@Test
-	public void deleteBoardTest() throws Exception {
-		long id = 1L;
-		String title = "title";
-		String content = "content";
-		LocalDateTime date = LocalDateTime.now();
+        when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(user);
+        when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(false);
+
+        mockMvc.perform(put("/board/api/update/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
+                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    //Delete
+    @Test
+    public void deleteBoardTest() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
-		String user = "testUser";
+        String user = "testUser";
 
-		Board post = new Board(id, title, content, date,tab, user);
+        Board post = new Board(id, title, content, date, tab, user);
 
-		when(boardService.deleteBoard(post.getId())).thenReturn(true);
+        when(boardService.deleteBoard(post.getId())).thenReturn(true);
 
-		mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId()))
-				.andExpect(status().isNoContent());
-	}
+        mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId()))
+                .andExpect(status().isNoContent());
+    }
 
-	//Detail
-	@Test
-	public void getBoardDetailTest() throws Exception {
-		long boardId = 1L;
-		String token = "Bearer validToken";
-		String userId = "testUser";
-		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+    //Detail
+    @Test
+    public void getBoardDetailTest() throws Exception {
+        long boardId = 1L;
+        String token = "Bearer validToken";
+        String userId = "testUser";
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
 
-		when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
-		when(boardService.getBoardDetail(boardId)).thenReturn(board);
+        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
-		mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
-						.header("Authorization", token)
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.board.id").value(boardId))
-				.andExpect(jsonPath("$.board.title").value("Test Title"))
-				.andExpect(jsonPath("$.board.content").value("Test Content"))
-				.andExpect(jsonPath("$.isCreator").value(true));
-	}
+        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.board.id").value(boardId))
+                .andExpect(jsonPath("$.board.title").value("Test Title"))
+                .andExpect(jsonPath("$.board.content").value("Test Content"))
+                .andExpect(jsonPath("$.isCreator").value(true));
+    }
 
-	@Test
-	public void getBoardDetailNoTokenTest() throws Exception {
-		long boardId = 1L;
-		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+    @Test
+    public void getBoardDetailNoTokenTest() throws Exception {
+        long boardId = 1L;
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
-		when(boardService.getBoardDetail(boardId)).thenReturn(board);
+        when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
-		mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.board.id").value(boardId))
-				.andExpect(jsonPath("$.board.title").value("Test Title"))
-				.andExpect(jsonPath("$.board.content").value("Test Content"))
-				.andExpect(jsonPath("$.isCreator").value(false));
-	}
+        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.board.id").value(boardId))
+                .andExpect(jsonPath("$.board.title").value("Test Title"))
+                .andExpect(jsonPath("$.board.content").value("Test Content"))
+                .andExpect(jsonPath("$.isCreator").value(false));
+    }
 
-	@Test
-	public void searchPosts_returnsPagedResults() throws Exception {
-		String thisTab = "general";
-		Pageable pageable = PageRequest.of(0, 10);
-		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
+    @Test
+    public void searchPosts_returnsPagedResults() throws Exception {
+        String thisTab = "general";
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
 
-		when(boardService.searchPosts("title", "title", pageable, thisTab)).thenReturn(boardPage);
+        when(boardService.searchPosts("title", "title", pageable, thisTab)).thenReturn(boardPage);
 
-		mockMvc.perform(get("/board/api/search")
-						.param("query", "title")
-						.param("type", "title")
-						.param("page", "0")
-						.param("size", "10")
-						.param("tabName", thisTab)// qurry문으로 날려주는 부분
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.content[0].title").value("title"));
-	}
-
-
-	@Test
-	public void getMemberBoard_returnsPagedResults() throws Exception {
-		Pageable pageable = PageRequest.of(0, 10);
-		Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser")));
-
-		when(boardService.getBoard("member", pageable)).thenReturn(boardPage);
-
-		mockMvc.perform(get("/board/api/memberBoard")
-						.param("page", "0")
-						.param("size", "10")
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.content[0].title").value("title"));
-	}
-
-	@Test
-	void uploadImageSuccessfully() throws Exception {
-		String imageUrl = "http://localhost/images/test.jpg";
-		mockMultipartFile = new MockMultipartFile( "image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "image content".getBytes());
+        mockMvc.perform(get("/board/api/search")
+                        .param("query", "title")
+                        .param("type", "title")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("tabName", thisTab)// qurry문으로 날려주는 부분
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content[0].title").value("title"));
+    }
 
 
-		when(fileUploadService.saveImage(mockMultipartFile)).thenReturn(imageUrl);
+    @Test
+    public void getMemberBoard_returnsPagedResults() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser")));
 
-		mockMvc.perform(multipart("/board/api/upload-image")
-						.file(mockMultipartFile))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.imageUrl").value(imageUrl));
-	}
+        when(boardService.getBoard("member", pageable)).thenReturn(boardPage);
 
-	@Test
-	void uploadImageFailsDueToException() throws Exception {
-		mockMultipartFile = new MockMultipartFile("image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "image content".getBytes());
+        mockMvc.perform(get("/board/api/memberBoard")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content[0].title").value("title"));
+    }
 
-		when(fileUploadService.saveImage(mockMultipartFile)).thenThrow(new IOException("File upload error"));
+    @Test
+    void uploadImageSuccessfully() throws Exception {
+        String imageUrl = "http://localhost/images/test.jpg";
+        mockMultipartFile = new MockMultipartFile("image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "image content".getBytes());
 
-		mockMvc.perform(multipart("/board/api/upload-image")
-						.file(mockMultipartFile))
-				.andExpect(status().isInternalServerError());
-	}
 
-	@Test
-	public void findBoardSuccessTest() throws Exception {
-		long boardId = 1L;
-		String token = "Bearer validToken";
-		String userId = "testUser";
-		Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+        when(fileUploadService.saveImage(mockMultipartFile)).thenReturn(imageUrl);
 
-		when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
-		when(boardService.findBoard(userId, boardId)).thenReturn(board);
+        mockMvc.perform(multipart("/board/api/upload-image")
+                        .file(mockMultipartFile))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imageUrl").value(imageUrl));
+    }
 
-		mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
-						.header("Authorization", token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(boardId))
-				.andExpect(jsonPath("$.title").value("Test Title"))
-				.andExpect(jsonPath("$.content").value("Test Content"))
-				.andExpect(jsonPath("$.tabName").value("testTab"))
-				.andExpect(jsonPath("$.creator").value(userId));
-	}
+    @Test
+    void uploadImageFailsDueToException() throws Exception {
+        mockMultipartFile = new MockMultipartFile("image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "image content".getBytes());
 
-	@Test
-	public void findBoardFailTest() throws Exception {
-		long boardId = 1L;
-		String token = "Bearer validToken";
-		String userId = "testUser";
+        when(fileUploadService.saveImage(mockMultipartFile)).thenThrow(new IOException("File upload error"));
 
-		when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
-		when(boardService.findBoard(userId, boardId)).thenReturn(null);
+        mockMvc.perform(multipart("/board/api/upload-image")
+                        .file(mockMultipartFile))
+                .andExpect(status().isInternalServerError());
+    }
 
-		mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
-						.header("Authorization", token))
-				.andExpect(status().isForbidden());
-	}
+    @Test
+    public void findBoardSuccessTest() throws Exception {
+        long boardId = 1L;
+        String token = "Bearer validToken";
+        String userId = "testUser";
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+
+        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(boardService.findBoard(userId, boardId)).thenReturn(board);
+
+        mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
+                        .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(boardId))
+                .andExpect(jsonPath("$.title").value("Test Title"))
+                .andExpect(jsonPath("$.content").value("Test Content"))
+                .andExpect(jsonPath("$.tabName").value("testTab"))
+                .andExpect(jsonPath("$.creator").value(userId));
+    }
+
+    @Test
+    public void findBoardFailTest() throws Exception {
+        long boardId = 1L;
+        String token = "Bearer validToken";
+        String userId = "testUser";
+
+        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(boardService.findBoard(userId, boardId)).thenReturn(null);
+
+        mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
+                        .header("Authorization", token))
+                .andExpect(status().isForbidden());
+    }
 }

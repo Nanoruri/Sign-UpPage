@@ -76,9 +76,9 @@ function updateComment(commentId, newContent, contentDiv, token, commentEditButt
         .then(response => {
             if (!response.ok) {
                 throw new Error('댓글 업데이트에 실패했습니다.');
-            }else{
-            contentDiv.innerHTML = newContent; // DOM에서 내용 업데이트
-            alert('댓글이 성공적으로 업데이트되었습니다.');
+            } else {
+                contentDiv.innerHTML = newContent; // DOM에서 내용 업데이트
+                alert('댓글이 성공적으로 업데이트되었습니다.');
                 loadComments(); // 댓글 목록을 다시 불러오는 함수 호출
             }
         })

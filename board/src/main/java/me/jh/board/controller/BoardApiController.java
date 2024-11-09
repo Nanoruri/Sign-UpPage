@@ -7,7 +7,6 @@ import me.jh.core.utils.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -123,7 +121,7 @@ public class BoardApiController {
                                                    @RequestParam("type") String type,
                                                    @RequestParam("tabName") String tabName, Pageable pageable) {
 
-        Page<Board> searchResults = boardService.searchPosts(query, type, pageable,tabName);
+        Page<Board> searchResults = boardService.searchPosts(query, type, pageable, tabName);
         return ResponseEntity.ok(searchResults);
     }
 

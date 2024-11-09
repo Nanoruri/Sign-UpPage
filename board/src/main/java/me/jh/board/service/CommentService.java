@@ -41,10 +41,10 @@ public class CommentService {//TODO: 댓글 D 구현
     @Transactional
     public boolean updateComment(Long commentId, Comment comment, String userId) {
         Comment oldcomment = commentDao.findById(commentId).orElse(null);
-        if (oldcomment == null|| !oldcomment.getCreator().equals(userId)) {
+        if (oldcomment == null || !oldcomment.getCreator().equals(userId)) {
             return false;
         }
-        oldcomment.setContent("(수정됨)"+ comment.getContent());
+        oldcomment.setContent("(수정됨)" + comment.getContent());
         oldcomment.setDate(LocalDateTime.now());
 
         commentDao.save(oldcomment);

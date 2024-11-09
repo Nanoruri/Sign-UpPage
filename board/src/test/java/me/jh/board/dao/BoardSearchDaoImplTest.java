@@ -133,7 +133,6 @@ public class BoardSearchDaoImplTest {
     }
 
 
-
     @Test
     public void searchPosts_withNullType_returnsEmptyPage() {
         // given

@@ -50,8 +50,6 @@ function getAllPost() {
     }
 
 
-
-
     // '이전' 버튼 클릭 시 페이지 변경
     document.getElementById('prev-btn').addEventListener('click', function () {
         changePage(currentPage - 1);

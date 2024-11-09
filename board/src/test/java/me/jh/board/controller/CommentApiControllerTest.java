@@ -108,7 +108,7 @@ public class CommentApiControllerTest {
 
 
         when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
-        when(commentService.updateComment(eq(commentId), any(Comment.class),eq(commentUserId))).thenReturn(false);
+        when(commentService.updateComment(eq(commentId), any(Comment.class), eq(commentUserId))).thenReturn(false);
 
         mockMvc.perform(put("/comment/api/update-comment")
                         .header("Authorization", "Bearer " + token)

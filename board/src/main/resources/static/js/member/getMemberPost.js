@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 회원 게시글 로드 함수
-    function loadMemberBoardList(page =0) {
+    function loadMemberBoardList(page = 0) {
         fetch(`/study/board/api/memberBoard?page=${page}&size=${pageSize}`, {
             method: 'GET',
             headers: {

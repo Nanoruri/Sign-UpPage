@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,10 +52,10 @@ public class BoardService {
     }
 
 
-    public boolean updateBoard(Long id, String userId , Board board) {
+    public boolean updateBoard(Long id, String userId, Board board) {
 
         Board oldBoard = boardDao.findById(id).orElse(null);
-        if (oldBoard == null ||!oldBoard.getCreator().equals(userId)) {
+        if (oldBoard == null || !oldBoard.getCreator().equals(userId)) {
             return false;
         }// todo: 게시글 변경 사항에 대해서만 변경하도록 수정하기
 
@@ -89,7 +87,7 @@ public class BoardService {
 
     @Transactional
     public Page<Board> searchPosts(String query, String type, Pageable pageable, String tabName) {
-        return boardDao.searchPosts(query, type, pageable, tabName) ;
+        return boardDao.searchPosts(query, type, pageable, tabName);
     }
 
     //todo: 토큰의 사용자 ID와 게시판 아이디를 받아  DB 내 작성자 ID와 비교하여 일치하면 게시글 반환
