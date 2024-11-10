@@ -89,8 +89,30 @@ h2 {
 }
 
 /* 게시글 상세보기 */
+/* 게시글 상세보기 스타일 */
 #boardDetail {
-    display: block; /* 디폴트로 표시되게 수정 */
+    display: block;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2); /*게시글 상세보기 컬러 */
+    margin-bottom: 20px;
+}
+
+#boardContent {
+    margin-bottom: 20px;
+}
+
+#boardMeta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: white;
+}
+
+#boardMeta .post-author {
+    font-weight: bold;
+    color: white;
 }
 
 #backButton, #editButton, #submitCommentButton {
