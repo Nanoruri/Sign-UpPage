@@ -2,6 +2,7 @@
 function showBoardDetail(postId) {
     const boardTitle = document.getElementById('boardTitle');
     const boardContent = document.getElementById('boardContent');
+    const boardMeta = document.getElementById('boardMeta');
     const boardDate = document.getElementById('boardDate');
     const editButton = document.getElementById('editButton');
     const backButton = document.getElementById('backButton');
@@ -28,13 +29,12 @@ function showBoardDetail(postId) {
             const post = data.board;
             boardTitle.textContent = post.title; // 제목 표시
             boardContent.innerHTML = post.content; // 내용 표시
-            boardDate.textContent = new Date(post.date).toLocaleString(); // 작성일 표시
-            // 게시글 작성자 표시
-            const postAuthor = document.createElement('span');
-            postAuthor.textContent = `작성자: ${post.creator}`; // 작성자 표시
-            postAuthor.classList.add('post-author'); // TODO: 필요한 경우 스타일 클래스 추가
-            boardContent.appendChild(postAuthor); // 내용 아래에 작성자 추가
 
+            // 작성자와 작성일 표시
+            boardMeta.innerHTML = `
+                <span class="post-author">작성자: ${post.creator}</span>
+                <span class="post-date">${new Date(post.date).toLocaleString()}</span>
+            `;
 
             post.comments = post.comments || [];
             data.isCreator = data.isCreator || false;
