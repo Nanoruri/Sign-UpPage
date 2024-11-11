@@ -168,14 +168,21 @@ div {
     transform: scale(1.05);
 }
 
-/* 글쓰기 버튼 오른쪽 구석으로 이동 */
+
+/* 글쓰기 버튼 스타일 */
+.write-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 0 0; 
+    position: relative;
+    left: 400px;
+}
+
 #writeButton {
-    display: block;
-    margin-left: auto;
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
+    background-color: white;
+    color: #53e3a6;
     border: none;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
@@ -183,7 +190,7 @@ div {
 }
 
 #writeButton:hover {
-    background-color: #218838;
+    background-color: #f5f7f9;
     transform: scale(1.05);
 }
 
