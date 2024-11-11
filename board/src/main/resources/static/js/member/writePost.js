@@ -76,6 +76,11 @@ function uploadImage(file, quill) {
         .then(result => {
             const range = quill.getSelection();
             quill.insertEmbed(range.index, 'image', result.imageUrl);
+            const insertedImage = quill.root.querySelector(`img[src="${result.imageUrl}"]`);
+            if (insertedImage) {
+                insertedImage.style.maxWidth = '100%';  // 부모 요소의 너비를 초과하지 않도록 설정
+                insertedImage.style.height = 'auto';    // 비율 유지
+            }
         })
         .catch(error => console.error('Error uploading image:', error));
 }
