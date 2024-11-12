@@ -173,7 +173,7 @@ div {
 .write-button-container {
     display: flex;
     justify-content: center;
-    margin: 0 0; 
+    margin: -10px 0;
     position: relative;
     left: 400px;
 }
@@ -192,6 +192,13 @@ div {
 #writeButton:hover {
     background-color: #f5f7f9;
     transform: scale(1.05);
+}
+
+.pagination-container {
+    margin-top: 30px; /* Adjust this value as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* 푸터 */
