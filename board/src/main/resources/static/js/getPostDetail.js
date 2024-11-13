@@ -100,16 +100,23 @@ function displayComments(comments, token, currentUserId) {
             const commentEditButton = document.createElement('button');
             commentEditButton.textContent = '수정';
 
+            // 삭제 버튼 생성
+            const commentDeleteButton = document.createElement('button');
+            commentDeleteButton.textContent = '삭제';
+
             // 댓글 작성자와 현재 사용자가 같은 경우에만 수정 버튼 활성화
             if (comment.creator === currentUserId) {
                 commentEditButton.addEventListener('click', () => editComment(comment.id, contentDiv, commentEditButton, token));
+                commentDeleteButton.addEventListener('click', () => deleteComment(comment.id, token));
             } else {
                 commentEditButton.style.display = 'none';
+                commentDeleteButton.style.display = 'none';
             }
 
             commentDiv.appendChild(headerDiv);
             commentDiv.appendChild(contentDiv);
             commentDiv.appendChild(commentEditButton);
+            commentDiv.appendChild(commentDeleteButton);
             commentSection.appendChild(commentDiv);
         });
     } else {
