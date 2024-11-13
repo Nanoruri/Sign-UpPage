@@ -4,6 +4,7 @@ import me.jh.board.entity.Comment;
 import me.jh.board.service.CommentService;
 import me.jh.core.utils.auth.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -51,4 +52,15 @@ public class CommentApiController {//todo: 댓글 CUD API 구현
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/delete/{commentId}")
+    @ResponseBody
+    public ResponseEntity<Comment> deleteComment(@PathVariable Long commentId, @RequestHeader("Authorization") String token) {
+        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+        String userId = jwtProvider.getUserIdFromToken(substringToken);
+        if (!commentService.deleteComment(commentId, userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

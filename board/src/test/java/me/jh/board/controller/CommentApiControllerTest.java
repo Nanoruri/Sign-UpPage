@@ -20,8 +20,7 @@ import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -116,6 +115,36 @@ public class CommentApiControllerTest {
                         .content("{\"id\":1,\"content\":\"Test Comment\"}"))
                 .andExpect(status().isNotFound());
     }
+
+
+    @Test
+    void deleteCommentReturnsSuccess() throws Exception {
+        String token = "Bearer token";
+        String userId = "testUser";
+        Long commentId = 1L;
+
+        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(commentService.deleteComment(commentId, userId)).thenReturn(true);
+
+        mockMvc.perform(delete("/comment/api/delete/{commentId}", commentId)
+                        .header("Authorization", token))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteCommentReturnsForbidden() throws Exception {
+        String token = "Bearer token";
+        String userId = "testUser";
+        Long commentId = 1L;
+
+        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(commentService.deleteComment(commentId, userId)).thenReturn(false);
+
+        mockMvc.perform(delete("/comment/api/delete/{commentId}", commentId)
+                        .header("Authorization", token))
+                .andExpect(status().isForbidden());
+    }
+
 
 
 }
