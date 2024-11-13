@@ -107,4 +107,54 @@ public class CommentServiceTest {
         verify(commentDao, times(1)).findById(commentId);
         verify(commentDao, times(0)).save(any(Comment.class));
     }
+
+
+    @Test
+    void testDeleteComment_Successful() {
+        Long commentId = 1L;
+        String userId = "testUser";
+        Comment comment = new Comment();
+        comment.setId(commentId);
+        comment.setCreator(userId);
+
+        when(commentDao.findById(commentId)).thenReturn(Optional.of(comment));
+
+        boolean result = commentService.deleteComment(commentId, userId);
+
+        assertTrue(result);
+        verify(commentDao, times(1)).findById(commentId);
+        verify(commentDao, times(1)).delete(comment);
+    }
+
+    @Test
+    void testDeleteComment_CommentNotFound() {
+        Long commentId = 1L;
+        String userId = "testUser";
+
+        when(commentDao.findById(commentId)).thenReturn(Optional.empty());
+
+        boolean result = commentService.deleteComment(commentId, userId);
+
+        assertFalse(result);
+        verify(commentDao, times(1)).findById(commentId);
+        verify(commentDao, times(0)).delete(any(Comment.class));
+    }
+
+    @Test
+    void testDeleteComment_UserNotMatch() {
+        Long commentId = 1L;
+        String userId = "testUser";
+        String otherUserId = "otherUser";
+        Comment comment = new Comment();
+        comment.setId(commentId);
+        comment.setCreator(otherUserId);
+
+        when(commentDao.findById(commentId)).thenReturn(Optional.of(comment));
+
+        boolean result = commentService.deleteComment(commentId, userId);
+
+        assertFalse(result);
+        verify(commentDao, times(1)).findById(commentId);
+        verify(commentDao, times(0)).delete(any(Comment.class));
+    }
 }

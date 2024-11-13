@@ -50,4 +50,16 @@ public class CommentService {//TODO: 댓글 D 구현
         commentDao.save(oldcomment);
         return true;
     }
+
+    @Transactional
+    public boolean deleteComment(Long commentId, String userId) {
+        Comment comment = commentDao.findById(commentId).orElse(null);
+
+        if (comment == null || !comment.getCreator().equals(userId)){
+            return false;
+        }
+
+        commentDao.delete(comment);
+        return true;
+    }
 }
