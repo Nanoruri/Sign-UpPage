@@ -115,7 +115,7 @@ h2 {
     color: white;
 }
 
-#backButton, #editButton, #submitCommentButton {
+#backButton, #editButton, #submitCommentButton, #deleteButton {
     background-color: white;
     color: #53e3a6;
     border: none;
