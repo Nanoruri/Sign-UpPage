@@ -6,6 +6,7 @@ function showBoardDetail(postId) {
     const boardDate = document.getElementById('boardDate');
     const editButton = document.getElementById('editButton');
     const backButton = document.getElementById('backButton');
+    const deleteButton = document.getElementById("deleteButton");
     const token = sessionStorage.getItem('aToken'); // JWT 토큰 가져오기
 
     const headers = {};
@@ -44,8 +45,10 @@ function showBoardDetail(postId) {
 
             if (data.isCreator) {  // 'data.isCreator'가 true일 때만 수정 버튼 표시
                 editButton.style.display = 'inline-block';
+                deleteButton.style.display = 'inline-block';
             } else {
                 editButton.style.display = 'none';
+                deleteButton.style.display = 'none';
             }
         })
         .catch(error => {
