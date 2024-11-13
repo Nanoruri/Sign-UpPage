@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -172,10 +173,43 @@ public class BoardServiceTest {
         when(boardDao.findById(id)).thenReturn(Optional.of(boardList.get(0)));
         doNothing().when(boardDao).delete(boardList.get(0));
 
-        boolean result = boardService.deleteBoard(id);
+        boolean result = boardService.deleteBoard(id, "testUser");
+
+        assertTrue(result);
 
         verify(boardDao).findById(id);
         verify(boardDao).delete(boardList.get(0));
+    }
+
+
+    @Test
+    public void deleteBoard_BoardNotFound() {
+        Long boardId = 1L;
+        String userId = "testUser";
+
+        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+
+        boolean result = boardService.deleteBoard(boardId, userId);
+
+        assertFalse(result);
+        verify(boardDao).findById(boardId);
+        verify(boardDao, never()).delete(any(Board.class));
+    }
+
+    @Test
+    public void deleteBoard_UserNotCreator() {
+        Long boardId = 1L;
+        String userId = "testUser";
+        String anotherUserId = "anotherUser";
+        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", anotherUserId);
+
+        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+
+        boolean result = boardService.deleteBoard(boardId, userId);
+
+        assertFalse(result);
+        verify(boardDao).findById(boardId);
+        verify(boardDao, never()).delete(board);
     }
 
 

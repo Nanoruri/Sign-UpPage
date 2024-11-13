@@ -60,11 +60,12 @@ public class BoardService {
         return true;
     }
 
-    public boolean deleteBoard(Long id) {
+    public boolean deleteBoard(Long id, String userId) {
         Board board = boardDao.findById(id).orElse(null);
-        if (board == null) {
+        if (board == null || !board.getCreator().equals(userId)) {
             return false;
         }
+
         boardDao.delete(board);
         return true;
     }
