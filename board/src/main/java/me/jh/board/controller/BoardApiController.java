@@ -80,8 +80,14 @@ public class BoardApiController {
     //Delete
     @DeleteMapping("/delete/{boardId}")
     @ResponseBody
-    public ResponseEntity<Board> deleteBoard(@PathVariable Long boardId) {
-        boardService.deleteBoard(boardId);
+    public ResponseEntity<Board> deleteBoard(@PathVariable Long boardId, @RequestHeader("Authorization") String token) {
+        String subStingToken= token.substring(7);
+        String userId = jwtProvider.getUserIdFromToken(subStingToken);
+
+        if (!boardService.deleteBoard(boardId,userId)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.noContent().build();
     }
 

@@ -162,11 +162,32 @@ public class BoardApiControllerTest {
 
         Board post = new Board(id, title, content, date, tab, user);
 
-        when(boardService.deleteBoard(post.getId())).thenReturn(true);
+        when(jwtProvider.getUserIdFromToken("token")).thenReturn(user);
+        when(boardService.deleteBoard(post.getId(),user)).thenReturn(true);
 
-        mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId()))
+        mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId())
+                        .header("Authorization", "Bearer token"))
                 .andExpect(status().isNoContent());
     }
+
+
+    @Test
+    public void deleteBoard_UserNotCreator() throws Exception {
+        long boardId = 1L;
+        String token = "Bearer validToken";
+        String userId = "testUser";
+        String anotherUserId = "anotherUser";
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", anotherUserId);
+
+        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(boardService.deleteBoard(boardId, userId)).thenReturn(false);
+
+        mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId())
+                        .header("Authorization", token))
+                .andExpect(status().isForbidden());
+    }
+
+
 
     //Detail
     @Test
