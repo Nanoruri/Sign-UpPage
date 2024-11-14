@@ -1,6 +1,7 @@
 package me.jh.board.controller;
 
 import me.jh.board.entity.Board;
+import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
 import me.jh.core.utils.auth.JwtProvider;
@@ -30,12 +31,14 @@ public class BoardApiController {
     private final BoardService boardService;
     private final FileUploadService fileUploadService;
     private final JwtProvider jwtProvider;
+    private final AuthService authService;
 
     @Autowired
-    public BoardApiController(BoardService boardService, FileUploadService fileUploadService, JwtProvider jwtProvider) {
+    public BoardApiController(BoardService boardService, FileUploadService fileUploadService, JwtProvider jwtProvider, AuthService authService) {
         this.boardService = boardService;
         this.fileUploadService = fileUploadService;
         this.jwtProvider = jwtProvider;
+        this.authService = authService;
     }
 
 
@@ -44,12 +47,13 @@ public class BoardApiController {
     // 토큰 내 정보를 이용하여 작성자 정보를 함께 저장하게 하기
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Board> saveBoard(@RequestHeader("Authorization") String token, @RequestBody Board board) {
-        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
+    public ResponseEntity<Board> saveBoard(@RequestBody Board board) {
 
-        String userId = jwtProvider.getUserIdFromToken(substringToken);
-
-        boardService.saveBoard(userId, board);
+        String userId = authService.getAuthenticatedUserId();
+        if (userId == null){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        boardService.saveBoard(userId,board);
         return ResponseEntity.ok().build();
     }
 
@@ -65,14 +69,11 @@ public class BoardApiController {
     //Update
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestHeader("Authorization") String token, @RequestBody Board board) {
-        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
-        String userId = jwtProvider.getUserIdFromToken(substringToken);
-
+    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
+        String userId = authService.getAuthenticatedUserId();
         if (!boardService.updateBoard(id, userId, board)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
         return ResponseEntity.ok().build();
     }
 
@@ -80,10 +81,8 @@ public class BoardApiController {
     //Delete
     @DeleteMapping("/delete/{boardId}")
     @ResponseBody
-    public ResponseEntity<Board> deleteBoard(@PathVariable Long boardId, @RequestHeader("Authorization") String token) {
-        String subStingToken= token.substring(7);
-        String userId = jwtProvider.getUserIdFromToken(subStingToken);
-
+    public ResponseEntity<Board> deleteBoard(@PathVariable Long boardId) {
+        String userId = authService.getAuthenticatedUserId();
         if (!boardService.deleteBoard(boardId,userId)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -96,6 +95,7 @@ public class BoardApiController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getBoardDetail(@PathVariable Long boardId,
                                                               @RequestHeader(value = "Authorization", required = false) String token) {
+
         String userId = null;
 
         if (token != null) {
@@ -148,13 +148,10 @@ public class BoardApiController {
     //todo: Token 내 아이디와 게시글 작성자 아이디가 일치하는지 확인 후 게시글을 찾아 반환
     @GetMapping("/getBoardInfo/{boardId}")
     @ResponseBody
-    public ResponseEntity<Board> findBoard(@RequestHeader("Authorization") String token, @PathVariable Long boardId) {
-        String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
-
-        String userId = jwtProvider.getUserIdFromToken(substringToken);
+    public ResponseEntity<Board> findBoard(@PathVariable Long boardId) {
+        String userId = authService.getAuthenticatedUserId();
 
         Board board = boardService.findBoard(userId, boardId);
-
         if (board == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

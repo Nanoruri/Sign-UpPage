@@ -2,6 +2,7 @@ package me.jh.board.controller;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
+import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
 import me.jh.core.utils.auth.JwtProvider;
@@ -54,13 +55,16 @@ public class BoardApiControllerTest {
     @MockBean
     private JwtProvider jwtProvider;
 
+    @MockBean
+    private AuthService authService;
+
     @Mock
     private MockMultipartFile mockMultipartFile;
 
 
     @BeforeEach
     void setup() throws IOException {
-        mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService, jwtProvider))
+        mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService, jwtProvider, authService))
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
 
@@ -80,13 +84,13 @@ public class BoardApiControllerTest {
 
         Board post = new Board(id, title, content, date, tab, userId);
 
-        when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.saveBoard(userId, post)).thenReturn(true);
 
         mockMvc.perform(post("/board/api/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
-                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
+                     .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
                 .andExpect(status().isOk());
     }
 
@@ -115,16 +119,14 @@ public class BoardApiControllerTest {
         String content = "content";
         LocalDateTime date = LocalDateTime.now();
         String user = "testUser";
-        String token = "Bearer testToken"; // JWT 토큰 형식 맞추기
 
 
         // 'testToken'에 대한 Mocking 설정
-        when(jwtProvider.getUserIdFromToken("testToken")).thenReturn(user);
+        when(authService.getAuthenticatedUserId()).thenReturn(user);
         when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(true);
 
         mockMvc.perform(put("/board/api/update/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", token) // JWT 토큰을 헤더에 추가
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
                 .andExpect(status().isOk());
     }
@@ -137,15 +139,13 @@ public class BoardApiControllerTest {
         String content = "content";
         LocalDateTime date = LocalDateTime.now();
         String user = "testUser";
-        String token = "testToken";
 
 
-        when(jwtProvider.getUserIdFromToken("mockJwtToken")).thenReturn(user);
+        when(authService.getAuthenticatedUserId()).thenReturn(user);
         when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(false);
 
         mockMvc.perform(put("/board/api/update/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", token)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
                 .andExpect(status().isForbidden());
     }
@@ -162,11 +162,11 @@ public class BoardApiControllerTest {
 
         Board post = new Board(id, title, content, date, tab, user);
 
-        when(jwtProvider.getUserIdFromToken("token")).thenReturn(user);
+        when(authService.getAuthenticatedUserId()).thenReturn(user);
         when(boardService.deleteBoard(post.getId(),user)).thenReturn(true);
 
         mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId())
-                        .header("Authorization", "Bearer token"))
+                        )
                 .andExpect(status().isNoContent());
     }
 
@@ -179,11 +179,10 @@ public class BoardApiControllerTest {
         String anotherUserId = "anotherUser";
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", anotherUserId);
 
-        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.deleteBoard(boardId, userId)).thenReturn(false);
 
-        mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId())
-                        .header("Authorization", token))
+        mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId()))
                 .andExpect(status().isForbidden());
     }
 
@@ -295,7 +294,8 @@ public class BoardApiControllerTest {
         String userId = "testUser";
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
 
-        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.findBoard(userId, boardId)).thenReturn(board);
 
         mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
@@ -314,7 +314,7 @@ public class BoardApiControllerTest {
         String token = "Bearer validToken";
         String userId = "testUser";
 
-        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.findBoard(userId, boardId)).thenReturn(null);
 
         mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
