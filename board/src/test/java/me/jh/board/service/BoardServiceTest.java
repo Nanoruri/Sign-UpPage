@@ -361,4 +361,41 @@ public class BoardServiceTest {
         assertEquals("게시글이 존재하지 않거나 권한이 없습니다.", exception.getMessage());
     }
 
+    @Test
+    public void testIsUserAuthorized_returnsTrue_whenUserIsCreator() {
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
+        String userId = "testUser";
+
+        boolean result = boardService.isUserAuthorized(board, userId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIsUserAuthorized_returnsFalse_whenUserIsNotCreatorAndMemberTab() {
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+
+        boolean result = boardService.isUserAuthorized(board, null);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndGeneralTab() {
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
+
+        boolean result = boardService.isUserAuthorized(board, null);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndMemberTabWithUserId() {
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+        String userId = "anotherUser";
+
+        boolean result = boardService.isUserAuthorized(board, userId);
+
+        assertTrue(result);
+    }
 }

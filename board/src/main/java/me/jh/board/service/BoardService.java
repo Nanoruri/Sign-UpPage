@@ -95,4 +95,10 @@ public class BoardService {
         }
         throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");
     }
+
+
+    public boolean isUserAuthorized(Board board, String userId) {
+        boolean isMember = "member".equals(board.getTabName());
+        return !(isMember && userId == null);
+    }
 }
