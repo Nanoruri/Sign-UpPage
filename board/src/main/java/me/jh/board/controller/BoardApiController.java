@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,14 +31,13 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final FileUploadService fileUploadService;
-    private final JwtProvider jwtProvider;
     private final AuthService authService;
 
     @Autowired
-    public BoardApiController(BoardService boardService, FileUploadService fileUploadService, JwtProvider jwtProvider, AuthService authService) {
+    public BoardApiController(BoardService boardService, FileUploadService fileUploadService,  AuthService authService) {
         this.boardService = boardService;
         this.fileUploadService = fileUploadService;
-        this.jwtProvider = jwtProvider;
+
         this.authService = authService;
     }
 
@@ -93,18 +93,23 @@ public class BoardApiController {
 
     @GetMapping("/detail/{boardId}")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getBoardDetail(@PathVariable Long boardId,
-                                                              @RequestHeader(value = "Authorization", required = false) String token) {
+    public ResponseEntity<Map<String, Object>> getBoardDetail(@PathVariable Long boardId) {
 
-        String userId = null;
-
-        if (token != null) {
-            String substringToken = token.substring(7); // "Bearer " 이후의 토큰 부분만 추출
-            userId = jwtProvider.getUserIdFromToken(substringToken);
+        String userId;
+        try {
+            userId = authService.getAuthenticatedUserId();
+        } catch (AccessDeniedException e) {
+            userId = null;
         }
+
         Board board = boardService.getBoardDetail(boardId);
 
         boolean isCreator = board.getCreator().equals(userId);
+        boolean isMember = "member".equals(board.getTabName());
+
+        if (isMember && userId == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("board", board);

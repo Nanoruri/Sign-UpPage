@@ -5,7 +5,6 @@ import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
-import me.jh.core.utils.auth.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -53,9 +53,6 @@ public class BoardApiControllerTest {
     private FileUploadService fileUploadService;
 
     @MockBean
-    private JwtProvider jwtProvider;
-
-    @MockBean
     private AuthService authService;
 
     @Mock
@@ -64,7 +61,7 @@ public class BoardApiControllerTest {
 
     @BeforeEach
     void setup() throws IOException {
-        mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService, jwtProvider, authService))
+        mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService, authService))
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
 
@@ -192,15 +189,13 @@ public class BoardApiControllerTest {
     @Test
     public void getBoardDetailTest() throws Exception {
         long boardId = 1L;
-        String token = "Bearer validToken";
         String userId = "testUser";
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
 
-        when(jwtProvider.getUserIdFromToken("validToken")).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
-                        .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.board.id").value(boardId))
@@ -210,9 +205,22 @@ public class BoardApiControllerTest {
     }
 
     @Test
-    public void getBoardDetailNoTokenTest() throws Exception {
+    public void getBoardDetail_UnauthorizedForMemberBoardWithoutToken() throws Exception {
         long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "member", "testUser");
+
+        when(boardService.getBoardDetail(boardId)).thenReturn(board);
+
+        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    public void getBoardDetail_returnsBoardDetailsForGeneralWithoutToken() throws Exception {
+        long boardId = 1L;
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "general", "testUser");
 
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
 
@@ -222,7 +230,26 @@ public class BoardApiControllerTest {
                 .andExpect(jsonPath("$.board.id").value(boardId))
                 .andExpect(jsonPath("$.board.title").value("Test Title"))
                 .andExpect(jsonPath("$.board.content").value("Test Content"))
-                .andExpect(jsonPath("$.isCreator").value(false));
+                .andExpect(jsonPath("$.isCreator").value(false))
+                .andExpect(jsonPath("$.currentUserId").isEmpty());
+    }
+
+    @Test
+    public void getBoardDetail_handlesAccessDeniedException() throws Exception {
+        long boardId = 1L;
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "general", "testUser");
+
+        when(authService.getAuthenticatedUserId()).thenThrow(new AccessDeniedException("Access denied"));
+        when(boardService.getBoardDetail(boardId)).thenReturn(board);
+
+        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.board.id").value(boardId))
+                .andExpect(jsonPath("$.board.title").value("Test Title"))
+                .andExpect(jsonPath("$.board.content").value("Test Content"))
+                .andExpect(jsonPath("$.isCreator").value(false))
+                .andExpect(jsonPath("$.currentUserId").isEmpty());
     }
 
     @Test
