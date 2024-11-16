@@ -1,5 +1,5 @@
 // 게시글 상세보기 페이지 로드 시 호출되는 함수
-function showBoardDetail(postId) {
+function showBoardDetail(postId, tabName) {
     const boardTitle = document.getElementById('boardTitle');
     const boardContent = document.getElementById('boardContent');
     const boardMeta = document.getElementById('boardMeta');
@@ -14,7 +14,7 @@ function showBoardDetail(postId) {
         headers['Authorization'] = `Bearer ${token}`; // 토큰이 존재하면 헤더에 추가
     }
 
-    fetch(`/study/board/api/detail/${postId}`, {
+    fetch(`/study/board/api/detail/${postId}?tabName=${tabName}`, {
         method: 'GET',
         headers: headers
     })
@@ -128,6 +128,10 @@ function getPostId() {
     return new URLSearchParams(window.location.search).get('postId');
 }
 
+function getTabName(){
+    return new URLSearchParams(window.location.search).get('tabName')
+}
+
 // 페이지 로드 시 showBoardDetail 호출
 document.addEventListener('DOMContentLoaded', () => {
     const mainPageButton = document.getElementById("mainButton");
@@ -135,5 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/study/';
     });
     const postId = getPostId();
-    showBoardDetail(postId);
+    const tabName = getTabName();
+    showBoardDetail(postId,tabName);
 });
