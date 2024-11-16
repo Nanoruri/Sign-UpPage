@@ -21,4 +21,14 @@ public class AuthService {
         }
         return authenticationUtils.getAuthName();
     }
+
+    public String getAuthenticatedUserIdOrNull() {
+        try {
+            return getAuthenticatedUserId();
+        } catch (AccessDeniedException e) {
+            return null;
+        }
+    }
+
+
 }

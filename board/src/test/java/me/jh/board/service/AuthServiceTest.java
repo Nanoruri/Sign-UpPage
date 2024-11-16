@@ -8,8 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,5 +55,25 @@ public class AuthServiceTest {
         });
 
         assertEquals("해당 권한이 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    void getAuthenticatedUserIdOrNull_returnsUserId_whenUserHasRequiredRole() {
+        String expectedUserId = "user123";
+        when(authenticationUtils.hasAuthority("ROLE_USER")).thenReturn(true);
+        when(authenticationUtils.getAuthName()).thenReturn(expectedUserId);
+
+        String actualUserId = authService.getAuthenticatedUserIdOrNull();
+
+        assertEquals(expectedUserId, actualUserId);
+    }
+
+    @Test
+    void getAuthenticatedUserIdOrNull_returnsNull_whenUserDoesNotHaveRequiredRole() {
+        when(authenticationUtils.hasAuthority("ROLE_USER")).thenReturn(false);
+
+        String actualUserId = authService.getAuthenticatedUserIdOrNull();
+
+        assertNull(actualUserId);
     }
 }
