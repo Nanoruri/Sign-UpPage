@@ -95,25 +95,17 @@ public class BoardApiController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getBoardDetail(@PathVariable Long boardId) {
 
-        String userId;
-        try {
-            userId = authService.getAuthenticatedUserId();
-        } catch (AccessDeniedException e) {
-            userId = null;
-        }
+
+        String userId = authService.getAuthenticatedUserIdOrNull();
 
         Board board = boardService.getBoardDetail(boardId);
 
-        boolean isCreator = board.getCreator().equals(userId);
-        boolean isMember = "member".equals(board.getTabName());
-
-        if (isMember && userId == null){
+        if (!boardService.isUserAuthorized(board, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         Map<String, Object> response = new HashMap<>();
         response.put("board", board);
-        response.put("isCreator", isCreator);
+        response.put("isCreator", board.getCreator().equals(userId));
         response.put("currentUserId", userId);
 
         return ResponseEntity.ok(response);

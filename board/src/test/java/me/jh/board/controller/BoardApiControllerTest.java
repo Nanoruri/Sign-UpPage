@@ -192,8 +192,9 @@ public class BoardApiControllerTest {
         String userId = "testUser";
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
 
-        when(authService.getAuthenticatedUserId()).thenReturn(userId);
+        when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
+        when(boardService.isUserAuthorized(board, userId)).thenReturn(true);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -205,51 +206,32 @@ public class BoardApiControllerTest {
     }
 
     @Test
-    public void getBoardDetail_UnauthorizedForMemberBoardWithoutToken() throws Exception {
+    public void testGetBoardDetail_returnsUnauthorized_whenUserIsNotAuthorized() throws Exception {
         long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "member", "testUser");
+        String userId = "testUser";
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
 
+        when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
+        when(boardService.isUserAuthorized(board, userId)).thenReturn(false);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
-
     @Test
-    public void getBoardDetail_returnsBoardDetailsForGeneralWithoutToken() throws Exception {
+    public void testGetBoardDetail_returnsUnauthorized_whenUserIdIsNull() throws Exception {
         long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "general", "testUser");
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
 
+        when(authService.getAuthenticatedUserIdOrNull()).thenReturn(null);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
+        when(boardService.isUserAuthorized(board, null)).thenReturn(false);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.board.id").value(boardId))
-                .andExpect(jsonPath("$.board.title").value("Test Title"))
-                .andExpect(jsonPath("$.board.content").value("Test Content"))
-                .andExpect(jsonPath("$.isCreator").value(false))
-                .andExpect(jsonPath("$.currentUserId").isEmpty());
-    }
-
-    @Test
-    public void getBoardDetail_handlesAccessDeniedException() throws Exception {
-        long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "general", "testUser");
-
-        when(authService.getAuthenticatedUserId()).thenThrow(new AccessDeniedException("Access denied"));
-        when(boardService.getBoardDetail(boardId)).thenReturn(board);
-
-        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.board.id").value(boardId))
-                .andExpect(jsonPath("$.board.title").value("Test Title"))
-                .andExpect(jsonPath("$.board.content").value("Test Content"))
-                .andExpect(jsonPath("$.isCreator").value(false))
-                .andExpect(jsonPath("$.currentUserId").isEmpty());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
