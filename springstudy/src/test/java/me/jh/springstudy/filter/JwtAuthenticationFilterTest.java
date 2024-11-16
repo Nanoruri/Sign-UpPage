@@ -2,8 +2,8 @@ package me.jh.springstudy.filter;
 
 
 import io.jsonwebtoken.JwtException;
-import me.jh.springstudy.MySpringBootApplication;
 import me.jh.core.utils.auth.JwtProvider;
+import me.jh.springstudy.MySpringBootApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -138,6 +138,52 @@ public class JwtAuthenticationFilterTest {
 
 		verify(request,times(1)).getRequestURI();
 	}
+
+
+    @Test
+    public void shouldNotFilter_generalTabWithoutToken() throws ServletException {
+        when(request.getRequestURI()).thenReturn("/study/board/api/detail/1");
+        when(request.getParameter("tabName")).thenReturn("general");
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
+
+        assertTrue(result);
+
+        verify(request, times(1)).getRequestURI();
+        verify(request, times(1)).getParameter("tabName");
+        verify(request, times(1)).getHeader("Authorization");
+    }
+
+    @Test
+    public void shouldFilter_generalTabWithToken() throws ServletException {
+        when(request.getRequestURI()).thenReturn("/study/board/api/detail/1");
+        when(request.getParameter("tabName")).thenReturn("general");
+        when(request.getHeader("Authorization")).thenReturn("Bearer validToken");
+
+        boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
+
+        assertFalse(result);
+
+        verify(request, times(1)).getRequestURI();
+        verify(request, times(1)).getParameter("tabName");
+        verify(request, times(1)).getHeader("Authorization");
+    }
+
+    @Test
+    public void shouldFilter_nonGeneralTabWithoutToken() throws ServletException {
+        when(request.getRequestURI()).thenReturn("/study/board/api/detail/1");
+        when(request.getParameter("tabName")).thenReturn("member");
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
+
+        assertFalse(result);
+
+        verify(request, times(1)).getRequestURI();
+        verify(request, times(1)).getParameter("tabName");
+        verify(request, times(1)).getHeader("Authorization");
+    }
 
 }
 

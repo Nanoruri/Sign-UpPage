@@ -8,10 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.persistence.Entity;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -70,6 +68,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				"/study/board/api/update/","/study/board/api/create","/study/board/api/upload-image", "/study/comment/api"};
 		String path = request.getRequestURI();
 
-		return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
-	}
+        String tabName = request.getParameter("tabName");
+        String token = request.getHeader("Authorization");
+
+        if (path.startsWith("/study/board/api/detail/")) {
+            return "general".equals(tabName)&& token == null;
+        }
+        return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
+    }
 }
