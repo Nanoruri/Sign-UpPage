@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -87,7 +86,7 @@ public class BoardApiControllerTest {
         mockMvc.perform(post("/board/api/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
-                     .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
+                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
                 .andExpect(status().isOk());
     }
 
@@ -160,10 +159,10 @@ public class BoardApiControllerTest {
         Board post = new Board(id, title, content, date, tab, user);
 
         when(authService.getAuthenticatedUserId()).thenReturn(user);
-        when(boardService.deleteBoard(post.getId(),user)).thenReturn(true);
+        when(boardService.deleteBoard(post.getId(), user)).thenReturn(true);
 
         mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId())
-                        )
+                )
                 .andExpect(status().isNoContent());
     }
 
@@ -182,7 +181,6 @@ public class BoardApiControllerTest {
         mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId()))
                 .andExpect(status().isForbidden());
     }
-
 
 
     //Detail

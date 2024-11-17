@@ -128,7 +128,7 @@ function getPostId() {
     return new URLSearchParams(window.location.search).get('postId');
 }
 
-function getTabName(){
+function getTabName() {
     return new URLSearchParams(window.location.search).get('tabName')
 }
 
@@ -140,5 +140,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const postId = getPostId();
     const tabName = getTabName();
-    showBoardDetail(postId,tabName);
+    showBoardDetail(postId, tabName);
 });

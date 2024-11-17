@@ -42,6 +42,7 @@ function initializeQuill() {
         }
     });
 }
+
 function setupImageUploadHandler(quill) {
     quill.getModule('toolbar').addHandler('image', () => selectLocalImage(quill));
 }

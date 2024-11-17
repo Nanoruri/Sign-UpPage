@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const postId = getPostId(); // postId를 얻는 방법에 따라 수정 필요
 
     // 삭제 버튼 클릭 시 deletePost 함수 실행
-    deletePostButton.addEventListener('click', function() {
+    deletePostButton.addEventListener('click', function () {
         deletePost(postId);
     });
 });
