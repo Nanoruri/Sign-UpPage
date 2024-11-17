@@ -1,6 +1,7 @@
 package me.jh.board.config;
 
 import me.jh.board.TestSpringContext;
+import me.jh.core.utils.AuthenticationUtils;
 import me.jh.core.utils.auth.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class WebConfigTest {
 
     @MockBean
     private JwtProvider jwtProvider;
+
+    @MockBean
+    private AuthenticationUtils authenticationUtils;
 
 
     @Test
