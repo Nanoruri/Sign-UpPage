@@ -3,6 +3,8 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +18,11 @@ import java.util.Optional;
 @Service
 public class BoardService {
 
+    private static final Logger log = LoggerFactory.getLogger(BoardService.class);
+
     @PostConstruct
     public void init() {
-        System.out.println("BoardService Bean 등록 성공");
+        log.info("BoardService Bean 등록 성공");
     }
 
     private final BoardDao boardDao;
