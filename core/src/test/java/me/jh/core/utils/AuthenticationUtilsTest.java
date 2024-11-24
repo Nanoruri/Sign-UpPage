@@ -33,10 +33,6 @@ public class AuthenticationUtilsTest {
     @Mock
     private Authentication authentication;
 
-
-    @InjectMocks
-    private AuthenticationUtils authenticationUtils;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -50,7 +46,7 @@ public class AuthenticationUtilsTest {
         when(authentication.getName()).thenReturn("user");
 
         // Act
-        String authName = authenticationUtils.getAuthName();
+        String authName = AuthenticationUtils.getAuthName();
 
         // Assert
         assertEquals("user", authName);
@@ -62,7 +58,7 @@ public class AuthenticationUtilsTest {
         when(securityContext.getAuthentication()).thenReturn(null);
 
         // Act
-        String authName = authenticationUtils.getAuthName();
+        String authName = AuthenticationUtils.getAuthName();
 
         // Assert
         assertNull(authName);
@@ -77,7 +73,7 @@ public class AuthenticationUtilsTest {
         when(authentication.getAuthorities()).thenReturn((Set)authorities);
 
         // Act
-        boolean hasAuthority = authenticationUtils.hasAuthority("ROLE_USER");
+        boolean hasAuthority = AuthenticationUtils.hasAuthority("ROLE_USER");
 
         // Assert
         assertTrue(hasAuthority);
@@ -92,7 +88,7 @@ public class AuthenticationUtilsTest {
         when(authentication.getAuthorities()).thenReturn((Set)authorities);
 
         // Act
-        boolean hasAuthority = authenticationUtils.hasAuthority("ROLE_USER");
+        boolean hasAuthority = AuthenticationUtils.hasAuthority("ROLE_USER");
 
         // Assert
         assertFalse(hasAuthority);
@@ -104,7 +100,7 @@ public class AuthenticationUtilsTest {
         when(securityContext.getAuthentication()).thenReturn(null);
 
         // Act
-        boolean hasAuthority = authenticationUtils.hasAuthority("ROLE_USER");
+        boolean hasAuthority = AuthenticationUtils.hasAuthority("ROLE_USER");
 
         // Assert
         assertFalse(hasAuthority);
