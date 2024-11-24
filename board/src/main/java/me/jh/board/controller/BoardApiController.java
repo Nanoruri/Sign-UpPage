@@ -4,6 +4,8 @@ import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,14 +19,17 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @Controller
 @RequestMapping("/board/api")// todo: 로직중 인증이 필요한 로직들은 인증용 컨트롤러에 넣기.
 public class BoardApiController {
 
+    private final static Logger log = LoggerFactory.getLogger(BoardApiController.class);
+
 
     @PostConstruct
     public void init() {
-        System.out.println("BoardApiController Bean 생성");
+        log.info("BoardApiController Bean 등록 성공");
     }
 
     private final BoardService boardService;
