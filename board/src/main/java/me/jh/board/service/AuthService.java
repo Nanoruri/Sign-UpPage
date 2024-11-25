@@ -7,19 +7,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    private final AuthenticationUtils authenticationUtils;
     private static final String REQUIREMENT = "ROLE_USER";
 
-    public AuthService(AuthenticationUtils authenticationUtils) {
-        this.authenticationUtils = authenticationUtils;
-    }
 
     public String getAuthenticatedUserId() {
 
-        if (!authenticationUtils.hasAuthority(REQUIREMENT)) {
+        if (!AuthenticationUtils.hasAuthority(REQUIREMENT)) {
             throw new AccessDeniedException("해당 권한이 없습니다.");
         }
-        return authenticationUtils.getAuthName();
+        return AuthenticationUtils.getAuthName();
     }
 
     public String getAuthenticatedUserIdOrNull() {
