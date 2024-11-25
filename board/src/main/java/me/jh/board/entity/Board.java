@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "board")
@@ -101,5 +103,13 @@ public class Board {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public Map<String, Object> toObject(String userId) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("board", this);
+        response.put("isCreator", this.creator.equals(userId));
+        response.put("currentUserId", userId);
+        return response;
     }
 }

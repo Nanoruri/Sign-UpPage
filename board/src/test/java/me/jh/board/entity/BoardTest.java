@@ -9,9 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("boardTest")
 @DataJpaTest
@@ -77,6 +79,42 @@ public class BoardTest {
 
         // then
         assertThat(deletedBoard).isNotPresent();
+    }
+
+
+    @Test
+    void toObject_returnsCorrectMap_whenUserIsCreator() {
+        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        String userId = "testUser";
+
+        Map<String, Object> result = board.toObject(userId);
+
+        assertEquals(board, result.get("board"));
+        assertTrue((Boolean) result.get("isCreator"));
+        assertEquals(userId, result.get("currentUserId"));
+    }
+
+    @Test
+    void toObject_returnsCorrectMap_whenUserIsNotCreator() {
+        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        String userId = "anotherUser";
+
+        Map<String, Object> result = board.toObject(userId);
+
+        assertEquals(board, result.get("board"));
+        assertFalse((Boolean) result.get("isCreator"));
+        assertEquals(userId, result.get("currentUserId"));
+    }
+
+    @Test
+    void toObject_returnsCorrectMap_whenUserIdIsNull() {
+        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+
+        Map<String, Object> result = board.toObject(null);
+
+        assertEquals(board, result.get("board"));
+        assertFalse((Boolean) result.get("isCreator"));
+        assertNull(result.get("currentUserId"));
     }
 
 
