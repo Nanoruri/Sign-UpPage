@@ -106,11 +106,8 @@ public class BoardApiController {
         if (!boardService.isUserAuthorized(board, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put("board", board);
-        response.put("isCreator", board.getCreator().equals(userId));
-        response.put("currentUserId", userId);
 
+        Map<String, Object> response = board.toObject(userId);
         return ResponseEntity.ok(response);
     }
 
