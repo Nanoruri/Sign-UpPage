@@ -24,8 +24,6 @@ public class WebConfigTest {
     @MockBean
     private JwtProvider jwtProvider;
 
-    @MockBean
-    private AuthenticationUtils authenticationUtils;
 
 
     @Test
