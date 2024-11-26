@@ -225,3 +225,37 @@ footer {
     color: #555;
     padding-top: 5px; /* 구분선과 내용 사이 여백 */
 }
+
+
+.comment-edit-button {
+    background-color: white;
+    color: #53e3a6;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.comment-edit-button:hover {
+    background-color: #f5f7f9;
+    transform: scale(1.05);
+}
+
+/* 댓글 버튼 스타일 */
+.comment-delete-button, .comment-save-button, .comment-cancel-button  {
+    background-color: white;
+    color: #53e3a6;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.comment-delete-button:hover,.comment-save-button:hover, .comment-cancel-button:hover  {
+    background-color: #f5f7f9;
+    transform: scale(1.05);
+}
