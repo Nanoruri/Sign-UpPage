@@ -45,10 +45,12 @@ function editComment(commentId, contentDiv, commentEditButton, token) {
 
     const saveButton = document.createElement('button');
     saveButton.textContent = '저장';
+    saveButton.classList.add('comment-save-button');
     saveButton.addEventListener('click', () => updateComment(commentId, inputField.value, contentDiv, token, commentEditButton));
 
     const cancelButton = document.createElement('button');
     cancelButton.textContent = '취소';
+    cancelButton.classList.add('comment-cancel-button');
     cancelButton.addEventListener('click', () => {
         contentDiv.innerHTML = originalContent; // 원래 내용으로 되돌리기
         commentEditButton.style.display = 'inline'; // 수정 버튼 다시 보이기

@@ -99,10 +99,12 @@ function displayComments(comments, token, currentUserId) {
             // 수정 버튼 생성
             const commentEditButton = document.createElement('button');
             commentEditButton.textContent = '수정';
+            commentEditButton.classList.add('comment-edit-button');
 
             // 삭제 버튼 생성
             const commentDeleteButton = document.createElement('button');
             commentDeleteButton.textContent = '삭제';
+            commentDeleteButton.classList.add('comment-delete-button');
 
             // 댓글 작성자와 현재 사용자가 같은 경우에만 수정 버튼 활성화
             if (comment.creator === currentUserId) {
