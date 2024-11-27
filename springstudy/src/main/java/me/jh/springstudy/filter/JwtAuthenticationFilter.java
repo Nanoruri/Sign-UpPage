@@ -1,7 +1,7 @@
 package me.jh.springstudy.filter;
 
 import io.jsonwebtoken.JwtException;
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 /**
@@ -43,14 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				// 리프레시 토큰일 경우, 인증 정보 설정 없이 계속 진행
 				Authentication authentication = jwtTokenProvider.getAuthentication(token);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+				filterChain.doFilter(request, response);
 			}
-			filterChain.doFilter(request, response);
 		} catch (JwtException e) {
 			SecurityContextHolder.clearContext();
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 		}
 
-	}
+;	}
 
 	private String resolveToken(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
@@ -60,4 +61,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		return null;
 	}
 
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        //todo: 해당 경로들은 인증이 필요한 authController를 만들어 빼도록 하기
+		String[] notExcludePath = {"/study/board/api/memberBoard","/study/board/api/getBoardInfo/","/study/board/api/delete/",
+				"/study/board/api/update/","/study/board/api/create","/study/board/api/upload-image", "/study/comment/api"};
+		String path = request.getRequestURI();
+
+        String tabName = request.getParameter("tabName");
+        String token = request.getHeader("Authorization");
+
+        if (path.startsWith("/study/board/api/detail/")) {
+            return "general".equals(tabName)&& token == null;
+        }
+        return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
+    }
 }

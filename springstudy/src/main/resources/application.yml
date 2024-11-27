@@ -32,7 +32,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
-        show-sql: true # hibernate.show-sql should be under properties.hibernate
 
 # 스프링 시큐리티 설정
 security:

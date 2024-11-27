@@ -1,6 +1,6 @@
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;

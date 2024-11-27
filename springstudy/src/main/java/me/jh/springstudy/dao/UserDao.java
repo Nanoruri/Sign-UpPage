@@ -1,6 +1,6 @@
 package me.jh.springstudy.dao;
 
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

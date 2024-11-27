@@ -2,7 +2,7 @@ package me.jh.springstudy.controller;
 
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.core.utils.auth.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

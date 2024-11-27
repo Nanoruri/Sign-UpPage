@@ -1,6 +1,6 @@
 package me.jh.springstudy.controller.user;
 
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

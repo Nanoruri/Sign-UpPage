@@ -1,8 +1,8 @@
 package me.jh.springstudy.config;
 
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.JwtAuthenticationEntryPoint;
 import me.jh.springstudy.filter.JwtAuthenticationFilter;
 import org.slf4j.Logger;

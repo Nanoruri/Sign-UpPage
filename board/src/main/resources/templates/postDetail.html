@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script th:src="@{/js/member/wirteComment.js}"></script>
+    <script th:src="@{/js/member/editPost.js}"></script>
+    <script th:src="@{/js/getPostDetail.js}"></script>
+    <script th:src="@{/js/member/deletePost.js}"></script>
+    <script th:src="@{/js/member/deleteComment.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/postDetail.css}"><!--todo: 해당 링크의 css 교정하기-->
+    <link th:href="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'}" rel="stylesheet">
+    <title>게시글 상세보기</title>
+</head>
+<body>
+<header>
+    <h1>게시글 상세보기</h1>
+    <div class="button-group">
+        <button id="mainButton">메인페이지로</button>
+    </div>
+</header>
+
+<main>
+    <section id="boardDetail">
+        <h2 id="boardTitle" style="margin-bottom: 10px;"></h2>
+        <div style="margin-bottom: 10px;">
+            <p id="boardContent"></p>
+        </div>
+        <div id="boardMeta">
+            <span class="post-author"></span>
+            <span class="post-date"></span>
+        </div>
+
+
+        <button id="editButton">수정</button><!--todo: 수정 버튼은 해당 게시글 작성자만 보이게 하기-->
+        <button id="deleteButton">삭제</button>
+        <h3>댓글</h3>
+        <div id="commentSection">
+            <!-- 댓글 목록이 여기에 동적으로 추가됨 -->
+        </div>
+
+        <h4>댓글 작성</h4>
+        <form id="commentForm">
+            <textarea id="commentContent" placeholder="댓글을 입력하세요" rows="4" style="width: 100%; resize: none"></textarea>
+            <button type="submit" id="submitCommentButton">댓글 작성</button>
+        </form>
+        <button id="backButton">목록으로 돌아가기</button>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; NanoRuriStudy</p>
+</footer>
+</body>
+</html>

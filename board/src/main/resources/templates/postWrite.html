@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script th:src="@{/js/member/writePost.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/postWrite.css}">
+    <title>Title</title>
+    <!-- Quill CSS CDN -->
+    <script th:src="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'}"></script>
+    <script th:src="${'https://cdn.jsdelivr.net/gh/hunghg255/quill-resize-module/dist/quill-resize-image.min.js'}"></script>
+    <link th:href="${'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'}" rel="stylesheet">
+
+</head>
+<body>
+
+<header>
+    <h1>게시판 - 글 작성하기</h1>
+</header>
+
+<main>
+    <form id="writeForm">
+        <div>
+            <label for="tab">탭 선택</label>
+            <select id="tab" name="tabName" class="tab-select">
+                <option value="general">일반</option>
+                <option value="member">자유</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+        </div>
+
+        <div>
+            <div id="editor"></div>
+            <textarea id="content" name="content" style="display:none;"></textarea>
+        </div>
+
+        <div>
+            <button type="submit">작성 완료</button>
+            <button type="button" id="cancelButton">취소</button>
+        </div>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; NanoRuriStudy</p>
+</footer>
+
+<script>
+    Quill.register("modules/resize", window.QuillResizeImage);
+</script>
+
+
+</body>
+</html>

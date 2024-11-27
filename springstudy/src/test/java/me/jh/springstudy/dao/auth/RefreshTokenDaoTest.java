@@ -1,6 +1,6 @@
 package me.jh.springstudy.dao.auth;
 
-import me.jh.springstudy.entitiy.auth.RefreshToken;
+import me.jh.springstudy.entity.auth.RefreshToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

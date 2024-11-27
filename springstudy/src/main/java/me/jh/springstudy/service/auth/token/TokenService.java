@@ -3,7 +3,7 @@ package me.jh.springstudy.service.auth.token;
 import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
-import me.jh.springstudy.entitiy.auth.RefreshToken;
+import me.jh.springstudy.entity.auth.RefreshToken;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
