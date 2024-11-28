@@ -17,22 +17,22 @@ spring:
     check-template-location: true
 
   datasource:
-    url: "jdbc:mariadb://127.0.0.1:44327/USERINFO"
-    username: "kaby1217"
-    password: "Cubie159!@"
-    driver-class-name: "org.mariadb.jdbc.Driver"
+    url: jdbc:h2:mem:testdb  # 인메모리 H2 데이터베이스
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
 
-#JPA 설정
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop  # 테스트가 끝나면 데이터베이스를 초기화
     show-sql: true
     generate-ddl: true
     open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-
+        dialect: org.hibernate.dialect.H2Dialect
+        show-sql: true
+        
 # 스프링 시큐리티 설정
 security:
   user:
