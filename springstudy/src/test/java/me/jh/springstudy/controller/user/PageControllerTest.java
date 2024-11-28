@@ -1,8 +1,13 @@
 package me.jh.springstudy.controller.user;
 
+import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardSearchDaoImpl;
+import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.dao.UserPropertiesDaoImpl;
+import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -43,6 +48,16 @@ public class PageControllerTest {
 	private JwtProvider jwtProvider;
 	@MockBean
 	private AuthenticationManager authenticationManager;
+	@MockBean
+	private BoardDao boardDao;
+	@MockBean
+	private BoardSearchDaoImpl boardSearchDao;
+	@MockBean
+	private UserPropertiesDaoImpl userPropertiesDao;
+	@MockBean
+	private CommentDao commentDao;
+	@MockBean
+	private RefreshTokenDao refreshTokenDao;
 
 
 	@Test

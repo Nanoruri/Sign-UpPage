@@ -3,12 +3,19 @@ package me.jh.springstudy.controller.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
+import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardSearchDao;
+import me.jh.board.dao.BoardSearchDaoImpl;
+import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.core.dto.JWToken;
+import me.jh.springstudy.dao.UserPropertiesDaoImpl;
+import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
+import me.jh.springstudy.entity.auth.RefreshToken;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import me.jh.springstudy.service.auth.token.TokenService;
@@ -24,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -74,6 +82,16 @@ public class ApiControllerTest {
 	private AuthenticationManager authenticationManager;
 	@MockBean
 	private TokenService tokenService;
+	@MockBean
+	private BoardDao boardDao;
+	@MockBean
+	private BoardSearchDaoImpl boardSearchDao;
+	@MockBean
+	private UserPropertiesDaoImpl userPropertiesDao;
+	@MockBean
+	private CommentDao commentDao;
+	@MockBean
+	private RefreshTokenDao refreshTokenDao;
 
 
 	@Mock
