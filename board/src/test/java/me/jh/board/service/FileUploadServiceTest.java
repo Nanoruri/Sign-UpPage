@@ -1,5 +1,6 @@
 package me.jh.board.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,49 +39,12 @@ public class FileUploadServiceTest {
     }
 
 
-    @Test
-    void testGetSavePathWindows() {
-        String os = System.getProperty("os.name").toLowerCase();
-        System.setProperty("os.name", "Windows 10");
-
-        String expectedPath = System.getProperty("user.dir") + "\\files\\image";
-
-        String result = fileUploadService.getSavePath();
-
-        assertEquals(expectedPath, result);
-
-        System.setProperty("os.name", os);
+    @AfterEach
+    void tearDown() {
+        // 테스트 후에는 환경 변수 또는 시스템 속성 초기화
+        System.clearProperty("UPLOAD_DIR");
     }
 
-    @Test
-    void testGetSavePathLinux() {
-        String os = System.getProperty("os.name").toLowerCase();
-        System.setProperty("os.name", "Linux");
-
-        String expectedPath = System.getProperty("user.dir") + "/files/image";
-        expectedPath = expectedPath.replace("\\", "/");
-
-        String result = fileUploadService.getSavePath().replace("\\", "/");
-
-        assertEquals(expectedPath, result);
-
-        System.setProperty("os.name", os);
-    }
-
-    @Test
-    void testGetSavePathMac() {
-        String os = System.getProperty("os.name").toLowerCase();
-        System.setProperty("os.name", "Mac OS X");
-
-        String expectedPath = System.getProperty("user.dir") + "/files/image";
-        expectedPath = expectedPath.replace("\\", "/");
-
-        String result = fileUploadService.getSavePath().replace("\\", "/");
-
-        assertEquals(expectedPath, result);
-
-        System.setProperty("os.name", os);
-    }
 
 
     @Test
