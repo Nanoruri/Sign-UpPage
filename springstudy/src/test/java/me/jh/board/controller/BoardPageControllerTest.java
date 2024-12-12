@@ -35,7 +35,7 @@ public class BoardPageControllerTest {
 
     @Test
     public void boardDetailPageTest() throws Exception {
-        mockMvc.perform(get("/board/page/detail? postId= 1"))
+        mockMvc.perform(get("/board/page/postDetail? postId= 1"))
                 .andExpect(view().name("board/postDetail"))
                 .andExpect(status().isOk());
     }

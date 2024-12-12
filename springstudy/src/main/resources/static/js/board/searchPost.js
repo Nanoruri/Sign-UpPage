@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             row.addEventListener('click', function () {
                 const postId = this.getAttribute('data-id');
                 const tab = document.querySelector('.tab-button.active').getAttribute('data-tab');
-                window.location.href = `/study/board/page/detail?postId=${postId}&tab=${tab}`;
+                window.location.href = `/study/board/page/postDetail?postId=${postId}&tab=${tab}`;
             });
 
             tableBody.appendChild(row);

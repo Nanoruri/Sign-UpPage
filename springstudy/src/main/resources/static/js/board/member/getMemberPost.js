@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     row.addEventListener('click', function () {
                         const postId = this.getAttribute('data-id');
                         const tab = document.querySelector('.tab-button.active').getAttribute('data-tab');
-                        window.location.href = `/study/board/page/detail?postId=${postId}&tabName=${tab}`;
+                        window.location.href = `/study/board/page/postDetail?postId=${postId}&tabName=${tab}`;
                     });
 
                     memberTableBody.appendChild(row);
