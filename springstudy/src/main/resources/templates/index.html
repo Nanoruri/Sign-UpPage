@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+
+	<script th:src="@{/js/goLocation.js}"></script>
 	<script type="module" th:src="@{/js/handleAuthFetch.js}"></script>
 	<script th:src="@{/js/checkLogout.js}"></script>
 	<script th:src="@{/js/goBoard.js}"></script>
@@ -14,32 +16,29 @@
 	<div class="wrapper">
 		<div class="container">
 
-			<form method="get" th:action="@{/}" class="mb-3">
+			<form class="mb-3">
 				<h2>메인입니다!</h2>
 			</form>
 
-			<form method="get" th:action="@{/signup}" th:object="${user}" class="mb-3">
-				<!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
-				<button type="submit" class="btn btn-info border-2">가입하기</button>
+			<form class="mb-3">
+				<button type="button" id="signupButton" class="btn btn-info border-2">가입하기</button>
 			</form>
 
-			<div id="loginLogoutButton" class="mb-3">
-				<!-- JavaScript로 로그인 상태에 따라 버튼을 동적으로 변경 -->
-			</div>
+			<div id="loginLogoutButton" class="mb-3"></div>
 
-			<!--게시판으로 가는 버튼-->
+
 			<form class="mb-3">
 				<button type="button" id="boardButton" class="btn btn-outline-primary border-2">게시판</button>
 			</form>
 
 
 			<div class="btn-group mb-3" role="group" aria-label="아이디 및 비밀번호 찾기">
-				<form method="get" th:action="@{/findId}"><!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
-					<button type="submit" class="btn btn-outline-primary border-2">아이디 찾기</button>
+				<form>
+					<button type="button" id="findIdButton" class="btn btn-outline-primary border-2">아이디 찾기</button>
 				</form>
 
-				<form method="get" th:action="@{/findPassword}"><!--메인페이지에서 가입하기 버튼 누를 시 회원가입 get요청-->
-					<button type="submit" class="btn btn-outline-primary border-2">비밀번호 찾기</button>
+				<form>
+					<button type="button" id="findPasswordButton" class="btn btn-outline-primary border-2">비밀번호 찾기</button>
 				</form>
 			</div>
 
