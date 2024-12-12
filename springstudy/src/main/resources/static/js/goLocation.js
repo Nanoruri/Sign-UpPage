@@ -11,6 +11,9 @@
             window.location.href = '/study/findId';
         });
 
+        buttons.boardButton.addEventListener('click', function () {
+            window.location.href = '/study/board/page/boardIndex';
+        });
     }
 
 //클릭 이벤트 생성
@@ -19,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         signUpButton: document.getElementById('signupButton'),
         findPasswordButton: document.getElementById('findPasswordButton'),
         findIdButton: document.getElementById('findIdButton'),
+        boardButton: document.getElementById('boardButton')
     };
     buttonsSetUp(buttons);
 });
