@@ -64,36 +64,28 @@ public class PageControllerTest {
 	public void testLoginForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/login"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("login/loginPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("signin"))
-				.andExpect(MockMvcResultMatchers.model().attribute("signin", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("login/loginPage"));
 	}
 
 	@Test
 	public void testSignupForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/signup"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("signup/signupPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("user"))
-				.andExpect(MockMvcResultMatchers.model().attribute("user", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("signup/signupPage"));
 	}
 
 	@Test//아이디 찾기 폼
 	public void testFindIdForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findId"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/findIdPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserId"))
-				.andExpect(MockMvcResultMatchers.model().attribute("findUserId", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("finds/findIdPage"));
 	}
 
 	@Test// 비밀번호 찾기 폼
 	public void testFindPasswordForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findPassword"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserPassword"))
-				.andExpect(MockMvcResultMatchers.model().attribute("findUserPassword", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"));
 	}
 
 	@Test//비밀번호 변경 폼 로드 성공

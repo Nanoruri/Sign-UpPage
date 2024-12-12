@@ -11,24 +11,20 @@ public class PageController {
 	/**
 	 * 로그인 페이지를 보여주는 API
 	 *
-	 * @param model 뷰 렌더링을 위해 속성을 추가하는 모델
 	 * @return 로그인 페이지 뷰 반환
 	 */
 	@GetMapping("/login")
-	public String loginForm(Model model) {
-		model.addAttribute("signin", new User());
+	public String loginForm() {
 		return "login/loginPage";
 	}
 
 	/**
 	 * 회원가입 페이지를 보여주는 API
 	 *
-	 * @param model member란 속성이름으로 새로운 User객체 생성
 	 * @return 회원가입 페이지 뷰 반환
 	 */
 	@GetMapping("/signup")
-	public String signupForm(Model model) {
-		model.addAttribute("user", new User());
+	public String signupForm() {
 		return "signup/signupPage";
 	}
 
@@ -56,24 +52,22 @@ public class PageController {
 	/**
 	 * 아이디 찾기 페이지를 보여주는 API
 	 *
-	 * @param model findUserId라는 이름으로 새로운 User객체 생성
+
 	 * @return 아이디 찾기에 대한 인증페이지 뷰 반환
 	 */
 	@GetMapping("/findId")
-	public String findId(Model model) {
-		model.addAttribute("findUserId", new User());
+	public String findId() {
 		return "finds/findIdPage";
 	}
 
 	/**
 	 * 비밀번호 찾는 페이지를 보여주는 API
 	 *
-	 * @param model findUserPw라는 이름으로 새로윤 User객체 생성
+
 	 * @return 비밀번호 찾기에 대한 인증페이지 뷰 반환
 	 */
 	@GetMapping("/findPassword")
-	public String findPassword(Model model) {
-		model.addAttribute("findUserPassword", new User());
+	public String findPassword() {
 		return "finds/findPasswordPage";
 	}
 
