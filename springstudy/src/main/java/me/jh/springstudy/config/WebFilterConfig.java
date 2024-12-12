@@ -2,8 +2,6 @@ package me.jh.springstudy.config;
 
 
 import me.jh.springstudy.filter.LoggingFilter;
-import me.jh.springstudy.filter.SessionCheckFilter;
-import me.jh.springstudy.filter.SessionCreateFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,28 +23,6 @@ public class WebFilterConfig {
 		return registrationBean;
 	}
 
-	@Bean
-	public FilterRegistrationBean<SessionCreateFilter> sessionCreateFilter() {
-
-		FilterRegistrationBean<SessionCreateFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new SessionCreateFilter());
-		registrationBean.setOrder(1);
-		registrationBean.addUrlPatterns("/*");
-
-		return registrationBean;
-	}
-
-
-	@Bean
-	public FilterRegistrationBean<SessionCheckFilter> sessionCheckFilter() {
-
-		FilterRegistrationBean<SessionCheckFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new SessionCheckFilter());
-		registrationBean.setOrder(2);
-		registrationBean.addUrlPatterns("/*");
-
-		return registrationBean;
-	}
 
 //	@Bean
 //	public FilterRegistrationBean<FetchDestHeaderFilter> customHeaderCheckFilter() {
