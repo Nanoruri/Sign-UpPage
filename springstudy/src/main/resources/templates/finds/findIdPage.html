@@ -19,16 +19,15 @@
 		<div class="container">
 			<h1>아이디 찾기</h1>
 
-			<form method="post" th:action="@{user/api/findId}" class="form" th:object="${findUserId}"
-				onsubmit="return validateAndFindId()">
+			<form method="post" class="form" onsubmit="return validateAndFindId()">
 				<!--사용자 이름 입력란-->
 				<label for="inputName">이름</label>
-				<input type="text" id="inputName" name="name" th:field="*{name}" placeholder="이름">
+				<input type="text" id="inputName" name="name"  placeholder="이름">
 
 				<!--이메일 입력란-->
 				<label for="inputPhoneNum">전화번호</label>
-				<input type="text" id="inputPhoneNum" name="phoneNum" th:field="*{phoneNum}" placeholder="전화번호">
-				<span th:if="${#fields.hasErrors('phoneNum')}" th:errors="*{phoneNum}"></span>
+				<input type="text" id="inputPhoneNum" name="phoneNum"  placeholder="전화번호">
+
 
 				<button type="submit" id="button">입력</button>
 			</form>
