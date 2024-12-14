@@ -27,52 +27,52 @@ import java.util.Arrays;
  */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtProvider jwtTokenProvider;
+    private final JwtProvider jwtTokenProvider;
 
 
-	public JwtAuthenticationFilter(JwtProvider jwtTokenProvider) {
-		this.jwtTokenProvider = jwtTokenProvider;
-	}
+    public JwtAuthenticationFilter(JwtProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-		String token = resolveToken(request);
+        String token = resolveToken(request);
 
-		try {
-			if (token != null && jwtTokenProvider.validateToken(token)) {
-				// 리프레시 토큰일 경우, 인증 정보 설정 없이 계속 진행
-				Authentication authentication = jwtTokenProvider.getAuthentication(token);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				filterChain.doFilter(request, response);
-			}
-		} catch (JwtException e) {
-			SecurityContextHolder.clearContext();
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-		}
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                // 리프레시 토큰일 경우, 인증 정보 설정 없이 계속 진행
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                filterChain.doFilter(request, response);
+            }
+        } catch (JwtException e) {
+            SecurityContextHolder.clearContext();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+        }
 
-;	}
+    }
 
-	private String resolveToken(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7);
-		}
-		return null;
-	}
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 
-	@Override
-	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         //todo: 해당 경로들은 인증이 필요한 authController를 만들어 빼도록 하기
-		String[] notExcludePath = {"/study/board/api/memberBoard","/study/board/api/getBoardInfo/","/study/board/api/delete/",
-				"/study/board/api/update/","/study/board/api/create","/study/board/api/upload-image", "/study/comment/api"};
-		String path = request.getRequestURI();
+        String[] notExcludePath = {"/study/board/api/memberBoard", "/study/board/api/getBoardInfo/", "/study/board/api/delete/",
+                "/study/board/api/update/", "/study/board/api/create", "/study/board/api/upload-image", "/study/comment/api"};
+        String path = request.getRequestURI();
 
         String tabName = request.getParameter("tabName");
         String token = request.getHeader("Authorization");
 
         if (path.startsWith("/study/board/api/detail/")) {
-            return "general".equals(tabName)&& token == null;
+            return "general".equals(tabName) && token == null;
         }
         return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
     }

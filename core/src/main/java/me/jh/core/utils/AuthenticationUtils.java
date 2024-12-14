@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//todo: Utils를 쓸거면 final 선언+ Bean x
+
 public final class AuthenticationUtils {
 
 

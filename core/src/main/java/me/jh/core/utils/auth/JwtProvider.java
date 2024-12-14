@@ -34,7 +34,6 @@ public class JwtProvider {
     }
 
 
-
     public Authentication getAuthentication(String accessToken) {
         // Jwt 토큰 복호화
         Claims claims = parseClaims(accessToken);
@@ -65,7 +64,6 @@ public class JwtProvider {
     }
 
 
-
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -88,9 +86,9 @@ public class JwtProvider {
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parser()
-		            .verifyWith(getSigningKey())
-		            .build()
-		            .parseSignedClaims(accessToken)
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(accessToken)
                     .getPayload();
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
             return e.getClaims();

@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         String resourceLocation = PathUtils.getResourceLocation();
 
-        
+
         registry.addResourceHandler("/images/**")
                 .addResourceLocations(resourceLocation);
     }

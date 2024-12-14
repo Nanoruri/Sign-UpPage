@@ -4,43 +4,43 @@ import me.jh.core.dto.builder.JWTokenBuilder;
 
 public class JWToken {
 
-	private String grantType;
-	private String accessToken;
-	private String refreshToken;
+    private String grantType;
+    private String accessToken;
+    private String refreshToken;
 
-	public JWToken(String grantType, String accessToken, String refreshToken) {
-		this.grantType = grantType;
-		this.accessToken = accessToken;
-		this.refreshToken = refreshToken;
-	}
+    public JWToken(String grantType, String accessToken, String refreshToken) {
+        this.grantType = grantType;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 
-	// Getters and setters
+    // Getters and setters
 
-	public String getGrantType() {
-		return grantType;
-	}
+    public String getGrantType() {
+        return grantType;
+    }
 
-	public void setGrantType(String grantType) {
-		this.grantType = grantType;
-	}
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
+    }
 
-	public String getAccessToken() {
-		return accessToken;
-	}
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-	public static JWTokenBuilder builder() {
-		return new JWTokenBuilder();
-	}
+    public static JWTokenBuilder builder() {
+        return new JWTokenBuilder();
+    }
 }
