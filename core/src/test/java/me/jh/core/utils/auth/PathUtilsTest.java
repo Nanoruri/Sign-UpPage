@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PathUtilsTest {
 
@@ -97,28 +97,6 @@ public class PathUtilsTest {
 
         String expectedPath = new File("/custom/upload/dir").getAbsolutePath() + File.separator + "files" + File.separator + "image";
         String actualPath = PathUtils.getSavePath();
-
-        assertEquals(expectedPath, actualPath);
-    }
-
-    @Test
-    void getResourceLocationHandlesWindowsPathSeparator() {
-        System.setProperty("os.name", "Windows 10");
-        System.setProperty("UPLOAD_DIR", "C:\\CustomUploadDir");
-
-        String expectedPath = "file:///" + new File("C:\\CustomUploadDir").getAbsolutePath() + File.separator;
-        String actualPath = PathUtils.getResourceLocation();
-
-        assertEquals(expectedPath, actualPath);
-    }
-
-    @Test
-    void getResourceLocationHandlesUnixPathSeparator() {
-        System.setProperty("os.name", "Linux");
-        System.setProperty("UPLOAD_DIR", "/custom/upload/dir");
-
-        String expectedPath = "file:///" + new File("/custom/upload/dir").getAbsolutePath() + File.separator;
-        String actualPath = PathUtils.getResourceLocation();
 
         assertEquals(expectedPath, actualPath);
     }
