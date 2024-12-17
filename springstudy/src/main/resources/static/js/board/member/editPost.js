@@ -1,3 +1,4 @@
+import fetchWithAuth from "../../handleAuthFetch.js";
 document.addEventListener('DOMContentLoaded', function () {
     const editButton = document.getElementById('editButton');
 
@@ -8,13 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function fetchBoardDetails(boardId) {
-    const token = sessionStorage.getItem('aToken');
-
-    fetch(`/study/board/api/getBoardInfo/${boardId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
+    fetchWithAuth(`/study/board/api/getBoardInfo/${boardId}`, {
+        method: 'GET'
     })
         .then(response => {
             if (!response.ok) {

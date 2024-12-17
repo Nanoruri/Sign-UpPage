@@ -1,3 +1,5 @@
+import fetchWithAuth from "../../handleAuthFetch.js";
+
 document.addEventListener('DOMContentLoaded', function () {
     const memberTab = document.getElementById('memberTab');
     const accessToken = sessionStorage.getItem('aToken');
@@ -32,11 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 회원 게시글 로드 함수
     function loadMemberBoardList(page = 0) {
-        fetch(`/study/board/api/memberBoard?page=${page}&size=${pageSize}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
+        fetchWithAuth(`/study/board/api/memberBoard?page=${page}&size=${pageSize}`, {
+            method: 'GET'
         })
             .then(response => {
                 if (response.status === 401) {

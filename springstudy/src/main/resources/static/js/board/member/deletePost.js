@@ -1,3 +1,4 @@
+import fetchWithAuth from "../../handleAuthFetch.js";
 document.addEventListener('DOMContentLoaded', function () {
     const deletePostButton = document.getElementById('deleteButton');
     const postId = getPostId(); // postId를 얻는 방법에 따라 수정 필요
@@ -9,13 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function deletePost(boardId) {
-    const token = sessionStorage.getItem('aToken');
-
-    fetch(`/study/board/api/delete/${boardId}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
+    fetchWithAuth(`/study/board/api/delete/${boardId}`, {
+        method: 'DELETE'
     })
         .then(response => {
             if (response.status === 401) {

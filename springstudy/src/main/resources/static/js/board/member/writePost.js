@@ -1,3 +1,5 @@
+import fetchWithAuth from "../../handleAuthFetch.js";
+
 document.addEventListener('DOMContentLoaded', function () {
     const writeForm = document.getElementById('writeForm');
     const cancelButton = document.getElementById('cancelButton');
@@ -62,15 +64,11 @@ function selectLocalImage(quill) {
 }
 
 function uploadImage(file, quill) {
-    const accessToken = sessionStorage.getItem('aToken')
     const formData = new FormData();
     formData.append('image', file);
 
-    fetch('/study/board/api/upload-image', {
+    fetchWithAuth('/study/board/api/upload-image', {
         method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        },
         body: formData
     })
         .then(response => response.json())
@@ -97,11 +95,10 @@ function createPost(event) {
         content: content
     };
 
-    fetch('/study/board/api/create', {
+    fetchWithAuth('/study/board/api/create', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     })
@@ -130,11 +127,10 @@ function updateBoard(boardId, quill) {
         content: quill.root.innerHTML  // Get content from Quill editor
     };
 
-    fetch(`/study/board/api/update/${boardId}`, {
+    fetchWithAuth(`/study/board/api/update/${boardId}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedBoard)
     })
