@@ -15,9 +15,9 @@ public class PathUtils {
 
     // 리소스를 서빙하기 위한 경로를 반환
     public static String getResourceLocation() {
-        String absolutePath = getUploadDir();
-        String pathSeparator = File.separator;
-        return "file:///" + absolutePath + pathSeparator;
+        String absolutePath = getUploadDir().replace("\\", "/");
+        String pathSeparator = "/";
+        return "file:///" + absolutePath + pathSeparator + "files" + pathSeparator + "image" + pathSeparator;
     }
 
     // 경로가 null이거나 비어 있으면 기본 경로를 사용하여 절대 경로를 반환

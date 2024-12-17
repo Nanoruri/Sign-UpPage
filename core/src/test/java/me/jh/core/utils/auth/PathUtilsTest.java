@@ -53,7 +53,7 @@ public class PathUtilsTest {
     void getResourceLocationReturnsDefaultWhenEnvVarNotSet() {
         System.clearProperty("UPLOAD_DIR");
 
-        String expectedPath = "file:///" + new File("uploadTest").getAbsolutePath() + File.separator;
+        String expectedPath = "file:///" + new File("uploadTest").getAbsolutePath().replace("\\", "/") + "/files/image/";
         String actualPath = PathUtils.getResourceLocation();
 
         assertEquals(expectedPath, actualPath);
@@ -63,7 +63,7 @@ public class PathUtilsTest {
     void getResourceLocationReturnsDefaultWhenEnvVarIsEmpty() {
         System.setProperty("UPLOAD_DIR", "");
 
-        String expectedPath = "file:///" + new File("uploadTest").getAbsolutePath() + File.separator;
+        String expectedPath = "file:///" + new File("uploadTest").getAbsolutePath().replace("\\", "/") + "/files/image/";
         String actualPath = PathUtils.getResourceLocation();
 
         assertEquals(expectedPath, actualPath);
@@ -73,7 +73,7 @@ public class PathUtilsTest {
     void getResourceLocationReturnsEnvVarWhenSet() {
         System.setProperty("UPLOAD_DIR", "C:\\CustomUploadDir");
 
-        String expectedPath = "file:///" + new File("C:\\CustomUploadDir").getAbsolutePath() + File.separator;
+        String expectedPath = "file:///" + new File("C:\\CustomUploadDir").getAbsolutePath().replace("\\", "/") + "/files/image/";
         String actualPath = PathUtils.getResourceLocation();
 
         assertEquals(expectedPath, actualPath);
