@@ -25,10 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {  // If response is 200(OK)
                     alert('댓글이 작성되었습니다.');
                     window.location.reload();  // Reload the page
-                } else {
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.message || '댓글 작성에 실패했습니다.');
-                    });
+                } else if (response.status === 401) {  // If response is 401(Unauthorized)
+                    alert('댓글 작성에 실패했습니다. 댓글을 작성하려면 로그인을 하여주십시오.');
                 }
             })
             .catch(error => {
