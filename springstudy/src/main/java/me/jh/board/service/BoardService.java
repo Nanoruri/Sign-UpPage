@@ -52,7 +52,7 @@ public class BoardService {
 
     public boolean updateBoard(Long id, String userId, Board board) {
         Board oldBoard = boardDao.findById(id).orElse(null);
-        if (oldBoard == null || !oldBoard.getCreator().equals(userId)) {
+        if (oldBoard == null || !oldBoard.getCreator().getUserId().equals(userId)) {
             return false;
         }// todo: 게시글 변경 사항에 대해서만 변경하도록 수정하기
 
@@ -66,7 +66,7 @@ public class BoardService {
 
     public boolean deleteBoard(Long id, String userId) {
         Board board = boardDao.findById(id).orElse(null);
-        if (board == null || !board.getCreator().equals(userId)) {
+        if (board == null || !board.getCreator().getUserId().equals(userId)) {
             return false;
         }
 
@@ -93,7 +93,7 @@ public class BoardService {
     public Board findBoard(String userId, Long boardId) {
         Optional<Board> board = boardDao.findById(boardId);
 
-        if (board.isPresent() && board.get().getCreator().equals(userId)) {
+        if (board.isPresent() && board.get().getCreator().getUserId().equals(userId)) {
             board.get().setComments(null);// todo: 임시 comment 강제초기화
             return board.get();
         }

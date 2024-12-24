@@ -82,9 +82,9 @@ public class BoardServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
+                new Board(1L, "title1", "content1", now, "testTab", user),
+                new Board(2L, "title2", "content2", now, "testTab", user),
+                new Board(3L, "title3", "content3", now, "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -107,14 +107,14 @@ public class BoardServiceTest {
 
         //기존 게시글 리스트
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
+                new Board(1L, "title1", "content1", now, "testTab", user),
+                new Board(2L, "title2", "content2", now, "testTab", user),
+                new Board(3L, "title3", "content3", now, "testTab", user)
         );
 
         // 업데이트할 게시글
         Board existingBoard = boardList.get(0);
-        Board updatedBoard = new Board(1L, "title1", "updatedContent", now, "testTab", "testUser");
+        Board updatedBoard = new Board(1L, "title1", "updatedContent", now, "testTab", user);
 
         // 게시글을 찾아오기
         Long id = 1L;
@@ -122,7 +122,7 @@ public class BoardServiceTest {
         when(boardDao.save(existingBoard)).thenReturn(existingBoard);
 
         // 게시글 수정
-        boolean result = boardService.updateBoard(id, "testUser", updatedBoard);
+        boolean result = boardService.updateBoard(id, user.getUserId(), updatedBoard);
 
         // 검증
         verify(boardDao).findById(1L);
@@ -136,10 +136,9 @@ public class BoardServiceTest {
     @Test
     void updateBoardWithInvalidUserTest() {
         Long id = 1L;
-        String userId = "testUser";
-        String invalidUserId = "invalidUser";
-        Board existingBoard = new Board(id, "oldTitle", "oldContent", LocalDateTime.now(), "testTab", userId);
-        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", invalidUserId);
+        String invalidUserId = anotherUser.getUserId();
+        Board existingBoard = new Board(id, "oldTitle", "oldContent", LocalDateTime.now(), "testTab", user);
+        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", anotherUser);
 
         when(boardDao.findById(id)).thenReturn(Optional.of(existingBoard));
 
@@ -155,8 +154,8 @@ public class BoardServiceTest {
     @Test
     void updateBoardNotFoundTest() {
         Long id = 1L;
-        String userId = "testUser";
-        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", userId);
+        String userId = user.getUserId();
+        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", user);
 
         when(boardDao.findById(id)).thenReturn(Optional.empty());
 
@@ -178,9 +177,9 @@ public class BoardServiceTest {
 
         //기존 게시글 리스트
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
+                new Board(1L, "title1", "content1", now, "testTab", user),
+                new Board(2L, "title2", "content2", now, "testTab", user),
+                new Board(3L, "title3", "content3", now, "testTab", user)
         );
 
 
@@ -190,7 +189,7 @@ public class BoardServiceTest {
         when(boardDao.findById(id)).thenReturn(Optional.of(boardList.get(0)));
         doNothing().when(boardDao).delete(boardList.get(0));
 
-        boolean result = boardService.deleteBoard(id, "testUser");
+        boolean result = boardService.deleteBoard(id, user.getUserId());
 
         assertTrue(result);
 
@@ -202,7 +201,7 @@ public class BoardServiceTest {
     @Test
     public void deleteBoard_BoardNotFound() {
         Long boardId = 1L;
-        String userId = "testUser";
+        String userId = user.getUserId();
 
         when(boardDao.findById(boardId)).thenReturn(Optional.empty());
 
@@ -216,9 +215,8 @@ public class BoardServiceTest {
     @Test
     public void deleteBoard_UserNotCreator() {
         Long boardId = 1L;
-        String userId = "testUser";
-        String anotherUserId = "anotherUser";
-        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", anotherUserId);
+        String userId = user.getUserId();
+        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", anotherUser);
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
@@ -233,7 +231,7 @@ public class BoardServiceTest {
     @Test
     public void testGetBoarDetailSuccessful() {
         long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
         board.setComments(List.of(comment));
 
@@ -264,7 +262,7 @@ public class BoardServiceTest {
         String type = "title";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -282,7 +280,7 @@ public class BoardServiceTest {
         String type = "content";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -300,7 +298,7 @@ public class BoardServiceTest {
         String type = "titleAndContent";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -326,11 +324,11 @@ public class BoardServiceTest {
     @Test
     public void testFindBoard_Success() {
         // Arrange
-        String userId = "user123";
+        String userId = user.getUserId();
         Long boardId = 1L;
         Board board = new Board();
         board.setId(boardId);
-        board.setCreator(userId);
+        board.setCreator(user);
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
@@ -340,7 +338,7 @@ public class BoardServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(boardId, result.getId());
-        assertEquals(userId, result.getCreator());
+        assertEquals(userId, result.getCreator().getUserId());
     }
 
     @Test
@@ -366,7 +364,7 @@ public class BoardServiceTest {
         Long boardId = 1L;
         Board board = new Board();
         board.setId(boardId);
-        board.setCreator("anotherUser");
+        board.setCreator(anotherUser);
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
