@@ -1,5 +1,7 @@
 package me.jh.springstudy.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import me.jh.board.entity.Board;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -7,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 사용자 정보를 담는 엔티티 클래스.
@@ -48,6 +52,12 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 
     @Column(name = "USER_ROLE")
     private String role;
+
+     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+     @JsonManagedReference
+     private List<Board> boards;
+
+
 
     public User() {
     }
@@ -142,5 +152,12 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<Board> getBoards() {
+        return boards;
+    }
+    public void setBoards(List<Board> boards) {
+        this.boards = boards;
     }
 }

@@ -1,13 +1,22 @@
 package me.jh.board.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jh.board.dao.BoardDao;
+import me.jh.springstudy.MySpringBootApplication;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entity.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +24,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ContextConfiguration(classes = MySpringBootApplication.class)
 @ActiveProfiles("boardTest")
 @DataJpaTest
 @Transactional
+@Import(ObjectMapper.class)
 public class BoardTest {
 
     @Autowired
@@ -25,11 +36,23 @@ public class BoardTest {
 
     @Autowired
     private BoardDao boardDao;
+    @Autowired
+    private UserDao userDao;
+
+    @Mock
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(), "test@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
+        userDao.save(user);
+
+        }
 
     @Test
     public void testSaveBoard() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
         // when
         Board savedBoard = entityManager.persistAndFlush(board);
@@ -42,7 +65,7 @@ public class BoardTest {
     @Test
     public void testFindById() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         entityManager.persistAndFlush(board);
 
         // when
@@ -56,7 +79,7 @@ public class BoardTest {
     @Test
     public void testFindByTitle() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         entityManager.persistAndFlush(board);
 
         // when
@@ -70,7 +93,7 @@ public class BoardTest {
     @Test
     public void testDeleteBoard() {
         // given
-        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         entityManager.persistAndFlush(board);
 
         // when
@@ -84,8 +107,8 @@ public class BoardTest {
 
     @Test
     void toObject_returnsCorrectMap_whenUserIsCreator() {
-        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
-        String userId = "testUser";
+        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
+        String userId = user.getUserId();
 
         Map<String, Object> result = board.toObject(userId);
 
@@ -96,7 +119,7 @@ public class BoardTest {
 
     @Test
     void toObject_returnsCorrectMap_whenUserIsNotCreator() {
-        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         String userId = "anotherUser";
 
         Map<String, Object> result = board.toObject(userId);
@@ -108,7 +131,7 @@ public class BoardTest {
 
     @Test
     void toObject_returnsCorrectMap_whenUserIdIsNull() {
-        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
         Map<String, Object> result = board.toObject(null);
 
