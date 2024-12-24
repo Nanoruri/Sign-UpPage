@@ -88,10 +88,7 @@ public class BoardService {
 
     @Transactional
     public Board getBoardDetail(Long boardId) {
-        Optional<Board> board = boardDao.findById(boardId);
-        if (board.isPresent()) {
-            board.get().getComments().size();//todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
-        }
+        Optional<Board> board = boardDao.getBoardDetail(boardId);
         return board.orElse(null);
     }
 
@@ -103,10 +100,9 @@ public class BoardService {
     //todo: 토큰의 사용자 ID와 게시판 아이디를 받아  DB 내 작성자 ID와 비교하여 일치하면 게시글 반환
     @Transactional
     public Board findBoard(String userId, Long boardId) {
-        Optional<Board> board = boardDao.findById(boardId);
+        Optional<Board> board = boardDao.getBoardDetail(boardId);
 
         if (board.isPresent() && board.get().getCreator().getUserId().equals(userId)) {
-            board.get().setComments(null);// todo: 임시 comment 강제초기화
             return board.get();
         }
         throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");

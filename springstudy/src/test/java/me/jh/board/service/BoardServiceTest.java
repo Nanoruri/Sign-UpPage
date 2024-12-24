@@ -236,7 +236,7 @@ public class BoardServiceTest {
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
         board.setComments(List.of(comment));
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
         Board result = boardService.getBoardDetail(boardId);
 
@@ -249,7 +249,7 @@ public class BoardServiceTest {
     public void testGetBoarDetailNotFoundTest() {
         long boardId = 1L;
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
 
         Board result = boardService.getBoardDetail(boardId);
 
@@ -331,7 +331,7 @@ public class BoardServiceTest {
         board.setId(boardId);
         board.setCreator(user);
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
         // Act
         Board result = boardService.findBoard(userId, boardId);
@@ -346,9 +346,9 @@ public class BoardServiceTest {
     public void testFindBoard_BoardNotFound() {
         // Arrange
         String userId = "user123";
-        Long boardId = 1L;
+        long boardId = 1L;
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -362,12 +362,12 @@ public class BoardServiceTest {
     public void testFindBoard_UserMismatch() {
         // Arrange
         String userId = "user123";
-        Long boardId = 1L;
+        long boardId = 1L;
         Board board = new Board();
         board.setId(boardId);
         board.setCreator(anotherUser);
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
