@@ -1,6 +1,10 @@
 package me.jh.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import me.jh.springstudy.entity.User;
+import org.hibernate.annotations.BatchSize;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,14 +33,16 @@ public class Board {
     @Column(name = "BOARD_TAB")
     private String tabName;
 
-    @Column(name = "CREATED_USER")
-    private String creator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    @JsonBackReference
+    private User creator;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Comment> comments;
 
-    public Board(long id, String title, String content, LocalDateTime date, String tabName, String creator) {
+    public Board(long id, String title, String content, LocalDateTime date, String tabName, User creator) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -97,19 +103,21 @@ public class Board {
         this.comments = comments;
     }
 
-    public String getCreator() {
+    public User getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 
+    @Transactional
     public Map<String, Object> toObject(String userId) {
         Map<String, Object> response = new HashMap<>();
         response.put("board", this);
-        response.put("isCreator", this.creator.equals(userId));
+        response.put("isCreator", this.creator.getUserId().equals(userId));
         response.put("currentUserId", userId);
+        response.put("creator", this.creator.getUserId());
         return response;
     }
 }

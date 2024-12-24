@@ -3,6 +3,8 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +28,27 @@ public class BoardService {
     }
 
     private final BoardDao boardDao;
+    private final UserDao userDao;
 
     @Autowired
-    public BoardService(BoardDao boardDao) {
+    public BoardService(BoardDao boardDao, UserDao userDao) {
         this.boardDao = boardDao;
+        this.userDao = userDao;
     }
 
 
     public boolean saveBoard(String userId, Board board) {
+        User findingUser = new User();
+        findingUser.setUserId(userId);//findProperties를 위한 객체 생성
+
+        User user = userDao.findByProperties(findingUser).orElse(null);
+        if (user == null) {
+            return false;
+        }
+
         board.setTabName(board.getTabName());
         board.setDate(LocalDateTime.now());
-        board.setCreator(userId);
+        board.setCreator(user);
 
         boardDao.save(board);
         return true;
@@ -52,7 +64,7 @@ public class BoardService {
 
     public boolean updateBoard(Long id, String userId, Board board) {
         Board oldBoard = boardDao.findById(id).orElse(null);
-        if (oldBoard == null || !oldBoard.getCreator().equals(userId)) {
+        if (oldBoard == null || !oldBoard.getCreator().getUserId().equals(userId)) {
             return false;
         }// todo: 게시글 변경 사항에 대해서만 변경하도록 수정하기
 
@@ -66,7 +78,7 @@ public class BoardService {
 
     public boolean deleteBoard(Long id, String userId) {
         Board board = boardDao.findById(id).orElse(null);
-        if (board == null || !board.getCreator().equals(userId)) {
+        if (board == null || !board.getCreator().getUserId().equals(userId)) {
             return false;
         }
 
@@ -76,10 +88,7 @@ public class BoardService {
 
     @Transactional
     public Board getBoardDetail(Long boardId) {
-        Optional<Board> board = boardDao.findById(boardId);
-        if (board.isPresent()) {
-            board.get().getComments().size();//todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
-        }
+        Optional<Board> board = boardDao.getBoardDetail(boardId);
         return board.orElse(null);
     }
 
@@ -91,10 +100,9 @@ public class BoardService {
     //todo: 토큰의 사용자 ID와 게시판 아이디를 받아  DB 내 작성자 ID와 비교하여 일치하면 게시글 반환
     @Transactional
     public Board findBoard(String userId, Long boardId) {
-        Optional<Board> board = boardDao.findById(boardId);
+        Optional<Board> board = boardDao.getBoardDetail(boardId);
 
-        if (board.isPresent() && board.get().getCreator().equals(userId)) {
-            board.get().setComments(null);// todo: 임시 comment 강제초기화
+        if (board.isPresent() && board.get().getCreator().getUserId().equals(userId)) {
             return board.get();
         }
         throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");

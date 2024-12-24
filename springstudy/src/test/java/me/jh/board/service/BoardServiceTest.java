@@ -4,6 +4,10 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entity.User;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +35,22 @@ public class BoardServiceTest {
     @Mock
     private BoardSearchDaoImpl boardSearchDaoImpl;
 
+    @Mock
+    private UserDao userDao;
+
+    @Mock
+    private User user;
+    @Mock
+    private User anotherUser;
+
     @InjectMocks
     private BoardService boardService;
+
+    @BeforeEach
+    public void setUp() {
+        user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(), "test@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
+        anotherUser = new User("anotherUser", "anotherName", "anotherPassword", "010-1234-5678", LocalDate.now(), "test123@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
+    }
 
 
     @Test//Create
@@ -41,13 +60,14 @@ public class BoardServiceTest {
         String title = "title";
         String content = "content";
         LocalDateTime date = LocalDateTime.now();
-        String user = "testUser";
+
 
         Board post = new Board(id, title, content, date, "testTab", user);
 
+        when(userDao.findByProperties(any(User.class))).thenReturn(Optional.of(user));
         when(boardDao.save(post)).thenReturn(post);
 
-        boolean result = boardService.saveBoard(user, post);
+        boolean result = boardService.saveBoard(user.getUserId(), post);
 
         verify(boardDao).save(post);
     }
@@ -63,9 +83,9 @@ public class BoardServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
+                new Board(1L, "title1", "content1", now, "testTab", user),
+                new Board(2L, "title2", "content2", now, "testTab", user),
+                new Board(3L, "title3", "content3", now, "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -88,14 +108,14 @@ public class BoardServiceTest {
 
         //기존 게시글 리스트
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
+                new Board(1L, "title1", "content1", now, "testTab", user),
+                new Board(2L, "title2", "content2", now, "testTab", user),
+                new Board(3L, "title3", "content3", now, "testTab", user)
         );
 
         // 업데이트할 게시글
         Board existingBoard = boardList.get(0);
-        Board updatedBoard = new Board(1L, "title1", "updatedContent", now, "testTab", "testUser");
+        Board updatedBoard = new Board(1L, "title1", "updatedContent", now, "testTab", user);
 
         // 게시글을 찾아오기
         Long id = 1L;
@@ -103,7 +123,7 @@ public class BoardServiceTest {
         when(boardDao.save(existingBoard)).thenReturn(existingBoard);
 
         // 게시글 수정
-        boolean result = boardService.updateBoard(id, "testUser", updatedBoard);
+        boolean result = boardService.updateBoard(id, user.getUserId(), updatedBoard);
 
         // 검증
         verify(boardDao).findById(1L);
@@ -117,10 +137,9 @@ public class BoardServiceTest {
     @Test
     void updateBoardWithInvalidUserTest() {
         Long id = 1L;
-        String userId = "testUser";
-        String invalidUserId = "invalidUser";
-        Board existingBoard = new Board(id, "oldTitle", "oldContent", LocalDateTime.now(), "testTab", userId);
-        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", invalidUserId);
+        String invalidUserId = anotherUser.getUserId();
+        Board existingBoard = new Board(id, "oldTitle", "oldContent", LocalDateTime.now(), "testTab", user);
+        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", anotherUser);
 
         when(boardDao.findById(id)).thenReturn(Optional.of(existingBoard));
 
@@ -136,8 +155,8 @@ public class BoardServiceTest {
     @Test
     void updateBoardNotFoundTest() {
         Long id = 1L;
-        String userId = "testUser";
-        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", userId);
+        String userId = user.getUserId();
+        Board updatedBoard = new Board(id, "newTitle", "newContent", LocalDateTime.now(), "testTab", user);
 
         when(boardDao.findById(id)).thenReturn(Optional.empty());
 
@@ -159,9 +178,9 @@ public class BoardServiceTest {
 
         //기존 게시글 리스트
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", now, "testTab", "testUser"),
-                new Board(2L, "title2", "content2", now, "testTab", "testUser"),
-                new Board(3L, "title3", "content3", now, "testTab", "testUser")
+                new Board(1L, "title1", "content1", now, "testTab", user),
+                new Board(2L, "title2", "content2", now, "testTab", user),
+                new Board(3L, "title3", "content3", now, "testTab", user)
         );
 
 
@@ -171,7 +190,7 @@ public class BoardServiceTest {
         when(boardDao.findById(id)).thenReturn(Optional.of(boardList.get(0)));
         doNothing().when(boardDao).delete(boardList.get(0));
 
-        boolean result = boardService.deleteBoard(id, "testUser");
+        boolean result = boardService.deleteBoard(id, user.getUserId());
 
         assertTrue(result);
 
@@ -183,7 +202,7 @@ public class BoardServiceTest {
     @Test
     public void deleteBoard_BoardNotFound() {
         Long boardId = 1L;
-        String userId = "testUser";
+        String userId = user.getUserId();
 
         when(boardDao.findById(boardId)).thenReturn(Optional.empty());
 
@@ -197,9 +216,8 @@ public class BoardServiceTest {
     @Test
     public void deleteBoard_UserNotCreator() {
         Long boardId = 1L;
-        String userId = "testUser";
-        String anotherUserId = "anotherUser";
-        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", anotherUserId);
+        String userId = user.getUserId();
+        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", anotherUser);
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
@@ -214,11 +232,11 @@ public class BoardServiceTest {
     @Test
     public void testGetBoarDetailSuccessful() {
         long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
         board.setComments(List.of(comment));
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
         Board result = boardService.getBoardDetail(boardId);
 
@@ -231,7 +249,7 @@ public class BoardServiceTest {
     public void testGetBoarDetailNotFoundTest() {
         long boardId = 1L;
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
 
         Board result = boardService.getBoardDetail(boardId);
 
@@ -245,7 +263,7 @@ public class BoardServiceTest {
         String type = "title";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -263,7 +281,7 @@ public class BoardServiceTest {
         String type = "content";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -281,7 +299,7 @@ public class BoardServiceTest {
         String type = "titleAndContent";
         Pageable pageable = PageRequest.of(0, 10);
         List<Board> boardList = List.of(
-                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", "testUser")
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
@@ -307,13 +325,13 @@ public class BoardServiceTest {
     @Test
     public void testFindBoard_Success() {
         // Arrange
-        String userId = "user123";
+        String userId = user.getUserId();
         Long boardId = 1L;
         Board board = new Board();
         board.setId(boardId);
-        board.setCreator(userId);
+        board.setCreator(user);
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
         // Act
         Board result = boardService.findBoard(userId, boardId);
@@ -321,16 +339,16 @@ public class BoardServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(boardId, result.getId());
-        assertEquals(userId, result.getCreator());
+        assertEquals(userId, result.getCreator().getUserId());
     }
 
     @Test
     public void testFindBoard_BoardNotFound() {
         // Arrange
         String userId = "user123";
-        Long boardId = 1L;
+        long boardId = 1L;
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -344,12 +362,12 @@ public class BoardServiceTest {
     public void testFindBoard_UserMismatch() {
         // Arrange
         String userId = "user123";
-        Long boardId = 1L;
+        long boardId = 1L;
         Board board = new Board();
         board.setId(boardId);
-        board.setCreator("anotherUser");
+        board.setCreator(anotherUser);
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -361,8 +379,8 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsCreator() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
-        String userId = "testUser";
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", user);
+        String userId = user.getUserId();
 
         boolean result = boardService.isUserAuthorized(board, userId);
 
@@ -371,7 +389,7 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsFalse_whenUserIsNotCreatorAndMemberTab() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", user);
 
         boolean result = boardService.isUserAuthorized(board, null);
 
@@ -380,7 +398,7 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndGeneralTab() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", user);
 
         boolean result = boardService.isUserAuthorized(board, null);
 
@@ -389,7 +407,7 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndMemberTabWithUserId() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", user);
         String userId = "anotherUser";
 
         boolean result = boardService.isUserAuthorized(board, userId);

@@ -1,6 +1,7 @@
 package me.jh.springstudy.controller;
 
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardDetailDaoImpl;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.springstudy.config.SecurityConfig;
@@ -58,6 +59,8 @@ public class HomeControllerTest {
 	private CommentDao commentDao;
 	@MockBean
 	private RefreshTokenDao refreshTokenDao;
+	@MockBean
+	private BoardDetailDaoImpl boardDetailDao;
 
 //	@MockBean
 //	private HttpSession session;

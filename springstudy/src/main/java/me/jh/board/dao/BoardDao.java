@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BoardDao extends JpaRepository<Board, Long>, BoardSearchDao {
+public interface BoardDao extends JpaRepository<Board, Long>, BoardSearchDao, BoardDetailDao {
     Optional<Board> findByTitle(String title);
 
     Page<Board> findByTabName(String tabName, Pageable pageable);

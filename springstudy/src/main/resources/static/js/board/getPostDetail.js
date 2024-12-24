@@ -28,12 +28,13 @@ function showBoardDetail(postId, tabName) {
         })
         .then(data => {
             const post = data.board;
+            const creator = data.creator;
             boardTitle.textContent = post.title; // 제목 표시
             boardContent.innerHTML = post.content; // 내용 표시
 
             // 작성자와 작성일 표시
             boardMeta.innerHTML = `
-                <span class="post-author">작성자: ${post.creator}</span>
+                <span class="post-author">작성자: ${creator}</span>
                 <span class="post-date">${new Date(post.date).toLocaleString()}</span>
             `;
 
