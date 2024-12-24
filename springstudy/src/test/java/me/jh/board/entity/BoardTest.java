@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(classes = MySpringBootApplication.class)
-@ActiveProfiles("boardTest")
+@ActiveProfiles("test")
 @DataJpaTest
 @Transactional
 @Import(ObjectMapper.class)

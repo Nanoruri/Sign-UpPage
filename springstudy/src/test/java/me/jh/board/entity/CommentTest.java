@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(classes = MySpringBootApplication.class)
-@ActiveProfiles("boardTest")
+@ActiveProfiles("test")
 @DataJpaTest
 @Import(ObjectMapper.class)
 public class CommentTest {

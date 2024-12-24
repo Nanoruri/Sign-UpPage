@@ -4,6 +4,7 @@ package me.jh.springstudy.controller.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardDetailDaoImpl;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtGenerator;
@@ -89,6 +90,8 @@ public class ApiControllerTest {
 	private CommentDao commentDao;
 	@MockBean
 	private RefreshTokenDao refreshTokenDao;
+	@MockBean
+	private BoardDetailDaoImpl boardDetailDao;
 
 
 	@Mock

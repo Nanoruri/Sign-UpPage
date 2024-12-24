@@ -1,6 +1,7 @@
 package me.jh.springstudy.controller.user;
 
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardDetailDaoImpl;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtProvider;
@@ -58,6 +59,8 @@ public class PageControllerTest {
 	private CommentDao commentDao;
 	@MockBean
 	private RefreshTokenDao refreshTokenDao;
+	@MockBean
+	private BoardDetailDaoImpl boardDetailDao;
 
 
 	@Test

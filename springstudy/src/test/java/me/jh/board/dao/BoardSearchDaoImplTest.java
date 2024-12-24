@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(classes = MySpringBootApplication.class)
-@ActiveProfiles("boardTest")
+@ActiveProfiles("test")
 @ExtendWith({SpringExtension.class})
 @Import(ObjectMapper.class)
 @DataJpaTest
