@@ -3,6 +3,8 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.entity.Board;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +28,27 @@ public class BoardService {
     }
 
     private final BoardDao boardDao;
+    private final UserDao userDao;
 
     @Autowired
-    public BoardService(BoardDao boardDao) {
+    public BoardService(BoardDao boardDao, UserDao userDao) {
         this.boardDao = boardDao;
+        this.userDao = userDao;
     }
 
 
     public boolean saveBoard(String userId, Board board) {
+        User findingUser = new User();
+        findingUser.setUserId(userId);//findProperties를 위한 객체 생성
+
+        User user = userDao.findByProperties(findingUser).orElse(null);
+        if (user == null) {
+            return false;
+        }
+
         board.setTabName(board.getTabName());
         board.setDate(LocalDateTime.now());
-        board.setCreator(userId);
+        board.setCreator(user);
 
         boardDao.save(board);
         return true;
