@@ -4,12 +4,14 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.CommentDao;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
+import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -36,7 +38,8 @@ public class CommentServiceTest {
     void testSaveComment() {
         Long boardId = 1L;
         String userId = "testLoginUser";
-        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", "testUser");
+        User user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(),"test@testEmail.com", LocalDateTime.now(),LocalDateTime.now(), "USER");
+        Board board = new Board(boardId, "title", "content", LocalDateTime.now(), "testTab", user);
         Comment comment = new Comment();
         comment.setContent("testCommentContent");
 

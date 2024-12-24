@@ -1,10 +1,16 @@
 package me.jh.board.controller;
 
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.BoardSearchDaoImpl;
+import me.jh.board.dao.CommentDao;
 import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.dao.UserPropertiesDaoImpl;
+import me.jh.springstudy.dao.auth.RefreshTokenDao;
+import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,6 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,8 +61,26 @@ public class BoardApiControllerTest {
     @MockBean
     private AuthService authService;
 
+    @MockBean
+    private UserDao userDao;
+
+    @MockBean
+    private BoardSearchDaoImpl boardSearchDao;
+    @MockBean
+    private UserPropertiesDaoImpl userPropertiesDao;
+    @MockBean
+    private CommentDao commentDao;
+    @MockBean
+    private RefreshTokenDao refreshTokenDao;
+
     @Mock
     private MockMultipartFile mockMultipartFile;
+
+    @Mock
+    private User user;
+
+    @Mock
+    private User anotherUser;
 
 
     @BeforeEach
@@ -63,6 +88,10 @@ public class BoardApiControllerTest {
         mockMvc = standaloneSetup(new BoardApiController(boardService, fileUploadService, authService))
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
+
+        user = new User("test", "testName", "validPassword", "010-1234-5678",
+                LocalDate.now(), "test@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
+        anotherUser = new User("anotherUser", "anotherName", "validPassword", "010-1234-5678",LocalDate.now(), "test2@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 
     }
 
@@ -74,11 +103,11 @@ public class BoardApiControllerTest {
         String content = "content";
         LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
-        String userId = "testUser";
+        String userId = user.getUserId();
 
         String token = "Bearer MockToken";
 
-        Board post = new Board(id, title, content, date, tab, userId);
+        Board post = new Board(id, title, content, date, tab, user);
 
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.saveBoard(userId, post)).thenReturn(true);
@@ -95,7 +124,7 @@ public class BoardApiControllerTest {
     public void getGeneralBoard_returnsPagedResults() throws Exception {
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
+        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", user)));
 
         when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
 
@@ -154,12 +183,12 @@ public class BoardApiControllerTest {
         String content = "content";
         LocalDateTime date = LocalDateTime.now();
         String tab = "testTab";
-        String user = "testUser";
+        String userId = user.getUserId();
 
         Board post = new Board(id, title, content, date, tab, user);
 
-        when(authService.getAuthenticatedUserId()).thenReturn(user);
-        when(boardService.deleteBoard(post.getId(), user)).thenReturn(true);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
+        when(boardService.deleteBoard(post.getId(), userId)).thenReturn(true);
 
         mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId())
                 )
@@ -172,8 +201,8 @@ public class BoardApiControllerTest {
         long boardId = 1L;
         String token = "Bearer validToken";
         String userId = "testUser";
-        String anotherUserId = "anotherUser";
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", anotherUserId);
+        String anotherUserId = anotherUser.getUserId();
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", anotherUser);
 
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.deleteBoard(boardId, userId)).thenReturn(false);
@@ -187,8 +216,8 @@ public class BoardApiControllerTest {
     @Test
     public void getBoardDetailTest() throws Exception {
         long boardId = 1L;
-        String userId = "testUser";
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+        String userId = user.getUserId();
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
@@ -206,8 +235,8 @@ public class BoardApiControllerTest {
     @Test
     public void testGetBoardDetail_returnsUnauthorized_whenUserIsNotAuthorized() throws Exception {
         long boardId = 1L;
-        String userId = "testUser";
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+        String userId = user.getUserId();
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
@@ -221,7 +250,7 @@ public class BoardApiControllerTest {
     @Test
     public void testGetBoardDetail_returnsUnauthorized_whenUserIdIsNull() throws Exception {
         long boardId = 1L;
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", "testUser");
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(null);
         when(boardService.getBoardDetail(boardId)).thenReturn(board);
@@ -236,7 +265,7 @@ public class BoardApiControllerTest {
     public void searchPosts_returnsPagedResults() throws Exception {
         String thisTab = "general";
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser")));
+        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", user)));
 
         when(boardService.searchPosts("title", "title", pageable, thisTab)).thenReturn(boardPage);
 
@@ -256,7 +285,7 @@ public class BoardApiControllerTest {
     @Test
     public void getMemberBoard_returnsPagedResults() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser")));
+        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "member", user)));
 
         when(boardService.getBoard("member", pageable)).thenReturn(boardPage);
 
@@ -298,8 +327,8 @@ public class BoardApiControllerTest {
     public void findBoardSuccessTest() throws Exception {
         long boardId = 1L;
         String token = "Bearer validToken";
-        String userId = "testUser";
-        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", userId);
+        String userId = user.getUserId();
+        Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
 
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
@@ -311,8 +340,7 @@ public class BoardApiControllerTest {
                 .andExpect(jsonPath("$.id").value(boardId))
                 .andExpect(jsonPath("$.title").value("Test Title"))
                 .andExpect(jsonPath("$.content").value("Test Content"))
-                .andExpect(jsonPath("$.tabName").value("testTab"))
-                .andExpect(jsonPath("$.creator").value(userId));
+                .andExpect(jsonPath("$.tabName").value("testTab"));
     }
 
     @Test

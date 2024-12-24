@@ -4,6 +4,10 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
+import me.jh.springstudy.dao.UserDao;
+import me.jh.springstudy.entity.User;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +35,22 @@ public class BoardServiceTest {
     @Mock
     private BoardSearchDaoImpl boardSearchDaoImpl;
 
+    @Mock
+    private UserDao userDao;
+
+    @Mock
+    private User user;
+    @Mock
+    private User anotherUser;
+
     @InjectMocks
     private BoardService boardService;
+
+    @BeforeEach
+    public void setUp() {
+        user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(), "test@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
+        anotherUser = new User("anotherUser", "anotherName", "anotherPassword", "010-1234-5678", LocalDate.now(), "test123@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
+    }
 
 
     @Test//Create
@@ -361,8 +380,8 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsCreator() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
-        String userId = "testUser";
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", user);
+        String userId = user.getUserId();
 
         boolean result = boardService.isUserAuthorized(board, userId);
 
@@ -371,7 +390,7 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsFalse_whenUserIsNotCreatorAndMemberTab() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", user);
 
         boolean result = boardService.isUserAuthorized(board, null);
 
@@ -380,7 +399,7 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndGeneralTab() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", "testUser");
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", user);
 
         boolean result = boardService.isUserAuthorized(board, null);
 
@@ -389,7 +408,7 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndMemberTabWithUserId() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", "testUser");
+        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", user);
         String userId = "anotherUser";
 
         boolean result = boardService.isUserAuthorized(board, userId);

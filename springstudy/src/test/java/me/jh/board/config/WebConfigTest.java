@@ -2,6 +2,7 @@ package me.jh.board.config;
 
 import me.jh.board.TestSpringContext;
 import me.jh.core.utils.auth.JwtProvider;
+import me.jh.springstudy.MySpringBootApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@ContextConfiguration(classes = {TestSpringContext.class})
+@ContextConfiguration(classes = {MySpringBootApplication.class})
 @ActiveProfiles("boardTest")
 public class WebConfigTest {
 
