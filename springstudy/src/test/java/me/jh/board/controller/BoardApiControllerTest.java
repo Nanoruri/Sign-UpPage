@@ -262,6 +262,19 @@ public class BoardApiControllerTest {
     }
 
     @Test
+    public void testGetBoardDetail_returnsUnauthorized_whenBoardIsNull() throws Exception {
+        long boardId = 1L;
+        String userId = user.getUserId();
+
+        when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
+        when(boardService.getBoardDetail(boardId)).thenReturn(null);
+
+        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void searchPosts_returnsPagedResults() throws Exception {
         String thisTab = "general";
         Pageable pageable = PageRequest.of(0, 10);
