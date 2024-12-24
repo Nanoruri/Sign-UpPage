@@ -111,11 +111,13 @@ public class Board {
         this.creator = creator;
     }
 
+    @Transactional
     public Map<String, Object> toObject(String userId) {
         Map<String, Object> response = new HashMap<>();
         response.put("board", this);
-        response.put("isCreator", this.creator.equals(userId));
+        response.put("isCreator", this.creator.getUserId().equals(userId));
         response.put("currentUserId", userId);
+        response.put("creator", this.creator.getUserId());
         return response;
     }
 }
