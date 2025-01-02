@@ -38,11 +38,20 @@ public class BoardService {
 
 
     public boolean saveBoard(String userId, Board board) {
-        User findingUser = new User();
-        findingUser.setUserId(userId);//findProperties를 위한 객체 생성
 
-        User user = userDao.findByProperties(findingUser).orElse(null);
-        if (user == null) {
+        try {//userId로 사용자 정보를 찾아서 게시글 작성자로 설정
+            userDao.findById(userId).ifPresentOrElse(user -> {
+                board.setTabName(board.getTabName());
+                board.setDate(LocalDateTime.now());
+                board.setCreator(user);
+
+                boardDao.save(board);
+            }, () -> {
+                throw new IllegalArgumentException("사용자 정보가 존재하지 않습니다.");
+            });
+            return true;
+        } catch (Exception e) {
+            log.error("게시글 작성 중 오류 발생", e);
             return false;
         }
 

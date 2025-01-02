@@ -53,9 +53,18 @@ public class FindService {
      * @implNote 이 메서드는 {@link UserDao#findByProperties(User)}를 사용하여 사용자를 검증.
      */
     public boolean validateUser(User user) {
-        boolean isValid = userDao.findByProperties(user).isPresent();
-        log.info(isValid ? "사용자를 찾았습니다" + user.getUserId() : "사용자를 찾을 수 없습니다.");
-        return isValid;
+        Optional<User> foundUser = userDao.findById(user.getUserId());
+
+        if (foundUser.isEmpty()) {
+            log.warn("사용자에 대한 정보가 존재하지 않습니다.");
+        return false;
+        }
+
+        log.info("사용자를 찾았습니다: {}", foundUser.get().getUserId());
+
+        // 사용자 정보 비교
+        return foundUser.get().getName().equals(user.getName())
+                && foundUser.get().getPhoneNum().equals(user.getPhoneNum());
     }
 
     /**
@@ -71,7 +80,7 @@ public class FindService {
      * {@link UserDao#save(Object)}를 사용하여 변경된 비밀번호를 저장합니다.
      */
     public boolean changePassword(User changePasswordUser, String newPassword) {
-        Optional<User> optionalUser = userDao.findByProperties(changePasswordUser);
+        Optional<User> optionalUser = userDao.findById(changePasswordUser.getUserId());
 
 
         if (optionalUser.isEmpty()) {

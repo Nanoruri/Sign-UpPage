@@ -85,9 +85,7 @@ public class FindServiceTest {
 		User user = new User(userId, name, "hashedPassword", phoneNum,
 				null, null, null, null,"USER");
 
-		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
-
-		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
 
 		boolean validUser = findService.validateUser(user);
 		assertTrue(validUser, "사용자를 찾았습니다.");
@@ -106,7 +104,7 @@ public class FindServiceTest {
 		User user = new User(userId, name, "hashedPassword", phoneNum,
 				null, null, null, null,"USER");
 
-		when(userDao.findByProperties(user)).thenReturn(Optional.empty());
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.empty());
 
 		boolean validUser = findService.validateUser(user);
 		assertFalse(validUser, "사용자를 찾지 못했습니다.");
@@ -125,7 +123,7 @@ public class FindServiceTest {
 		User user = new User(userId, name, null, phoneNum,
 				null, null, null, null,"USER");
 
-		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
 
 		String newPassword = "changedPassword";
 
@@ -144,7 +142,7 @@ public class FindServiceTest {
 
 		//given
 		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패해야함
-		when(userDao.findByProperties(changePasswordUser)).thenReturn(Optional.empty());
+		when(userDao.findById(changePasswordUser.getUserId())).thenReturn(Optional.empty());
 
 		// Act & Assert
 		try {
