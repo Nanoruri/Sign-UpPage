@@ -9,7 +9,6 @@ import me.jh.board.entity.Comment;
 import me.jh.board.service.CommentService;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.dao.UserPropertiesDaoImpl;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,8 +50,7 @@ public class CommentApiControllerTest {
     private BoardDao boardDao;
     @MockBean
     private BoardSearchDaoImpl boardSearchDao;
-    @MockBean
-    private UserPropertiesDaoImpl userPropertiesDao;
+
     @MockBean
     private CommentDao commentDao;
     @MockBean

@@ -5,7 +5,6 @@ import me.jh.board.TestSpringContext;
 import me.jh.board.entity.Board;
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.dao.UserPropertiesDaoImpl;
 import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

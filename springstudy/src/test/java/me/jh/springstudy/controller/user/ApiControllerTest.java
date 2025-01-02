@@ -12,7 +12,6 @@ import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.core.dto.JWToken;
-import me.jh.springstudy.dao.UserPropertiesDaoImpl;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.user.UserErrorType;
@@ -84,8 +83,7 @@ public class ApiControllerTest {
 	private BoardDao boardDao;
 	@MockBean
 	private BoardSearchDaoImpl boardSearchDao;
-	@MockBean
-	private UserPropertiesDaoImpl userPropertiesDao;
+
 	@MockBean
 	private CommentDao commentDao;
 	@MockBean

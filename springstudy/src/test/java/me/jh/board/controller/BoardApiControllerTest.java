@@ -8,7 +8,6 @@ import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
 import me.jh.board.service.FileUploadService;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.dao.UserPropertiesDaoImpl;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,8 +65,7 @@ public class BoardApiControllerTest {
 
     @MockBean
     private BoardSearchDaoImpl boardSearchDao;
-    @MockBean
-    private UserPropertiesDaoImpl userPropertiesDao;
+
     @MockBean
     private CommentDao commentDao;
     @MockBean

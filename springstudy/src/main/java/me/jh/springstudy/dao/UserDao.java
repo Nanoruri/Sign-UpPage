@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
  * Jpa와 CustomDao를 상속받는다.
  */
 @Repository
-public interface UserDao extends JpaRepository<User, String>, UserPropertiesDao {
+public interface UserDao extends JpaRepository<User, String> {// todo: Dao/ Repository 분리하기
+
 
     User findByNameAndPhoneNum(String name, String phoneNum);
 
