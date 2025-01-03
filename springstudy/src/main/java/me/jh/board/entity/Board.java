@@ -3,14 +3,10 @@ package me.jh.board.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import me.jh.springstudy.entity.User;
-import org.hibernate.annotations.BatchSize;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "board")
@@ -111,13 +107,5 @@ public class Board {
         this.creator = creator;
     }
 
-    @Transactional
-    public Map<String, Object> toObject(String userId) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("board", this);
-        response.put("isCreator", this.creator.getUserId().equals(userId));
-        response.put("currentUserId", userId);
-        response.put("creator", this.creator.getUserId());
-        return response;
-    }
+
 }

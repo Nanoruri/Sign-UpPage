@@ -29,3 +29,13 @@ public class BoardDTO {
 
 
 
+    @Transactional
+    public Map<String, Object> toObject(String userId) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("board", this);
+        response.put("isCreator", this.creatorId.equals(userId));
+        response.put("currentUserId", userId);
+        response.put("creator", this.creatorId);
+        return response;
+    }
+}
