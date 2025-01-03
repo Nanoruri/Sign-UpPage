@@ -54,13 +54,6 @@ public class BoardService {
             log.error("게시글 작성 중 오류 발생", e);
             return false;
         }
-
-        board.setTabName(board.getTabName());
-        board.setDate(LocalDateTime.now());
-        board.setCreator(user);
-
-        boardDao.save(board);
-        return true;
     }
 
     @Transactional
