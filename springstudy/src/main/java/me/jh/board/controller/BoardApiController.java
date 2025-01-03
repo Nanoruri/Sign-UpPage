@@ -53,10 +53,10 @@ public class BoardApiController {
     public ResponseEntity<Board> saveBoard(@RequestBody Board board) {
 
         String userId = authService.getAuthenticatedUserId();
-        if (userId == null) {
+        boardService.saveBoard(userId, board);
+        if (userId == null|| !boardService.saveBoard(userId, board)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        boardService.saveBoard(userId, board);
         return ResponseEntity.ok().build();
     }
 

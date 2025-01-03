@@ -33,8 +33,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -108,7 +107,7 @@ public class BoardApiControllerTest {
         Board post = new Board(id, title, content, date, tab, user);
 
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
-        when(boardService.saveBoard(userId, post)).thenReturn(true);
+        when(boardService.saveBoard(eq(userId), any(Board.class))).thenReturn(true);
 
         mockMvc.perform(post("/board/api/create")
                         .contentType(MediaType.APPLICATION_JSON)
