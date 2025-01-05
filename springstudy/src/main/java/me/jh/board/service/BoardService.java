@@ -56,12 +56,16 @@ public class BoardService {
         }
     }
 
-    @Transactional
-    public Page<Board> getBoard(String tabName, Pageable pageable) {
+    @Transactional//todo: DTO로 반환하도록 수정하기//todo: related problems Test 코드
+    public Page<BoardBasicDTO> getBoard(String tabName, Pageable pageable) {
         Page<Board> boards = boardDao.findByTabName(tabName, pageable);
-//		boards.forEach(board -> board.getComments().size());//todo: 강제로 comments를 초기화하는 꼼수. fetch= EAGER와 비슷하게 동작하니 고쳐놓기
-        boards.forEach(board -> board.setComments(null));
-        return boards;
+        return boards.map(board -> new BoardBasicDTO(
+                board.getId(),
+                board.getTitle(),
+                board.getContent(),
+                board.getDate(),
+                board.getTabName()
+        ));
     }
 
     public boolean updateBoard(Long id, String userId, Board board) {
@@ -79,9 +83,11 @@ public class BoardService {
     }
 
     public boolean deleteBoard(Long id, String userId) {
-        Board board = boardDao.findById(id).orElse(null);
-        if (board == null || !board.getCreator().getUserId().equals(userId)) {
-            return false;
+        Board board = boardDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        if (!board.getCreator().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
 
         boardDao.delete(board);
@@ -89,29 +95,55 @@ public class BoardService {
     }
 
     @Transactional
-    public Board getBoardDetail(Long boardId) {
+    public BoardDTO getBoardDetail(Long boardId) {
         Optional<Board> board = boardDao.getBoardDetail(boardId);
-        return board.orElse(null);
+
+        if (board.isEmpty()) {
+            throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
+        }
+
+        return new BoardDTO(
+                board.get().getId(),
+                board.get().getTitle(),
+                board.get().getContent(),
+                board.get().getDate(),
+                board.get().getTabName(),
+                board.get().getCreator().getUserId(),
+                board.get().getComments()
+        );
     }
 
     @Transactional
-    public Page<Board> searchPosts(String query, String type, Pageable pageable, String tabName) {
-        return boardDao.searchPosts(query, type, pageable, tabName);
+    public Page<BoardBasicDTO> searchPosts(String query, String type, Pageable pageable, String tabName) {
+        Page<Board> searchResult = boardDao.searchPosts(query, type, pageable, tabName);
+        return searchResult.map(board -> new BoardBasicDTO(
+                board.getId(),
+                board.getTitle(),
+                board.getContent(),
+                board.getDate(),
+                board.getTabName()
+        ));
     }
 
-    //todo: 토큰의 사용자 ID와 게시판 아이디를 받아  DB 내 작성자 ID와 비교하여 일치하면 게시글 반환
+
     @Transactional
-    public Board findBoard(String userId, Long boardId) {
+    public BoardBasicDTO findBoard(String userId, Long boardId) {
         Optional<Board> board = boardDao.getBoardDetail(boardId);
 
         if (board.isPresent() && board.get().getCreator().getUserId().equals(userId)) {
-            return board.get();
+            return board.map(boardToDto -> new BoardBasicDTO(
+                    boardToDto.getId(),
+                    boardToDto.getTitle(),
+                    boardToDto.getContent(),
+                    boardToDto.getDate(),
+                    boardToDto.getTabName()
+            )).orElse(null);
         }
         throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");
     }
 
 
-    public boolean isUserAuthorized(Board board, String userId) {
+    public boolean isUserAuthorized(BoardDTO board, String userId) {
         boolean isMember = "member".equals(board.getTabName());
         return !(isMember && userId == null);
     }
