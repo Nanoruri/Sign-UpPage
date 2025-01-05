@@ -3,6 +3,8 @@ package me.jh.board.controller;
 import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
+import me.jh.board.dto.board.BoardBasicDTO;
+import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
@@ -121,8 +123,8 @@ public class BoardApiControllerTest {
     public void getGeneralBoard_returnsPagedResults() throws Exception {
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", user)));
-
+        BoardBasicDTO boardDTO = new BoardBasicDTO(1L, "title", "content", LocalDateTime.now(), "general");
+        Page<BoardBasicDTO> boardPage = new PageImpl<>(List.of(boardDTO));
         when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
 
         mockMvc.perform(get("/board/api/generalBoard")
@@ -215,10 +217,11 @@ public class BoardApiControllerTest {
         long boardId = 1L;
         String userId = user.getUserId();
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
+        BoardDTO boardDTO = new BoardDTO(board.getId(), board.getTitle(), board.getContent(), board.getDate(), board.getTabName(), board.getCreator().getUserId(), null);
 
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
-        when(boardService.getBoardDetail(boardId)).thenReturn(board);
-        when(boardService.isUserAuthorized(board, userId)).thenReturn(true);
+        when(boardService.getBoardDetail(boardId)).thenReturn(boardDTO);
+        when(boardService.isUserAuthorized(boardDTO, userId)).thenReturn(true);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -234,10 +237,12 @@ public class BoardApiControllerTest {
         long boardId = 1L;
         String userId = user.getUserId();
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
+        BoardDTO boardDTO = new BoardDTO(board.getId(), board.getTitle(), board.getContent(), board.getDate(), board.getTabName(), board.getCreator().getUserId(), null);
+
 
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
-        when(boardService.getBoardDetail(boardId)).thenReturn(board);
-        when(boardService.isUserAuthorized(board, userId)).thenReturn(false);
+        when(boardService.getBoardDetail(boardId)).thenReturn(boardDTO);
+        when(boardService.isUserAuthorized(boardDTO, userId)).thenReturn(false);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -248,10 +253,12 @@ public class BoardApiControllerTest {
     public void testGetBoardDetail_returnsUnauthorized_whenUserIdIsNull() throws Exception {
         long boardId = 1L;
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
+        BoardDTO boardDTO = new BoardDTO(board.getId(), board.getTitle(), board.getContent(), board.getDate(), board.getTabName(), board.getCreator().getUserId(), null);
+
 
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(null);
-        when(boardService.getBoardDetail(boardId)).thenReturn(board);
-        when(boardService.isUserAuthorized(board, null)).thenReturn(false);
+        when(boardService.getBoardDetail(boardId)).thenReturn(boardDTO);
+        when(boardService.isUserAuthorized(boardDTO, null)).thenReturn(false);
 
         mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -275,7 +282,8 @@ public class BoardApiControllerTest {
     public void searchPosts_returnsPagedResults() throws Exception {
         String thisTab = "general";
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "general", user)));
+        BoardBasicDTO boardDTO = new BoardBasicDTO(1L, "title", "content", LocalDateTime.now(), "general");
+        Page<BoardBasicDTO> boardPage = new PageImpl<>(List.of(boardDTO));
 
         when(boardService.searchPosts("title", "title", pageable, thisTab)).thenReturn(boardPage);
 
@@ -295,7 +303,9 @@ public class BoardApiControllerTest {
     @Test
     public void getMemberBoard_returnsPagedResults() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> boardPage = new PageImpl<>(List.of(new Board(1L, "title", "content", LocalDateTime.now(), "member", user)));
+        BoardBasicDTO boardDTO = new BoardBasicDTO(1L, "title", "content", LocalDateTime.now(), "member");
+        Page<BoardBasicDTO> boardPage = new PageImpl<>(List.of(boardDTO));
+
 
         when(boardService.getBoard("member", pageable)).thenReturn(boardPage);
 
@@ -339,10 +349,11 @@ public class BoardApiControllerTest {
         String token = "Bearer validToken";
         String userId = user.getUserId();
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
+        BoardBasicDTO boardBasicDTO = new BoardBasicDTO(board.getId(), board.getTitle(), board.getContent(), board.getDate(), board.getTabName());
 
 
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
-        when(boardService.findBoard(userId, boardId)).thenReturn(board);
+        when(boardService.findBoard(userId, boardId)).thenReturn(boardBasicDTO);
 
         mockMvc.perform(get("/board/api/getBoardInfo/{boardId}", boardId)
                         .header("Authorization", token))
