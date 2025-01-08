@@ -247,14 +247,15 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void testGetBoarDetailNotFoundTest() {
+    public void testGetBoarDetailNotFound() {
         long boardId = 1L;
 
         when(boardDao.findById(boardId)).thenReturn(Optional.empty());
 
-        BoardDTO result = boardService.getBoardDetail(boardId);
+        assertThrows(IllegalArgumentException.class, () -> {
+            boardService.getBoardDetail(boardId);
+        });
 
-        assertNull(result);
     }
 
 
