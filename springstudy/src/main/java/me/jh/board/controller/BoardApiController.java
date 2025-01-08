@@ -53,10 +53,10 @@ public class BoardApiController {
     public ResponseEntity<Board> saveBoard(@RequestBody Board board) {
 
         String userId = authService.getAuthenticatedUserId();
-        if (userId == null) {
+        boardService.saveBoard(userId, board);
+        if (userId == null|| !boardService.saveBoard(userId, board)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        boardService.saveBoard(userId, board);
         return ResponseEntity.ok().build();
     }
 
@@ -64,8 +64,8 @@ public class BoardApiController {
     //Read
     @GetMapping("/generalBoard")
     @ResponseBody
-    public ResponseEntity<Page<Board>> getGeneralBoard(Pageable pageable) {
-        Page<Board> boards = boardService.getBoard("general", pageable);
+    public ResponseEntity<Page<BoardBasicDTO>> getGeneralBoard(Pageable pageable) {
+        Page<BoardBasicDTO> boards = boardService.getBoard("general", pageable);
         return ResponseEntity.ok(boards);//TODO: board.comments필드 JSON 직렬화 이슈 수정 필요
     }
 
@@ -101,7 +101,7 @@ public class BoardApiController {
 
         String userId = authService.getAuthenticatedUserIdOrNull();
 
-        Board board = boardService.getBoardDetail(boardId);
+        BoardDTO board = boardService.getBoardDetail(boardId);
 
         if (!boardService.isUserAuthorized(board, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -113,18 +113,18 @@ public class BoardApiController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Board>> searchPosts(@RequestParam("query") String query,
-                                                   @RequestParam("type") String type,
-                                                   @RequestParam("tabName") String tabName, Pageable pageable) {
+    public ResponseEntity<Page<BoardBasicDTO>> searchPosts(@RequestParam("query") String query,
+                                                           @RequestParam("type") String type,
+                                                           @RequestParam("tabName") String tabName, Pageable pageable) {
 
-        Page<Board> searchResults = boardService.searchPosts(query, type, pageable, tabName);
+        Page<BoardBasicDTO> searchResults = boardService.searchPosts(query, type, pageable, tabName);
         return ResponseEntity.ok(searchResults);
     }
 
     @GetMapping("/memberBoard")
     @ResponseBody
-    public ResponseEntity<Page<Board>> getMemberBoard(Pageable pageable) {
-        Page<Board> boards = boardService.getBoard("member", pageable);
+    public ResponseEntity<Page<BoardBasicDTO>> getMemberBoard(Pageable pageable) {
+        Page<BoardBasicDTO> boards = boardService.getBoard("member", pageable);
         return ResponseEntity.ok(boards);
     }
 
@@ -145,10 +145,10 @@ public class BoardApiController {
     //todo: Token 내 아이디와 게시글 작성자 아이디가 일치하는지 확인 후 게시글을 찾아 반환
     @GetMapping("/getBoardInfo/{boardId}")
     @ResponseBody
-    public ResponseEntity<Board> findBoard(@PathVariable Long boardId) {
+    public ResponseEntity<BoardBasicDTO> findBoard(@PathVariable Long boardId) {
         String userId = authService.getAuthenticatedUserId();
 
-        Board board = boardService.findBoard(userId, boardId);
+        BoardBasicDTO board = boardService.findBoard(userId, boardId);
         if (board == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

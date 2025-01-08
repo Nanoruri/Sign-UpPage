@@ -2,6 +2,8 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.BoardSearchDaoImpl;
+import me.jh.board.dto.board.BoardBasicDTO;
+import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
@@ -91,9 +93,8 @@ public class BoardServiceTest {
 
         when(boardDao.findByTabName("testTab", pageable)).thenReturn(boardPage);
 
-        Page<Board> result = boardService.getBoard("testTab", pageable);
+        Page<BoardBasicDTO> result = boardService.getBoard("testTab", pageable);
 
-        assertEquals(boardPage, result);
         verify(boardDao).findByTabName("testTab", pageable);
     }
 
@@ -238,9 +239,8 @@ public class BoardServiceTest {
 
         when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
 
-        Board result = boardService.getBoardDetail(boardId);
+        BoardDTO result = boardService.getBoardDetail(boardId);
 
-        assertEquals(board, result);
         assertEquals(1, result.getComments().size());
         assertEquals("Test Comment", result.getComments().get(0).getContent());
     }
@@ -251,7 +251,7 @@ public class BoardServiceTest {
 
         when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
 
-        Board result = boardService.getBoardDetail(boardId);
+        BoardDTO result = boardService.getBoardDetail(boardId);
 
         assertNull(result);
     }
@@ -269,7 +269,7 @@ public class BoardServiceTest {
 
         when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
 
-        Page<Board> result = boardService.searchPosts(query, "title", pageable, "testTab");
+        Page<BoardBasicDTO> result = boardService.searchPosts(query, "title", pageable, "testTab");
 
         assertEquals(boardList, result.getContent());
         verify(boardDao).searchPosts(query, type, pageable, "testTab");
@@ -287,7 +287,7 @@ public class BoardServiceTest {
 
         when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
 
-        Page<Board> result = boardService.searchPosts(query, type, pageable, "testTab");
+        Page<BoardBasicDTO> result = boardService.searchPosts(query, type, pageable, "testTab");
 
         assertEquals(boardPage, result);
         verify(boardDao).searchPosts(query, type, pageable, "testTab");
@@ -305,7 +305,7 @@ public class BoardServiceTest {
 
         when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
 
-        Page<Board> result = boardService.searchPosts(query, type, pageable, "testTab");
+        Page<BoardBasicDTO> result = boardService.searchPosts(query, type, pageable, "testTab");
 
         assertEquals(boardPage, result);
         verify(boardDao).searchPosts(query, type, pageable, "testTab");
@@ -316,7 +316,7 @@ public class BoardServiceTest {
         String query = "title1";
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Board> result = boardService.searchPosts(query, "invalidType", pageable, "testTab");
+        Page<BoardBasicDTO> result = boardService.searchPosts(query, "invalidType", pageable, "testTab");
 
         assertNull(result);
     }
@@ -331,15 +331,14 @@ public class BoardServiceTest {
         board.setId(boardId);
         board.setCreator(user);
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
         // Act
-        Board result = boardService.findBoard(userId, boardId);
+        BoardBasicDTO result = boardService.findBoard(userId, boardId);
 
         // Assert
         assertNotNull(result);
         assertEquals(boardId, result.getId());
-        assertEquals(userId, result.getCreator().getUserId());
     }
 
     @Test
@@ -348,7 +347,7 @@ public class BoardServiceTest {
         String userId = "user123";
         long boardId = 1L;
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
+        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -367,7 +366,7 @@ public class BoardServiceTest {
         board.setId(boardId);
         board.setCreator(anotherUser);
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -379,38 +378,38 @@ public class BoardServiceTest {
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsCreator() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", user);
+        BoardDTO boardDTO = new BoardDTO(1L, "title", "content", LocalDateTime.now(), "general", user.getUserId(), null);
         String userId = user.getUserId();
 
-        boolean result = boardService.isUserAuthorized(board, userId);
+        boolean result = boardService.isUserAuthorized(boardDTO, userId);
 
         assertTrue(result);
     }
 
     @Test
     public void testIsUserAuthorized_returnsFalse_whenUserIsNotCreatorAndMemberTab() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", user);
+        BoardDTO boardDTO = new BoardDTO(1L, "title", "content", LocalDateTime.now(), "member", user.getUserId(), null);
 
-        boolean result = boardService.isUserAuthorized(board, null);
+        boolean result = boardService.isUserAuthorized(boardDTO, null);
 
         assertFalse(result);
     }
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndGeneralTab() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "general", user);
+        BoardDTO boardDTO = new BoardDTO(1L, "title", "content", LocalDateTime.now(), "general", user.getUserId(), null);
 
-        boolean result = boardService.isUserAuthorized(board, null);
+        boolean result = boardService.isUserAuthorized(boardDTO, null);
 
         assertTrue(result);
     }
 
     @Test
     public void testIsUserAuthorized_returnsTrue_whenUserIsNotCreatorAndMemberTabWithUserId() {
-        Board board = new Board(1L, "title", "content", LocalDateTime.now(), "member", user);
-        String userId = "anotherUser";
+        BoardDTO boardDTO = new BoardDTO(1L, "title", "content", LocalDateTime.now(), "member", user.getUserId(), null);
+        String userId = anotherUser.getUserId();
 
-        boolean result = boardService.isUserAuthorized(board, userId);
+        boolean result = boardService.isUserAuthorized(boardDTO, userId);
 
         assertTrue(result);
     }
