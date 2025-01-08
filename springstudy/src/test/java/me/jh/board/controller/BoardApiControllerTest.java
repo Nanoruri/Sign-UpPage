@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -198,13 +199,12 @@ public class BoardApiControllerTest {
     @Test
     public void deleteBoard_UserNotCreator() throws Exception {
         long boardId = 1L;
-        String token = "Bearer validToken";
         String userId = "testUser";
-        String anotherUserId = anotherUser.getUserId();
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", anotherUser);
 
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
-        when(boardService.deleteBoard(boardId, userId)).thenReturn(false);
+        doThrow(new AccessDeniedException("삭제 권한이 없습니다."))
+                .when(boardService).deleteBoard(boardId, userId);
 
         mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId()))
                 .andExpect(status().isForbidden());

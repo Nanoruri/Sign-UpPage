@@ -1,5 +1,7 @@
 package me.jh.board.controller;
 
+import me.jh.board.dto.board.BoardBasicDTO;
+import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,12 +87,15 @@ public class BoardApiController {
     //Delete
     @DeleteMapping("/delete/{boardId}")
     @ResponseBody
-    public ResponseEntity<Board> deleteBoard(@PathVariable Long boardId) {
+    public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
         String userId = authService.getAuthenticatedUserId();
-        if (!boardService.deleteBoard(boardId, userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        try {
+            boardService.deleteBoard(boardId, userId);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage()); // 게시글 없음
+        } catch (AccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage()); // 권한 없음
         }
-
         return ResponseEntity.noContent().build();
     }
 
