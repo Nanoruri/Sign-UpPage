@@ -2,6 +2,8 @@ package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.BoardSearchDaoImpl;
+import me.jh.board.dto.board.BoardBasicDTO;
+import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
@@ -329,7 +331,7 @@ public class BoardServiceTest {
         board.setId(boardId);
         board.setCreator(user);
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
         // Act
         BoardBasicDTO result = boardService.findBoard(userId, boardId);
@@ -337,7 +339,6 @@ public class BoardServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(boardId, result.getId());
-        assertEquals(userId, result.getCreator().getUserId());
     }
 
     @Test
@@ -346,7 +347,7 @@ public class BoardServiceTest {
         String userId = "user123";
         long boardId = 1L;
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
+        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -365,7 +366,7 @@ public class BoardServiceTest {
         board.setId(boardId);
         board.setCreator(anotherUser);
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
         // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {

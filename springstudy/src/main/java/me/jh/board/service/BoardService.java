@@ -2,9 +2,11 @@ package me.jh.board.service;
 
 
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dto.board.BoardBasicDTO;
+import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.entity.Board;
+import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -96,11 +99,12 @@ public class BoardService {
 
     @Transactional
     public BoardDTO getBoardDetail(Long boardId) {
-        Optional<Board> board = boardDao.getBoardDetail(boardId);
-
+        Optional<Board> board = boardDao.findById(boardId);
         if (board.isEmpty()) {
             throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
         }
+
+        List<Comment> comments = board.get().getComments();
 
         return new BoardDTO(
                 board.get().getId(),
@@ -109,7 +113,7 @@ public class BoardService {
                 board.get().getDate(),
                 board.get().getTabName(),
                 board.get().getCreator().getUserId(),
-                board.get().getComments()
+                comments//todo: Lazy Loading 문제 해결 필요
         );
     }
 
@@ -128,18 +132,16 @@ public class BoardService {
 
     @Transactional
     public BoardBasicDTO findBoard(String userId, Long boardId) {
-        Optional<Board> board = boardDao.getBoardDetail(boardId);
-
-        if (board.isPresent() && board.get().getCreator().getUserId().equals(userId)) {
-            return board.map(boardToDto -> new BoardBasicDTO(
-                    boardToDto.getId(),
-                    boardToDto.getTitle(),
-                    boardToDto.getContent(),
-                    boardToDto.getDate(),
-                    boardToDto.getTabName()
-            )).orElse(null);
-        }
-        throw new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다.");
+        return boardDao.findById(boardId)
+                .filter(board -> board.getCreator().getUserId().equals(userId))
+                .map(board -> new BoardBasicDTO(
+                        board.getId(),
+                        board.getTitle(),
+                        board.getContent(),
+                        board.getDate(),
+                        board.getTabName()
+                ))
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않거나 권한이 없습니다."));
     }
 
 
