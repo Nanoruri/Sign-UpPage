@@ -1,15 +1,12 @@
 package me.jh.springstudy.controller.user;
 
 import me.jh.board.dao.BoardDao;
-import me.jh.board.dao.BoardDetailDaoImpl;
 import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
-import me.jh.springstudy.entity.User;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -56,8 +53,6 @@ public class PageControllerTest {
 	private CommentDao commentDao;
 	@MockBean
 	private RefreshTokenDao refreshTokenDao;
-	@MockBean
-	private BoardDetailDaoImpl boardDetailDao;
 
 
 	@Test
