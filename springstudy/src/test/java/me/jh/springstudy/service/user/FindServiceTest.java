@@ -90,7 +90,7 @@ public class FindServiceTest {
 		boolean validUser = findService.validateUser(user);
 		assertTrue(validUser, "사용자를 찾았습니다.");
 
-		verify(userDao, times(1)).findByProperties(user);
+		verify(userDao, times(1)).findById(user.getUserId());
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class FindServiceTest {
 		boolean validUser = findService.validateUser(user);
 		assertFalse(validUser, "사용자를 찾지 못했습니다.");
 
-		verify(userDao, times(1)).findByProperties(user);
+		verify(userDao, times(1)).findById(user.getUserId());
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class FindServiceTest {
 
 		// Verify
 		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패하고 해당 예외가 발생하는지 확인
-		verify(userDao, times(1)).findByProperties(changePasswordUser);
+		verify(userDao, times(1)).findById(changePasswordUser.getUserId());
 		verifyNoMoreInteractions(userDao);
 	}
 

@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,11 +67,12 @@ public class BoardServiceTest {
 
         Board post = new Board(id, title, content, date, "testTab", user);
 
-        when(userDao.findByProperties(any(User.class))).thenReturn(Optional.of(user));
+        when(userDao.findById(user.getUserId())).thenReturn(Optional.of(user));
         when(boardDao.save(post)).thenReturn(post);
 
         boolean result = boardService.saveBoard(user.getUserId(), post);
 
+        assertTrue(result);
         verify(boardDao).save(post);
     }
 
@@ -240,7 +242,7 @@ public class BoardServiceTest {
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
         board.setComments(List.of(comment));
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.of(board));
+        when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
         BoardDTO result = boardService.getBoardDetail(boardId);
 
@@ -252,7 +254,7 @@ public class BoardServiceTest {
     public void testGetBoarDetailNotFoundTest() {
         long boardId = 1L;
 
-        when(boardDao.getBoardDetail(boardId)).thenReturn(Optional.empty());
+        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
 
         BoardDTO result = boardService.getBoardDetail(boardId);
 
