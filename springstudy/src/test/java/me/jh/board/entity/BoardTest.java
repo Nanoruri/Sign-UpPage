@@ -2,6 +2,7 @@ package me.jh.board.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jh.board.dao.BoardDao;
+import me.jh.board.dto.board.BoardDTO;
 import me.jh.springstudy.MySpringBootApplication;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entity.User;
@@ -103,42 +104,5 @@ public class BoardTest {
         // then
         assertThat(deletedBoard).isNotPresent();
     }
-
-
-    @Test
-    void toObject_returnsCorrectMap_whenUserIsCreator() {
-        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
-        String userId = user.getUserId();
-
-        Map<String, Object> result = board.toObject(userId);
-
-        assertEquals(board, result.get("board"));
-        assertTrue((Boolean) result.get("isCreator"));
-        assertEquals(userId, result.get("currentUserId"));
-    }
-
-    @Test
-    void toObject_returnsCorrectMap_whenUserIsNotCreator() {
-        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
-        String userId = "anotherUser";
-
-        Map<String, Object> result = board.toObject(userId);
-
-        assertEquals(board, result.get("board"));
-        assertFalse((Boolean) result.get("isCreator"));
-        assertEquals(userId, result.get("currentUserId"));
-    }
-
-    @Test
-    void toObject_returnsCorrectMap_whenUserIdIsNull() {
-        Board board = new Board(1, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
-
-        Map<String, Object> result = board.toObject(null);
-
-        assertEquals(board, result.get("board"));
-        assertFalse((Boolean) result.get("isCreator"));
-        assertNull(result.get("currentUserId"));
-    }
-
 
 }
