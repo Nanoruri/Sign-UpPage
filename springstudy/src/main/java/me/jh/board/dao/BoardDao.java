@@ -14,4 +14,12 @@ public interface BoardDao extends JpaRepository<Board, Long>, BoardSearchDao {
 
     Page<Board> findByTabName(String tabName, Pageable pageable);
 
+    // 제목으로 검색
+    Page<Board> findByTabNameAndTitleContaining(String tabName, String title, Pageable pageable);
+
+    // 내용으로 검색
+    Page<Board> findByTabNameAndContentContaining(String tabName, String content, Pageable pageable);
+
+    // 제목과 내용으로 검색
+    Page<Board> findByTabNameAndTitleContainingOrContentContaining(String tabName, String title, String content, Pageable pageable);
 }

@@ -120,7 +120,13 @@ public class BoardService {
 
     @Transactional
     public Page<BoardBasicDTO> searchPosts(String query, String type, Pageable pageable, String tabName) {
-        Page<Board> searchResult = boardDao.searchPosts(query, type, pageable, tabName);
+        if (type == null || type.isEmpty() || !List.of("title", "content", "titleAndContent").contains(type)) {
+            type = "title";  // 기본값을 "title"로 설정
+        }
+
+        // Board 데이터를 검색하여 DTO로 변환
+        Page<Board> searchResult = searchPostsByType(query, type, tabName, pageable);
+
         return searchResult.map(board -> new BoardBasicDTO(
                 board.getId(),
                 board.getTitle(),
@@ -150,4 +156,29 @@ public class BoardService {
         boolean isMember = "member".equals(board.getTabName());
         return !(isMember && userId == null);
     }
+
+    
+    private Page<Board> searchPostsByType(String query, String type, String tabName, Pageable pageable) {
+        switch (type) {
+            case "title":
+                return searchByTitle(query, tabName, pageable);
+            case "content":
+                return searchByContent(query, tabName, pageable);
+            default:
+                return searchByTitleAndContent(query, tabName, pageable);
+        }
+    }
+
+    private Page<Board> searchByTitle(String query, String tabName, Pageable pageable) {
+        return boardDao.findByTabNameAndTitleContaining(tabName, query, pageable);
+    }
+
+    private Page<Board> searchByContent(String query, String tabName, Pageable pageable) {
+        return boardDao.findByTabNameAndContentContaining(tabName, query, pageable);
+    }
+
+    private Page<Board> searchByTitleAndContent(String query, String tabName, Pageable pageable) {
+        return boardDao.findByTabNameAndTitleContainingOrContentContaining(tabName, query, query, pageable);
+    }
 }
+

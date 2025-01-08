@@ -272,12 +272,13 @@ public class BoardServiceTest {
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
+        when(boardDao.findByTabNameAndTitleContaining("testTab", query, pageable)).thenReturn(boardPage);
 
         Page<BoardBasicDTO> result = boardService.searchPosts(query, "title", pageable, "testTab");
 
-        assertEquals(boardList, result.getContent());
-        verify(boardDao).searchPosts(query, type, pageable, "testTab");
+        //객체가 아닌 내용물이 같은지 비교
+        assertEquals(boardList.get(0).getId(), result.getContent().get(0).getId());
+        verify(boardDao).findByTabNameAndTitleContaining("testTab", query, pageable);
     }
 
     @Test
@@ -290,12 +291,16 @@ public class BoardServiceTest {
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
+        BoardBasicDTO pagingBoardBasicDTO = new BoardBasicDTO(
+                boardList.get(0).getId(), boardList.get(0).getTitle(), boardList.get(0).getContent(), boardList.get(0).getDate(), boardList.get(0).getTabName());
+
+        when(boardDao.findByTabNameAndContentContaining( "testTab", query, pageable)).thenReturn(boardPage);
 
         Page<BoardBasicDTO> result = boardService.searchPosts(query, type, pageable, "testTab");
 
-        assertEquals(boardPage, result);
-        verify(boardDao).searchPosts(query, type, pageable, "testTab");
+        //객체가 아닌 내용물이 같은지 비교
+        assertEquals(boardList.get(0).getId(), result.getContent().get(0).getId());
+        verify(boardDao).findByTabNameAndContentContaining( "testTab", query, pageable);
     }
 
     @Test
@@ -308,22 +313,29 @@ public class BoardServiceTest {
         );
         Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
-        when(boardDao.searchPosts(query, type, pageable, "testTab")).thenReturn(boardPage);
+        when(boardDao.findByTabNameAndTitleContainingOrContentContaining("testTab", query, query, pageable)).thenReturn(boardPage);
 
         Page<BoardBasicDTO> result = boardService.searchPosts(query, type, pageable, "testTab");
 
-        assertEquals(boardPage, result);
-        verify(boardDao).searchPosts(query, type, pageable, "testTab");
+        //객체가 아닌 내용물이 같은지 비교
+        assertEquals(boardList.get(0).getId(), result.getContent().get(0).getId());
+        verify(boardDao).findByTabNameAndTitleContainingOrContentContaining("testTab", query, query, pageable);
     }
 
-    @Test
+    @Test// 검색 타입이 없을 때 기본값으로 title 검색
     public void searchPostsInvalidType() {
         String query = "title1";
         Pageable pageable = PageRequest.of(0, 10);
+        List<Board> boardList = List.of(
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
+        );
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
 
+
+        when(boardDao.findByTabNameAndTitleContaining("testTab", query, pageable)).thenReturn(boardPage);
         Page<BoardBasicDTO> result = boardService.searchPosts(query, "invalidType", pageable, "testTab");
 
-        assertNull(result);
+        assertNotNull(result);
     }
 
 
