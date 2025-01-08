@@ -27,8 +27,6 @@ public class BoardDTO {
     private List<Comment> comments;
 
 
-
-
     @Transactional
     public Map<String, Object> toObject(String userId) {
         Map<String, Object> response = new HashMap<>();

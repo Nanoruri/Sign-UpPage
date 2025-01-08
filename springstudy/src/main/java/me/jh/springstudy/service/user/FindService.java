@@ -57,7 +57,7 @@ public class FindService {
 
         if (foundUser.isEmpty()) {
             log.warn("사용자에 대한 정보가 존재하지 않습니다.");
-        return false;
+            return false;
         }
 
         log.info("사용자를 찾았습니다: {}", foundUser.get().getUserId());

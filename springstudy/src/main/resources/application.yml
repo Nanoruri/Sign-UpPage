@@ -33,6 +33,11 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         show-sql: true
 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
   servlet:
     multipart:
       max-file-size: 5MB

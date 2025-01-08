@@ -7,7 +7,6 @@ import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entity.User;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -208,7 +207,7 @@ public class BoardServiceTest {
 
         // When & Then
         assertThrows(IllegalArgumentException.class, () ->
-            boardService.deleteBoard(boardId, userId));
+                boardService.deleteBoard(boardId, userId));
 
         // Assertion
         verify(boardDao).findById(boardId);

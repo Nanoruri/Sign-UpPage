@@ -57,7 +57,7 @@ public class BoardApiController {
 
         String userId = authService.getAuthenticatedUserId();
         boardService.saveBoard(userId, board);
-        if (userId == null|| !boardService.saveBoard(userId, board)) {
+        if (userId == null || !boardService.saveBoard(userId, board)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok().build();

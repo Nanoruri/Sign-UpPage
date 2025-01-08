@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository // todo: DTO사용하면BoardSearchDao, BoardDetailDao 필요 없음
-public interface BoardDao extends JpaRepository<Board, Long>{
+public interface BoardDao extends JpaRepository<Board, Long> {
     Optional<Board> findByTitle(String title);
 
     Page<Board> findByTabName(String tabName, Pageable pageable);

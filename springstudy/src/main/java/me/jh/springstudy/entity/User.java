@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,10 +52,9 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
     @Column(name = "USER_ROLE")
     private String role;
 
-     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
-     @JsonManagedReference
-     private List<Board> boards;
-
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Board> boards;
 
 
     public User() {
@@ -157,6 +155,7 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
     public List<Board> getBoards() {
         return boards;
     }
+
     public void setBoards(List<Board> boards) {
         this.boards = boards;
     }

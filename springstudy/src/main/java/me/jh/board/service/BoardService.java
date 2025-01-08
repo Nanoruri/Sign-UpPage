@@ -157,7 +157,7 @@ public class BoardService {
         return !(isMember && userId == null);
     }
 
-    
+
     private Page<Board> searchPostsByType(String query, String type, String tabName, Pageable pageable) {
         switch (type) {
             case "title":
