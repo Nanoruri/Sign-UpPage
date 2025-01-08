@@ -205,11 +205,14 @@ public class BoardServiceTest {
         Long boardId = 1L;
         String userId = user.getUserId();
 
-        when(boardDao.findById(boardId)).thenReturn(Optional.empty());
+        // Mocking
+        when(boardDao.findById(boardId)).thenReturn(Optional.empty()); // 게시물이 없는 상황 설정
 
-        boolean result = boardService.deleteBoard(boardId, userId);
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () ->
+            boardService.deleteBoard(boardId, userId));
 
-        assertFalse(result);
+        // Assertion
         verify(boardDao).findById(boardId);
         verify(boardDao, never()).delete(any(Board.class));
     }
@@ -222,9 +225,9 @@ public class BoardServiceTest {
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
 
-        boolean result = boardService.deleteBoard(boardId, userId);
+        assertThrows(AccessDeniedException.class, () ->
+                boardService.deleteBoard(boardId, userId));
 
-        assertFalse(result);
         verify(boardDao).findById(boardId);
         verify(boardDao, never()).delete(board);
     }
