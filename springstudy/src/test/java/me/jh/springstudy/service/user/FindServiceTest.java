@@ -80,7 +80,7 @@ public class FindServiceTest {
 	@Test
 	public void ValidateUserTest() {
 		String userId = "test";
-		String name = "test";
+		String name = "testName";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, "hashedPassword", phoneNum,
 				null, null, null, null,"USER");
@@ -94,12 +94,53 @@ public class FindServiceTest {
 	}
 
 	/**
+	 * 사용자 이름 불일치 테스트
+	 */
+	@Test
+	public void validateUserNameMismatch() {
+		String userId = "test";
+		String name = "test";
+		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null, "USER");
+
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
+
+		boolean validUser = findService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+	/**
+	 * 사용자 전화번호 불일치 테스트
+	 */
+	@Test
+	public void validateUserPhoneNumMismatch() {
+		String userId = "test";
+		String name = "testName";
+		String phoneNum = "010-4321-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null, "USER");
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
+
+		boolean validUser = findService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+
+
+	/**
 	 * 사용자 정보 조회 실패 테스트
 	 */
 	@Test
 	public void ValidateUserFailedTest() {
 		String userId = "Unknown";
-		String name = "test";
+		String name = "testName";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, "hashedPassword", phoneNum,
 				null, null, null, null,"USER");
