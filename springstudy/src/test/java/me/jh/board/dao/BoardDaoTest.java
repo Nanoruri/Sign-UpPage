@@ -35,8 +35,6 @@ public class BoardDaoTest {
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private BoardSearchDaoImpl boardSearchDaoImpl;
 
     @Mock
     private Board board;

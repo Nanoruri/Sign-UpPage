@@ -1,7 +1,6 @@
 package me.jh.board.service;
 
 import me.jh.board.dao.BoardDao;
-import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.entity.Board;
@@ -34,9 +33,6 @@ public class BoardServiceTest {
 
     @Mock
     private BoardDao boardDao;
-
-    @Mock
-    private BoardSearchDaoImpl boardSearchDaoImpl;
 
     @Mock
     private UserDao userDao;

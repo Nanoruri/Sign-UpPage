@@ -1,7 +1,6 @@
 package me.jh.board.controller;
 
 import me.jh.board.dao.BoardDao;
-import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
@@ -64,9 +63,6 @@ public class BoardApiControllerTest {
 
     @MockBean
     private UserDao userDao;
-
-    @MockBean
-    private BoardSearchDaoImpl boardSearchDao;
 
     @MockBean
     private CommentDao commentDao;

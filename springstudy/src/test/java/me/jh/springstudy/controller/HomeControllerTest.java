@@ -1,7 +1,6 @@
 package me.jh.springstudy.controller;
 
 import me.jh.board.dao.BoardDao;
-import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
@@ -49,8 +48,6 @@ public class HomeControllerTest {
 
 	@MockBean
 	private BoardDao boardDao;
-	@MockBean
-	private BoardSearchDaoImpl boardSearchDao;
 	@MockBean
 	private CommentDao commentDao;
 	@MockBean

@@ -2,7 +2,6 @@ package me.jh.board.controller;
 
 
 import me.jh.board.dao.BoardDao;
-import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
@@ -48,8 +47,7 @@ public class CommentApiControllerTest {
     private UserDao userDao;
     @MockBean
     private BoardDao boardDao;
-    @MockBean
-    private BoardSearchDaoImpl boardSearchDao;
+
 
     @MockBean
     private CommentDao commentDao;

@@ -1,7 +1,6 @@
 package me.jh.springstudy.controller.user;
 
 import me.jh.board.dao.BoardDao;
-import me.jh.board.dao.BoardSearchDaoImpl;
 import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
@@ -47,8 +46,6 @@ public class PageControllerTest {
 	private AuthenticationManager authenticationManager;
 	@MockBean
 	private BoardDao boardDao;
-	@MockBean
-	private BoardSearchDaoImpl boardSearchDao;
 	@MockBean
 	private CommentDao commentDao;
 	@MockBean
