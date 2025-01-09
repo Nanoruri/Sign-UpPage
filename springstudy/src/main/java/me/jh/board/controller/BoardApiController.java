@@ -2,6 +2,7 @@ package me.jh.board.controller;
 
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
+import me.jh.board.dto.board.BoardNoCommentDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
@@ -67,8 +68,8 @@ public class BoardApiController {
     //Read
     @GetMapping("/generalBoard")
     @ResponseBody
-    public ResponseEntity<Page<BoardBasicDTO>> getGeneralBoard(Pageable pageable) {
-        Page<BoardBasicDTO> boards = boardService.getBoard("general", pageable);
+    public ResponseEntity<Page<BoardNoCommentDTO>> getGeneralBoard(Pageable pageable) {
+        Page<BoardNoCommentDTO> boards = boardService.getBoard("general", pageable);
         return ResponseEntity.ok(boards);//TODO: board.comments필드 JSON 직렬화 이슈 수정 필요
     }
 
@@ -129,8 +130,8 @@ public class BoardApiController {
 
     @GetMapping("/memberBoard")
     @ResponseBody
-    public ResponseEntity<Page<BoardBasicDTO>> getMemberBoard(Pageable pageable) {
-        Page<BoardBasicDTO> boards = boardService.getBoard("member", pageable);
+    public ResponseEntity<Page<BoardNoCommentDTO>> getMemberBoard(Pageable pageable) {
+        Page<BoardNoCommentDTO> boards = boardService.getBoard("member", pageable);
         return ResponseEntity.ok(boards);
     }
 
