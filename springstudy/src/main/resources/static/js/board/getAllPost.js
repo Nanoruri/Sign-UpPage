@@ -36,6 +36,7 @@ function getAllPost() {
             row.innerHTML = `
                 <td>${index + 1 + (currentPage * pageSize)}</td>
                 <td>${post.title}</td>
+                <td>${post.creator}</td>
                 <td>${new Date(post.date).toLocaleDateString()}</td>
             `;
 
