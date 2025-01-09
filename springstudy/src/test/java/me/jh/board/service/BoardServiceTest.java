@@ -3,6 +3,7 @@ package me.jh.board.service;
 import me.jh.board.dao.BoardDao;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
+import me.jh.board.dto.board.BoardNoCommentDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
@@ -105,7 +106,7 @@ public class BoardServiceTest {
 
         when(boardDao.findByTabName("testTab", pageable)).thenReturn(boardPage);
 
-        Page<BoardBasicDTO> result = boardService.getBoard("testTab", pageable);
+        Page<BoardNoCommentDTO> result = boardService.getBoard("testTab", pageable);
 
         verify(boardDao).findByTabName("testTab", pageable);
     }
