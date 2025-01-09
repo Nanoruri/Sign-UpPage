@@ -115,6 +115,50 @@ public class BoardApiControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void saveBoard_FailTest() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
+        String tab = "testTab";
+        String userId = user.getUserId();
+
+        String token = "Bearer MockToken";
+
+        Board post = new Board(id, title, content, date, tab, user);
+
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
+        when(boardService.saveBoard(eq(userId), any(Board.class))).thenReturn(false);
+
+        mockMvc.perform(post("/board/api/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
+                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void saveBoard_userIdIsNull() throws Exception {
+        long id = 1L;
+        String title = "title";
+        String content = "content";
+        LocalDateTime date = LocalDateTime.now();
+        String tab = "testTab";
+
+        String token = "Bearer MockToken";
+
+        Board post = new Board(id, title, content, date, tab, user);
+
+        when(authService.getAuthenticatedUserId()).thenReturn(null);
+
+        mockMvc.perform(post("/board/api/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", token)
+                        .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
+                .andExpect(status().isForbidden());
+    }
+
 
     @Test
     public void getGeneralBoard_returnsPagedResults() throws Exception {
@@ -204,6 +248,19 @@ public class BoardApiControllerTest {
 
         mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId()))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteBoard_BoardNotFound() throws Exception {
+        long boardId = 1L;
+        String userId = "testUser";
+
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
+        doThrow(new IllegalArgumentException("게시글이 존재하지 않습니다."))
+                .when(boardService).deleteBoard(boardId, userId);
+
+        mockMvc.perform(delete("/board/api/delete/{boardId}", boardId))
+                .andExpect(status().isNotFound());
     }
 
 
