@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.jh.springstudy.entity.User;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +17,6 @@ public class BoardNoCommentDTO {
     private String content;
     private LocalDateTime date;
     private String tabName;
-    private User creator;
+    private String creator;
 
 }

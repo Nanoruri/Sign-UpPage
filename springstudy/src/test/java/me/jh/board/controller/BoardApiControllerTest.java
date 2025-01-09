@@ -4,6 +4,7 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.CommentDao;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
+import me.jh.board.dto.board.BoardNoCommentDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.BoardService;
@@ -164,8 +165,8 @@ public class BoardApiControllerTest {
     public void getGeneralBoard_returnsPagedResults() throws Exception {
 
         Pageable pageable = PageRequest.of(0, 10);
-        BoardBasicDTO boardDTO = new BoardBasicDTO(1L, "title", "content", LocalDateTime.now(), "general");
-        Page<BoardBasicDTO> boardPage = new PageImpl<>(List.of(boardDTO));
+        BoardNoCommentDTO boardDTO = new BoardNoCommentDTO(1L, "title", "content", LocalDateTime.now(), "general", user.getUserId());
+        Page<BoardNoCommentDTO> boardPage = new PageImpl<>(List.of(boardDTO));
         when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
 
         mockMvc.perform(get("/board/api/generalBoard")
@@ -174,7 +175,9 @@ public class BoardApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content[0].title").value("title"));
+                .andExpect(jsonPath("$.content[0].title").value("title"))
+                .andExpect(jsonPath("$.content[0].content").value("content"))
+                .andExpect(jsonPath("$.content[0].creator").value(user.getUserId()));
     }
 
     @Test
@@ -356,8 +359,8 @@ public class BoardApiControllerTest {
     @Test
     public void getMemberBoard_returnsPagedResults() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
-        BoardBasicDTO boardDTO = new BoardBasicDTO(1L, "title", "content", LocalDateTime.now(), "member");
-        Page<BoardBasicDTO> boardPage = new PageImpl<>(List.of(boardDTO));
+        BoardNoCommentDTO boardDTO = new BoardNoCommentDTO(1L, "title", "content", LocalDateTime.now(), "member",user.getUserId());
+        Page<BoardNoCommentDTO> boardPage = new PageImpl<>(List.of(boardDTO));
 
 
         when(boardService.getBoard("member", pageable)).thenReturn(boardPage);

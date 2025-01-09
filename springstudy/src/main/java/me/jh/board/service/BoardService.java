@@ -4,6 +4,7 @@ package me.jh.board.service;
 import me.jh.board.dao.BoardDao;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
+import me.jh.board.dto.board.BoardNoCommentDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
@@ -61,14 +62,15 @@ public class BoardService {
     }
 
     @Transactional//todo: DTO로 반환하도록 수정하기//todo: related problems Test 코드
-    public Page<BoardBasicDTO> getBoard(String tabName, Pageable pageable) {
+    public Page<BoardNoCommentDTO> getBoard(String tabName, Pageable pageable) {
         Page<Board> boards = boardDao.findByTabName(tabName, pageable);
-        return boards.map(board -> new BoardBasicDTO(
+        return boards.map(board -> new BoardNoCommentDTO(
                 board.getId(),
                 board.getTitle(),
                 board.getContent(),
                 board.getDate(),
-                board.getTabName()
+                board.getTabName(),
+                board.getCreator().getUserId()
         ));
     }
 
