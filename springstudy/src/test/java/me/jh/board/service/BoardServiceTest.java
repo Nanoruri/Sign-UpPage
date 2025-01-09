@@ -72,6 +72,21 @@ public class BoardServiceTest {
     }
 
 
+    @Test
+    public void saveBoard_UserNotFound() {
+        String userId = "user123";
+        Board post = new Board();
+        post.setTabName("testTab");
+
+        when(userDao.findById(userId)).thenReturn(Optional.empty());
+
+        boolean result = boardService.saveBoard(userId, post);
+
+        assertFalse(result);
+        verify(boardDao, never()).save(any(Board.class));
+    }
+
+
     /**
      * 일반 게시글 조회 테스트
      */
@@ -332,6 +347,44 @@ public class BoardServiceTest {
         Page<BoardBasicDTO> result = boardService.searchPosts(query, "invalidType", pageable, "testTab");
 
         assertNotNull(result);
+    }
+
+    @Test
+    public void searchPosts_NullType() {
+        String query = "title1";
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Board> boardList = List.of(
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
+        );
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
+
+        // 기본값 "title"로 검색하는 mock 설정
+        when(boardDao.findByTabNameAndTitleContaining("testTab", query, pageable)).thenReturn(boardPage);
+
+        // 검색 타입이 null인 경우
+        Page<BoardBasicDTO> result = boardService.searchPosts(query, null, pageable, "testTab");
+
+        assertNotNull(result);
+        verify(boardDao).findByTabNameAndTitleContaining("testTab", query, pageable);
+    }
+
+    @Test
+    public void searchPosts_EmptyType() {
+        String query = "title1";
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Board> boardList = List.of(
+                new Board(1L, "title1", "content1", LocalDateTime.now(), "testTab", user)
+        );
+        Page<Board> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
+
+        // 기본값 "title"로 검색하는 mock 설정
+        when(boardDao.findByTabNameAndTitleContaining("testTab", query, pageable)).thenReturn(boardPage);
+
+        // 검색 타입이 빈 문자열인 경우
+        Page<BoardBasicDTO> result = boardService.searchPosts(query, "", pageable, "testTab");
+
+        assertNotNull(result);
+        verify(boardDao).findByTabNameAndTitleContaining("testTab", query, pageable);
     }
 
 
