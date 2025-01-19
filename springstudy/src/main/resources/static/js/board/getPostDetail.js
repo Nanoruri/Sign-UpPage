@@ -145,3 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabName = getTabName();
     showBoardDetail(postId, tabName);
 });
+function isUpdateComment(comment) {
+    let commentCreateDate = new Date(comment.date).toLocaleString();
+    let commentUpdateDate = new Date(comment.updateDate).toLocaleString();
+
+    if (commentCreateDate === commentUpdateDate) {
+        return comment.content;
+    } else if (commentCreateDate !== commentUpdateDate) {
+        return `(수정됨) ${comment.content}`;
+    }
+}
