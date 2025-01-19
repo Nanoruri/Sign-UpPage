@@ -31,6 +31,7 @@ public class CommentService {//TODO: 댓글 D 구현
         Comment saveComment = new Comment();
         saveComment.setContent(comment.getContent());
         saveComment.setDate(LocalDateTime.now());
+        saveComment.setUpdateDate(LocalDateTime.now());
         saveComment.setCreator(userId);
         saveComment.setBoard(board);
 
