@@ -5,8 +5,8 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.CommentDao;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
+import me.jh.board.service.AuthService;
 import me.jh.board.service.CommentService;
-import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
@@ -42,7 +42,7 @@ public class CommentApiControllerTest {
     @MockBean
     private CommentService commentService;
     @MockBean
-    private JwtProvider jwtProvider;
+    private AuthService authService;
     @MockBean
     private UserDao userDao;
     @MockBean
@@ -58,7 +58,7 @@ public class CommentApiControllerTest {
 
     @BeforeEach
     void setup() throws IOException {
-        mockMvc = standaloneSetup(new CommentApiController(commentService, jwtProvider)).build();
+        mockMvc = standaloneSetup(new CommentApiController(commentService, authService)).build();
 
         user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(), "test@testEmail.com", LocalDateTime.now(), LocalDateTime.now(), "USER");
 
@@ -72,7 +72,7 @@ public class CommentApiControllerTest {
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, userId);
 
-        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(true);
 
         mockMvc.perform(post("/comment/api/create-comment")
@@ -89,7 +89,7 @@ public class CommentApiControllerTest {
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, userId);
 
-        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(false);
 
         mockMvc.perform(post("/comment/api/create-comment")
@@ -107,7 +107,7 @@ public class CommentApiControllerTest {
 
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
-        when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.updateComment(eq(commentId), any(Comment.class), eq(userId))).thenReturn(true);
 
         mockMvc.perform(put("/comment/api/update-comment")
@@ -127,7 +127,7 @@ public class CommentApiControllerTest {
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
 
 
-        when(jwtProvider.getUserIdFromToken(token)).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.updateComment(eq(commentId), any(Comment.class), eq(commentUserId))).thenReturn(false);
 
         mockMvc.perform(put("/comment/api/update-comment")
@@ -144,7 +144,7 @@ public class CommentApiControllerTest {
         String userId = user.getUserId();
         Long commentId = 1L;
 
-        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.deleteComment(commentId, userId)).thenReturn(true);
 
         mockMvc.perform(delete("/comment/api/delete/{commentId}", commentId)
@@ -158,7 +158,7 @@ public class CommentApiControllerTest {
         String userId = user.getUserId();
         Long commentId = 1L;
 
-        when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
+        when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.deleteComment(commentId, userId)).thenReturn(false);
 
         mockMvc.perform(delete("/comment/api/delete/{commentId}", commentId)
