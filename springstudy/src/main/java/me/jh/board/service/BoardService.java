@@ -5,6 +5,7 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.dto.board.BoardNoCommentDTO;
+import me.jh.board.dto.comment.CommentDTO;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
 import me.jh.springstudy.dao.UserDao;
@@ -21,6 +22,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
@@ -107,7 +109,15 @@ public class BoardService {
             throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
         }
 
-        List<Comment> comments = board.get().getComments();
+        List<CommentDTO> commentDTOs = board.get().getComments().stream()
+                .map(comment -> new CommentDTO(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getDate(),
+                        comment.getUpdateDate(),
+                        comment.getCreator().getUserId() // Lazy Loading 강제 초기화
+                ))
+                .collect(Collectors.toList());
 
         return new BoardDTO(
                 board.get().getId(),
@@ -116,7 +126,7 @@ public class BoardService {
                 board.get().getDate(),
                 board.get().getTabName(),
                 board.get().getCreator().getUserId(),
-                comments//todo: Lazy Loading 문제 해결 필요
+                commentDTOs
         );
     }
 
