@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.jh.board.dto.comment.CommentDTO;
 import me.jh.board.entity.Comment;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ public class BoardDTO {
     private LocalDateTime date;
     private String tabName;
     private String creatorId;
-    private List<Comment> comments;
+    private List<CommentDTO> comments;
 
 
     @Transactional
