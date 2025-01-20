@@ -4,6 +4,7 @@ import me.jh.board.dao.BoardDao;
 import me.jh.board.dao.CommentDao;
 import me.jh.board.entity.Board;
 import me.jh.board.entity.Comment;
+import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,8 @@ public class CommentServiceTest {
     private CommentDao commentDao;
     @Mock
     private BoardDao boardDao;
+    @Mock
+    private UserDao userDao;
 
     @InjectMocks
     private CommentService commentService;
@@ -45,6 +48,7 @@ public class CommentServiceTest {
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));
         when(commentDao.save(any(Comment.class))).thenReturn(comment);
+        when(userDao.findById(userId)).thenReturn(Optional.of(user));
 
         boolean result = commentService.saveComment(boardId, comment, userId);
 
@@ -56,18 +60,18 @@ public class CommentServiceTest {
     @Test
     void testUpdateComment_SuccessfulUpdate() {
         Long commentId = 1L;
-        String userId = "testUser";
+        User user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(),"test@testEmail.com", LocalDateTime.now(),LocalDateTime.now(), "USER");
         Comment newComment = new Comment();
         newComment.setContent("newContent");
 
         Comment oldComment = new Comment();
-        oldComment.setCreator(userId);
+        oldComment.setCreator(user);
         oldComment.setContent("oldContent");
 
         when(commentDao.findById(commentId)).thenReturn(Optional.of(oldComment));
         when(commentDao.save(any(Comment.class))).thenReturn(oldComment);
 
-        boolean result = commentService.updateComment(commentId, newComment, userId);
+        boolean result = commentService.updateComment(commentId, newComment, user.getUserId());
 
         assertTrue(result);
         verify(commentDao, times(1)).findById(commentId);
@@ -93,18 +97,18 @@ public class CommentServiceTest {
     @Test
     void testUpdateComment_UserNotAuthorized() {
         Long commentId = 1L;
-        String userId = "testUser";
+        User user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(),"test@testEmail.com", LocalDateTime.now(),LocalDateTime.now(), "USER");
         String otherUserId = "otherUser";
         Comment newComment = new Comment();
         newComment.setContent("newContent");
 
         Comment oldComment = new Comment();
-        oldComment.setCreator(otherUserId);
+        oldComment.setCreator(user);
         oldComment.setContent("oldContent");
 
         when(commentDao.findById(commentId)).thenReturn(Optional.of(oldComment));
 
-        boolean result = commentService.updateComment(commentId, newComment, userId);
+        boolean result = commentService.updateComment(commentId, newComment, otherUserId);
 
         assertFalse(result);
         verify(commentDao, times(1)).findById(commentId);
@@ -115,14 +119,14 @@ public class CommentServiceTest {
     @Test
     void testDeleteComment_Successful() {
         Long commentId = 1L;
-        String userId = "testUser";
+        User user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(),"test@testEmail.com", LocalDateTime.now(),LocalDateTime.now(), "USER");
         Comment comment = new Comment();
         comment.setId(commentId);
-        comment.setCreator(userId);
+        comment.setCreator(user);
 
         when(commentDao.findById(commentId)).thenReturn(Optional.of(comment));
 
-        boolean result = commentService.deleteComment(commentId, userId);
+        boolean result = commentService.deleteComment(commentId, user.getUserId());
 
         assertTrue(result);
         verify(commentDao, times(1)).findById(commentId);
@@ -146,15 +150,15 @@ public class CommentServiceTest {
     @Test
     void testDeleteComment_UserNotMatch() {
         Long commentId = 1L;
-        String userId = "testUser";
+        User user = new User("testUser", "testName", "testPassword", "010-1234-5678", LocalDate.now(),"test@testEmail.com", LocalDateTime.now(),LocalDateTime.now(), "USER");
         String otherUserId = "otherUser";
         Comment comment = new Comment();
         comment.setId(commentId);
-        comment.setCreator(otherUserId);
+        comment.setCreator(user);
 
         when(commentDao.findById(commentId)).thenReturn(Optional.of(comment));
 
-        boolean result = commentService.deleteComment(commentId, userId);
+        boolean result = commentService.deleteComment(commentId, otherUserId);
 
         assertFalse(result);
         verify(commentDao, times(1)).findById(commentId);
