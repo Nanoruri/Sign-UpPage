@@ -2,6 +2,7 @@ package me.jh.board.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import me.jh.springstudy.entity.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,17 +27,19 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOARD_NO")
-    @JsonBackReference
+    @JsonBackReference("board-comment")
     private Board board;  // 댓글이 속한 게시글
 
-    @Column(name = "COMMENT_CREATOR")
-    private String creator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    @JsonBackReference("user-comment")
+    private User creator;
 
 
     public Comment() {
     }
 
-    public Comment(long id, String content, LocalDateTime date, LocalDateTime updateDate, Board board, String creator) {
+    public Comment(long id, String content, LocalDateTime date, LocalDateTime updateDate, Board board, User creator) {
         this.id = id;
         this.content = content;
         this.date = date;
@@ -83,11 +86,11 @@ public class Comment {
         this.board = board;
     }
 
-    public String getCreator() {
+    public User getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 }
