@@ -2,6 +2,7 @@ package me.jh.springstudy.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import me.jh.board.entity.Board;
+import me.jh.board.entity.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -53,9 +54,12 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
     private String role;
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference("user-board")
     private List<Board> boards;
 
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    @JsonManagedReference("user-comment")
+    private List<Comment> comments;
 
     public User() {
     }
@@ -159,4 +163,8 @@ public class User {//Entity 하나 더 만들어서 userId를 forigen key 설정
     public void setBoards(List<Board> boards) {
         this.boards = boards;
     }
+
+    public List<Comment> getComments() {return comments;}
+
+    public void setComments(List<Comment> comments) {this.comments = comments;}
 }
