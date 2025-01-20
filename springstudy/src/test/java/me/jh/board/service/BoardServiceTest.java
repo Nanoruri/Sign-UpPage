@@ -250,7 +250,7 @@ public class BoardServiceTest {
     public void testGetBoarDetailSuccessful() {
         long boardId = 1L;
         Board board = new Board(boardId, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
-        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
+        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, "testCommentUser");
         board.setComments(List.of(comment));
 
         when(boardDao.findById(boardId)).thenReturn(Optional.of(board));

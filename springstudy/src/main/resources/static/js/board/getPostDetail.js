@@ -81,7 +81,7 @@ function displayComments(comments, token, currentUserId) {
             headerDiv.classList.add('comment-header');
 
             const date = document.createElement('span');
-            date.textContent = new Date(comment.date).toLocaleString();
+            date.textContent = new Date(comment.updateDate).toLocaleString();
             date.classList.add('comment-date');
 
             // 댓글 작성자 표시
@@ -95,7 +95,7 @@ function displayComments(comments, token, currentUserId) {
 
             const contentDiv = document.createElement('div');
             contentDiv.classList.add('comment-content');
-            contentDiv.textContent = comment.content;
+            contentDiv.textContent = isUpdateComment(comment);
 
             // 수정 버튼 생성
             const commentEditButton = document.createElement('button');
@@ -145,3 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabName = getTabName();
     showBoardDetail(postId, tabName);
 });
+function isUpdateComment(comment) {
+    let commentCreateDate = new Date(comment.date).toLocaleString();
+    let commentUpdateDate = new Date(comment.updateDate).toLocaleString();
+
+    if (commentCreateDate === commentUpdateDate) {
+        return comment.content;
+    } else if (commentCreateDate !== commentUpdateDate) {
+        return `(수정됨) ${comment.content}`;
+    }
+}

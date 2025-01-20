@@ -49,7 +49,7 @@ public class CommentDaoTest {
         userDao.save(user);
         board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "Test Tab", user);
 
-        comment = new Comment(0, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
+        comment = new Comment(0, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, "testCommentUser");
 
     }
 

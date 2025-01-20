@@ -70,7 +70,7 @@ public class CommentApiControllerTest {
         String token = "Bearer token";
         String userId = user.getUserId();
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
-        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, userId);
+        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, userId);
 
         when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
         when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(true);
@@ -87,7 +87,7 @@ public class CommentApiControllerTest {
         String token = "Bearer token";
         String userId = user.getUserId();
         Board board = new Board(1L, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
-        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), board, userId);
+        Comment comment = new Comment(1L, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, userId);
 
         when(jwtProvider.getUserIdFromToken(token.substring(7))).thenReturn(userId);
         when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(false);

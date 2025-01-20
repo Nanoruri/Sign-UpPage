@@ -21,6 +21,9 @@ public class Comment {
     @Column(name = "COMMENT_DATE")
     private LocalDateTime date;
 
+    @Column(name = "COMMENT_UPDATE_DATE")
+    private LocalDateTime updateDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOARD_NO")
     @JsonBackReference
@@ -33,10 +36,11 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(long id, String content, LocalDateTime date, Board board, String creator) {
+    public Comment(long id, String content, LocalDateTime date, LocalDateTime updateDate, Board board, String creator) {
         this.id = id;
         this.content = content;
         this.date = date;
+        this.updateDate = updateDate;
         this.board = board;
         this.creator = creator;
     }
@@ -63,7 +67,12 @@ public class Comment {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
 
+    public LocalDateTime getUpdateDate() {return updateDate;}
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
     }
 
     public Board getBoard() {

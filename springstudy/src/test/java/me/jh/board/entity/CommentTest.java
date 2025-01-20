@@ -52,7 +52,7 @@ public class CommentTest {
         Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         entityManager.persist(board);
 
-        Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
+        Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, "testCommentUser");
 
         // when
         Comment savedComment = entityManager.persistAndFlush(comment);
@@ -69,7 +69,7 @@ public class CommentTest {
         Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         entityManager.persistAndFlush(board);
 
-        Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), board, "testCommentUser");
+        Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, "testCommentUser");
         entityManager.persistAndFlush(comment);
 
         // when
@@ -86,7 +86,7 @@ public class CommentTest {
         Board board = new Board(0, "Test Title", "Test Content", LocalDateTime.now(), "testTab", user);
         entityManager.persistAndFlush(board);
 
-        Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), board, "testCommentUser"); // Ensure ID is null
+        Comment comment = new Comment(0, "Test Comment", LocalDateTime.now(), LocalDateTime.now(), board, "testCommentUser"); // Ensure ID is null
         entityManager.persistAndFlush(comment);
 
         // when

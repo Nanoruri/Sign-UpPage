@@ -31,6 +31,7 @@ public class CommentService {//TODO: 댓글 D 구현
         Comment saveComment = new Comment();
         saveComment.setContent(comment.getContent());
         saveComment.setDate(LocalDateTime.now());
+        saveComment.setUpdateDate(LocalDateTime.now());
         saveComment.setCreator(userId);
         saveComment.setBoard(board);
 
@@ -44,8 +45,8 @@ public class CommentService {//TODO: 댓글 D 구현
         if (oldcomment == null || !oldcomment.getCreator().equals(userId)) {
             return false;
         }
-        oldcomment.setContent("(수정됨)" + comment.getContent());
-        oldcomment.setDate(LocalDateTime.now());
+        oldcomment.setContent(comment.getContent());
+        oldcomment.setUpdateDate(LocalDateTime.now());
 
         commentDao.save(oldcomment);
         return true;
