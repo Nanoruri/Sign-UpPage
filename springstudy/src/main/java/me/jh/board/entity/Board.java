@@ -31,11 +31,11 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
-    @JsonBackReference
+    @JsonBackReference("user-board")
     private User creator;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference("board-comment")
     private List<Comment> comments;
 
     public Board(long id, String title, String content, LocalDateTime date, String tabName, User creator) {
