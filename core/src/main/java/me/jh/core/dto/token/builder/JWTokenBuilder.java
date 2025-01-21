@@ -1,7 +1,7 @@
-package me.jh.core.dto.builder;
+package me.jh.core.dto.token.builder;
 
 import io.jsonwebtoken.lang.Builder;
-import me.jh.core.dto.JWToken;
+import me.jh.core.dto.token.JWToken;
 
 public class JWTokenBuilder implements Builder<JWToken> {
 

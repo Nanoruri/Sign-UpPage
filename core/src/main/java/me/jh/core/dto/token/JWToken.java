@@ -1,6 +1,6 @@
-package me.jh.core.dto;
+package me.jh.core.dto.token;
 
-import me.jh.core.dto.builder.JWTokenBuilder;
+import me.jh.core.dto.token.builder.JWTokenBuilder;
 
 public class JWToken {
 
