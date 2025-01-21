@@ -1,6 +1,6 @@
 package me.jh.springstudy.service.auth;
 
-import me.jh.core.dto.JWToken;
+import me.jh.core.dto.token.JWToken;
 import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;

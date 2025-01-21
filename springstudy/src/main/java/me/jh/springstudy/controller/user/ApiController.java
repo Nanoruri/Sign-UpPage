@@ -1,7 +1,7 @@
 package me.jh.springstudy.controller.user;
 
 import io.jsonwebtoken.JwtException;
-import me.jh.core.dto.JWToken;
+import me.jh.core.dto.token.JWToken;
 import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.entity.User;

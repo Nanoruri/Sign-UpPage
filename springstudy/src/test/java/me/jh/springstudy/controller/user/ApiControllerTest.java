@@ -9,7 +9,7 @@ import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.core.dto.JWToken;
+import me.jh.core.dto.token.JWToken;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.user.UserErrorType;
