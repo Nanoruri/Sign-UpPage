@@ -1,5 +1,7 @@
 package me.jh.board.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import me.jh.board.entity.Comment;
 import me.jh.board.service.AuthService;
 import me.jh.board.service.CommentService;
@@ -25,7 +27,9 @@ public class CommentApiController {//todo: 댓글 CUD API 구현
     }
 
 
-    //create
+    @Operation(summary = "댓글 생성", description = "새 댓글을 생성합니다.")
+    @ApiResponse(responseCode = "200", description = "댓글 생성 성공")
+    @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음")
     @PostMapping("/create-comment")
     @ResponseBody
     public ResponseEntity<Comment> saveComment(@RequestBody Comment comment) {
@@ -38,6 +42,9 @@ public class CommentApiController {//todo: 댓글 CUD API 구현
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
+    @ApiResponse(responseCode = "200", description = "댓글 수정 성공")
+    @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
     @PutMapping("/update-comment")
     @ResponseBody//todo: 토큰과 함께 받아 사용자 검증 로직 추가하기
     public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
@@ -50,6 +57,9 @@ public class CommentApiController {//todo: 댓글 CUD API 구현
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
+    @ApiResponse(responseCode = "204", description = "댓글 삭제 성공")
+    @ApiResponse(responseCode = "403", description = "권한 없음")
     @DeleteMapping("/delete/{commentId}")
     @ResponseBody
     public ResponseEntity<Comment> deleteComment(@PathVariable Long commentId) {

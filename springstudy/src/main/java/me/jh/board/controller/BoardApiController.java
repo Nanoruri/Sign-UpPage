@@ -1,5 +1,7 @@
 package me.jh.board.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import me.jh.board.dto.board.BoardBasicDTO;
 import me.jh.board.dto.board.BoardDTO;
 import me.jh.board.dto.board.BoardNoCommentDTO;
@@ -49,9 +51,9 @@ public class BoardApiController {
     }
 
 
-    //CRUD에 대한 API 작성
-    //Create
-    // 토큰 내 정보를 이용하여 작성자 정보를 함께 저장하게 하기
+    @Operation(summary = "게시글 생성", description = "생성할 게시글의 정보를 받아 게시글을 생성")
+    @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
+    @ApiResponse(responseCode = "403", description = "권한 없음")
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<Board> saveBoard(@RequestBody Board board) {
@@ -65,7 +67,8 @@ public class BoardApiController {
     }
 
 
-    //Read
+    @Operation(summary = "일반 게시판 조회", description = "표시할 페이징 정보를 받아 일반 게시판의 게시글 목록을 조회")
+    @ApiResponse(responseCode = "200", description = "일반 게시판 게시글을 페이징처리하여 반환")
     @GetMapping("/generalBoard")
     @ResponseBody
     public ResponseEntity<Page<BoardNoCommentDTO>> getGeneralBoard(Pageable pageable) {
@@ -73,7 +76,9 @@ public class BoardApiController {
         return ResponseEntity.ok(boards);//TODO: board.comments필드 JSON 직렬화 이슈 수정 필요
     }
 
-    //Update
+    @Operation(summary = "게시글 수정", description = "게시글ID와 수정할 게시글 정보를 받아 게시글을 수정")
+    @ApiResponse(responseCode = "200", description = "수정 성공")
+    @ApiResponse(responseCode = "403", description = "권한 없음")
     @PutMapping("/update/{id}")
     @ResponseBody
     public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
@@ -85,7 +90,10 @@ public class BoardApiController {
     }
 
 
-    //Delete
+    @Operation(summary = "게시글 삭제", description = "주어진 게시글ID에 기반하여 게시글을 삭제")
+    @ApiResponse(responseCode = "204", description = "삭제 성공")
+    @ApiResponse(responseCode = "404", description = "게시글 없음")
+    @ApiResponse(responseCode = "403", description = "접근 권한 없음")
     @DeleteMapping("/delete/{boardId}")
     @ResponseBody
     public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
@@ -93,14 +101,17 @@ public class BoardApiController {
         try {
             boardService.deleteBoard(boardId, userId);
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage()); // 게시글 없음
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (AccessDeniedException ex) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage()); // 권한 없음
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
         }
         return ResponseEntity.noContent().build();
     }
 
 
+    @Operation(summary = "게시글 상세 조회", description = "게시글 상세 정보를 조회")
+    @ApiResponse(responseCode = "200", description = "조회 성공 및 게시글과 댓글 정보 반환")
+    @ApiResponse(responseCode = "401", description = "인증되지 않음")
     @GetMapping("/detail/{boardId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getBoardDetail(@PathVariable Long boardId) {
@@ -118,7 +129,8 @@ public class BoardApiController {
         return ResponseEntity.ok(response);
     }
 
-
+    @Operation(summary = "게시글 검색", description = "쿼리와 필터 파라미터를 사용하여 게시글을 검색")
+    @ApiResponse(responseCode = "200", description = "게시글 결과 반환")
     @GetMapping("/search")
     public ResponseEntity<Page<BoardBasicDTO>> searchPosts(@RequestParam("query") String query,
                                                            @RequestParam("type") String type,
@@ -128,6 +140,8 @@ public class BoardApiController {
         return ResponseEntity.ok(searchResults);
     }
 
+    @Operation(summary = "회원 전용 게시판 조회", description = "표시할 페이징 정보를 받아 회원용 게시판의 게시글 목록을 조회")
+    @ApiResponse(responseCode = "200", description = "회원 전용 게시판 게시글을 페이징 처리하여 반환")
     @GetMapping("/memberBoard")
     @ResponseBody
     public ResponseEntity<Page<BoardNoCommentDTO>> getMemberBoard(Pageable pageable) {
@@ -135,6 +149,8 @@ public class BoardApiController {
         return ResponseEntity.ok(boards);
     }
 
+    @Operation(summary = "이미지 업로드", description = "이미지 파일을 업로드하고 해당 이미지 URL을 반환")
+    @ApiResponse(responseCode = "200", description = "이미지 URL 반환")
     @PostMapping("/upload-image")
     public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile file) {
         try {
@@ -147,9 +163,9 @@ public class BoardApiController {
         }
     }
 
-
-    //todo: boardId를 받아서 해당 게시글을 찾아주는 API 구현
-    //todo: Token 내 아이디와 게시글 작성자 아이디가 일치하는지 확인 후 게시글을 찾아 반환
+    @Operation(summary = "게시글 수정에 사용할 게시글 정보 조회", description = "주어진 게시글 ID에 대한 기본 정보를 조회")
+    @ApiResponse(responseCode = "200", description = " 게시글 정보 반환")
+    @ApiResponse(responseCode = "403", description = "접근 권한 없음")
     @GetMapping("/getBoardInfo/{boardId}")
     @ResponseBody
     public ResponseEntity<BoardBasicDTO> findBoard(@PathVariable Long boardId) {
