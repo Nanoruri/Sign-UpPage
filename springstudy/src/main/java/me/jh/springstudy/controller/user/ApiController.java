@@ -1,6 +1,9 @@
 package me.jh.springstudy.controller.user;
 
 import io.jsonwebtoken.JwtException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import me.jh.core.dto.token.JWToken;
 import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.core.utils.auth.JwtProvider;
@@ -75,6 +78,11 @@ public class ApiController {
      * @implNote 이 메서드는 {@link JwtGenerator#generateToken(Authentication)}를 사용하여 JWT 토큰을 생성합니다.
      * 이 메서드는 {@link AuthenticationManager#authenticate(Authentication)}를 사용하여 사용자를 인증합니다.
      */
+    @Operation(summary = "사용자 인증 및 JWT 토큰 생성", description = "사용자 ID와 비밀번호를 이용하여 인증 후, JWT 토큰을 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "JWT 토큰 생성 및 로그인 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
     @PostMapping("/loginCheck")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> reqData) {
         String userId = reqData.get("userId");
@@ -110,6 +118,11 @@ public class ApiController {
      * @see JwtProvider#getUserIdFromToken(String) 토큰으로부터 사용자 ID를 추출하기 위한 메서드 참조.
      * @see AuthenticationService#authenticateAndGenerateToken(String) 새로운 토큰을 생성하기 위한 메서드 참조.
      */
+    @Operation(summary = "리프레시 토큰을 사용한 액세스 토큰 갱신", description = "리프레시 토큰을 이용하여 새로운 액세스 토큰과 리프레시 토큰을 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "새로운 액세스 토큰과 리프레시 토큰 생성 성공"),
+            @ApiResponse(responseCode = "401", description = "토큰 인증 실패")
+    })
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody Map<String, String> reqData) {
         String refreshToken = reqData.get("refreshToken");
@@ -134,6 +147,10 @@ public class ApiController {
         }
     }
 
+    @Operation(summary = "로그아웃 처리", description = "리프레시 토큰을 삭제하여 로그아웃을 처리합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공")
+    })
     @PostMapping("/logout")//todo: DB에 같은 아이디로 여러개의 토큰이 저장되어 있을 경우, 모두 삭제하는 기능 추가
     public ResponseEntity<?> logout(@RequestBody Map<String, String> reqData) {
         String refreshToken = reqData.get("refreshToken");
@@ -151,6 +168,10 @@ public class ApiController {
      * @return 회원가입 성공시 Success페이지로 리다이렉트, 실패하면 signupError페이지로 리다이렉트
      * @implNote 이 메서드는 {@link SignupService#registerMember(User)}를 사용하여 회원가입을 수행. 예외처리는 서비스 클래스에서 수행.
      */
+    @Operation(summary = "회원가입", description = "회원가입 정보를 받아 사용자 등록을 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원가입 성공")
+    })
     @PostMapping("/signup")
     @ResponseBody
     public ResponseEntity<String> signup(@RequestBody User user) {
@@ -168,6 +189,11 @@ public class ApiController {
      * @throws UserException 사용자 ID가 중복될 경우 아이디 중복 오류 메세지를 반환
      * @implNote 이 메서드는 {@link SignupService#isDuplicateId(String)}를 사용하여 사용자 ID 중복 여부를 확인.
      */
+    @Operation(summary = "사용자 ID 중복 체크", description = "사용자 ID가 중복되는지 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용 가능한 ID입니다."),
+            @ApiResponse(responseCode = "409", description = "중복된 ID입니다.")
+    })
     @PostMapping("/idCheck")
     @ResponseBody
     public ResponseEntity<String> checkDuplicateUserId(@RequestBody Map<String, String> reqData) {
@@ -190,6 +216,11 @@ public class ApiController {
      * @throws UserException 사용자 Email이 중복될 경우 이메일 중복 오류 메세지를 반환
      * @implNote 이 메서드는 {@link SignupService#isDuplicateEmail(String)}를 사용하여 사용자 Email 중복 여부를 확인.
      */
+    @Operation(summary = "사용자 Email 중복 체크", description = "사용자 Email이 중복되는지 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용 가능한 이메일입니다."),
+            @ApiResponse(responseCode = "409", description = "중복된 이메일입니다.")
+    })
     @PostMapping("/emailCheck")
     @ResponseBody
     public ResponseEntity<String> checkDuplicateEmail(@RequestBody Map<String, String> reqData) {
@@ -212,6 +243,11 @@ public class ApiController {
      * @throws UserException 사용자 이름과 전화번호가 일치하지 않을 경우 사용자를 찾을 수 없다는 메세지를 반환
      * @implNote 이 메서드는 {@link FindService#findId(String, String)}를 사용하여 사용자를 조회.
      */
+    @Operation(summary = "사용자 ID 찾기", description = "이름과 전화번호를 기준으로 사용자의 ID를 찾습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자 ID 반환"),
+            @ApiResponse(responseCode = "404", description = "사용자 ID를 찾을 수 없음")
+    })
     @PostMapping("/findId")
     @ResponseBody
     public ResponseEntity<Map<String, String>> findId(@RequestBody Map<String, String> reqData) {
@@ -248,7 +284,11 @@ public class ApiController {
      * @throws UserException 사용자를 찾을 수 없을 경우  404 상태와 사용자를 찾을 수 없다는 메세지를 반환
      * @implNote 이 메서드는 {@link FindService#validateUser(User)}를 사용하여 사용자를 조회.
      */
-
+    @Operation(summary = "비밀번호 찾기 인증", description = "사용자가 입력한 정보로 비밀번호 변경 토큰을 생성하여 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 변경 토큰 생성 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
+    })
     @PostMapping("/findPassword")
     @ResponseBody
     public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user) {
@@ -280,6 +320,11 @@ public class ApiController {
      * @implNote 이 메서드는 {@link JwtProvider#validateToken(String)}를 사용하여 토큰의 유효성을 검증.
      * {@link FindService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
      */
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 토큰을 검증하고 새 비밀번호를 설정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 변경 성공"),
+            @ApiResponse(responseCode = "401", description = "토큰 인증 실패")
+    })
     @PostMapping("/passwordChange")
     @ResponseBody
     public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> reqData) {
