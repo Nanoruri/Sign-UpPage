@@ -54,3 +54,8 @@ jwt:
   secret: 7L2cIOu4lOugiOydtOuTnCDsubTtg4DsiqTtirjroZztlLw= # 비밀의 키
   expiration: 8640000 # 만료시간
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs  # OpenAPI 명세 JSON 파일의 경로
+  swagger-ui:
+    path: /swagger-ui.html  # Swagger UI 페이지의 경로
