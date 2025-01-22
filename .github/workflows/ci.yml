@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: CI # WorkFolw name
 
 on:
@@ -28,84 +20,96 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up JDK 11
-      uses: actions/setup-java@v4
-      with:
-        java-version: '11'
-        distribution: 'zulu'
-        cache: maven
+      - uses: actions/checkout@v4
 
-      #GIT Ubuntu 환경에서의 Maven을 캐싱하여 CI 속도 개선
-    - name: Cache Maven dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-     
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'zulu'
+          cache: maven
 
-      #clean install을 사용하여 Jacoco테스트부터 빌드가 되는지까지 확인  
-    - name: Build with Maven
-      run: mvn clean install
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-     
 
-    - name: Upload Jacoco Report
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: jacoco-report
-        path: target/site/jacoco/index.html
+      - name: Build with Maven
+        run: mvn clean install
 
-      # Jacoco 리포트에서 커버리지 비율 추출하여 커버리지가 90% 미만이면 실패 처리
-    - name: Check coverage threshold
-      run: |
-        coverage=$(awk '/<span class="percentage">/ {print $2}' target/site/jacoco/index.html | sed 's/%//')
+      - name: Upload Jacoco Report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/index.html
 
-        if [ "$coverage" -lt 90 ]; then
-          echo "Coverage is below 90%: $coverage%"
-          exit 1
-        else
-          echo "Coverage is above 90%: $coverage%"
-        fi
+      - name: Check coverage threshold
+        run: |
+          coverage=$(awk '/<span class="percentage">/ {print $2}' target/site/jacoco/index.html | sed 's/%//')
+          
+          if [ "$coverage" -lt 90 ]; then
+            echo "Coverage is below 90%: $coverage%"
+            exit 1
+          else
+            echo "Coverage is above 90%: $coverage%"
+          fi
 
-    - name: Create Dockerfile
-      run: |
-        echo 'FROM arm64v8/openjdk:11-jre-slim' > Dockerfile
-        echo 'LABEL maintainer="NanoRuri"' >> Dockerfile
-        echo 'WORKDIR /app' >> Dockerfile
-        echo 'ARG JAR_FILE=springstudy/target/springstudy-1.0.4-RELEASE.jar' >> Dockerfile
-        echo 'COPY ${JAR_FILE} /app/springstudy.jar' >> Dockerfile
-        echo 'COPY springstudy/target/application.yml /app/application.yml' >> Dockerfile
-        echo 'EXPOSE 8082' >> Dockerfile
-        echo 'ENTRYPOINT ["java", "-jar", "/app/springstudy.jar", "--spring.config.location=/app/application.yml"]' >> Dockerfile
+      - name: Extract version from JAR file
+        id: version
+        run: |
+          VERSION=$(ls springstudy/target/springstudy-* | \
+          grep -oP 'springstudy-(\d+\.\d+\.\d+)(-RELEASE)?' | \
+          sort -V | \
+          tail -n 1 | \
+          sed 's/springstudy-//; s/-RELEASE//')
 
-    - name: Create docker-compose.yml
-      run: |
-        echo 'version: "3.8"' > docker-compose.yml
-        echo 'services:' >> docker-compose.yml
-        echo '  springstudy:' >> docker-compose.yml
-        echo '    image: nanoruri/springstudy:1.0.4' >> docker-compose.yml
-        echo '    ports:' >> docker-compose.yml
-        echo '      - "8084:8082"' >> docker-compose.yml
-        echo '    volumes:' >> docker-compose.yml
-        echo '      - ./springstudy/target/application.yml:/app/application.yml' >> docker-compose.yml
-        echo '    environment:' >> docker-compose.yml
-        echo '      - SPRING_CONFIG_LOCATION=/app/application.yml' >> docker-compose.yml
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Extracted version: $VERSION"
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Create Dockerfile
+        run: |
+          echo "FROM arm64v8/openjdk:11-jre-slim" > Dockerfile
+          echo "LABEL maintainer='NanoRuri'" >> Dockerfile
+          echo "WORKDIR /app" >> Dockerfile
+          echo "ARG JAR_FILE=springstudy/target/springstudy-${{ env.VERSION }}.jar" >> Dockerfile
+          echo "COPY ${JAR_FILE} /app/springstudy.jar" >> Dockerfile
+          echo "COPY springstudy/target/application.yml /app/application.yml" >> Dockerfile
+          echo "EXPOSE 8082" >> Dockerfile
+          echo 'ENTRYPOINT ["java", "-jar", "/app/springstudy.jar", "--spring.config.location=/app/application.yml"]' >> Dockerfile
 
-    - name: Build Docker Image
-      run: |
-        docker build \
-          --build-arg JAR_FILE=springstudy/target/springstudy-1.0.4-RELEASE.jar \
-          -t nanoruri/springstudy:1.0.4 .
+      - name: Create docker-compose.yml
+        run: |
+          echo 'version: "3.8"' > docker-compose.yml
+          echo 'services:' >> docker-compose.yml
+          echo "  springstudy:" >> docker-compose.yml
+          echo "    image: nanoruri/springstudy:${{ env.VERSION }}" >> docker-compose.yml
+          echo '    ports:' >> docker-compose.yml
+          echo '      - "8084:8082"' >> docker-compose.yml
+          echo '    volumes:' >> docker-compose.yml
+          echo '      - ./springstudy/target/application.yml:/app/application.yml' >> docker-compose.yml
+          echo '    environment:' >> docker-compose.yml
+          echo '      - SPRING_CONFIG_LOCATION=/app/application.yml' >> docker-compose.yml
 
-    - name: Push Docker Image
-      run: |
-        docker push nanoruri/springstudy:1.0.4
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Debug VERSION
+        run: echo "VERSION=${{ env.VERSION }}"
+          echo "JAR_FILE=springstudy/target/springstudy-${{ env.VERSION }}.jar"
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --build-arg JAR_FILE=springstudy/target/springstudy-${{ env.VERSION }}.jar \
+            -t nanoruri/springstudy:${{ env.VERSION }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push nanoruri/springstudy:${{ env.VERSION }}
