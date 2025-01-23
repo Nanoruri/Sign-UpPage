@@ -42,6 +42,9 @@ spring:
     multipart:
       max-file-size: 5MB
 
+  config:
+    import: file:///C:/Users/kaby1/Desktop/secret/JWTSetting.yml
+
 # 스프링 시큐리티 설정
 security:
   user:
@@ -49,10 +52,7 @@ security:
     password: 1217159
     roles: USER,ADMIN
 
-# JWT 설정
-jwt:
-  secret: 7L2cIOu4lOugiOydtOuTnCDsubTtg4DsiqTtirjroZztlLw= # 비밀의 키
-  expiration: 8640000 # 만료시간
+
 
 springdoc:
   api-docs:
