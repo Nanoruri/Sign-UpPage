@@ -74,6 +74,21 @@
             <version>5.7.12</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+        <dependency><!--CVE-2024-38821-->
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>5.7.14</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+
+        <dependency><!-- 버전 충돌로 인한 버전 통일 -->
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.16.0</version>
+        </dependency>
+
+
         <!--보안 이슈 CVE-2024-22233, CVE-2016-1000027, CVE-2023-20861로 인한 교체-->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -203,11 +218,12 @@
             <version>1.2.13</version>
         </dependency>
 
-        <dependency><!--tomcat의 CVE-2024-23672로 인한 버전 교체-->
+        <dependency><!--CVE-2024-52316로 인한 버전 교체-->
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>9.0.90</version>
+            <version>9.0.98</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-websocket</artifactId>
