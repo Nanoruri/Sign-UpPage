@@ -4,6 +4,8 @@
 
 이 프로젝트는 **Spring Boot**를 사용하여 개발된 **회원가입**, **게시판**, **댓글** 기능이 포함된 웹 애플리케이션입니다. 사용자들은 회원 가입 후, 게시글을 작성하고 댓글을 달 수 있습니다.
 
+---
+[![GitHub license](https://img.shields.io/badge/Apache-D22128?style=flat-square&label=license&labelColor=&color=D22128)](https://github.com/Nanoruri/Sign-UpPage/blob/develop/LICENSE)
 
 ---
 - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/2.7.18-515151?style=for-the-badge">
@@ -12,9 +14,10 @@
 ---
 ## 목차
 1. [설치 및 실행 방법](#1설치-및-실행-방법)
-2. [Docker를 사용한 실행](#2docker를-사용한-실행)
+2. [Docker 사용한 실행](#2docker를-사용한-실행)
 3. [기능 사용 방법](#3기능-사용-방법)
 4. [API 엔드포인트](#4api-엔드포인트)
+5. [라이센스](#5라이센스)
 
 ---
 
@@ -124,3 +127,8 @@ docker-compose up
 ## 4. API 엔드포인트
 
 Swagger 사용하여 API 엔드포인트를 확인할 수 있습니다. 애플리케이션을 실행한 후, http://localhost:8082/study/swagger-ui.html 로 이동하여 API 목록을 확인할 수 있습니다.
+
+---
+
+## 5. 라이센스
+이 프로젝트는 [Apache LICENSE](LICENSE)를 따릅니다.
