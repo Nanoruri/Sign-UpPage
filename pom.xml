@@ -85,7 +85,7 @@
         <dependency><!-- 버전 충돌로 인한 버전 통일 -->
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.16.0</version>
+            <version>2.13.5</version>
         </dependency>
 
 
