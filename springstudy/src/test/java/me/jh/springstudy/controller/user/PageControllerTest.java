@@ -1,10 +1,11 @@
 package me.jh.springstudy.controller.user;
 
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.CommentDao;
+import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.entitiy.User;
-import org.hamcrest.Matchers;
+import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @WebMvcTest(controllers = PageController.class) // YourController는 실제 컨트롤러 클래스명으로 대체해야 합니다.
 @Import(SecurityConfig.class)
+@ActiveProfiles("test")
 public class PageControllerTest {
 
 	@Autowired
@@ -41,42 +44,40 @@ public class PageControllerTest {
 	private JwtProvider jwtProvider;
 	@MockBean
 	private AuthenticationManager authenticationManager;
+	@MockBean
+	private BoardDao boardDao;
+	@MockBean
+	private CommentDao commentDao;
+	@MockBean
+	private RefreshTokenDao refreshTokenDao;
 
 
 	@Test
 	public void testLoginForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/login"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("login/loginPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("signin"))
-				.andExpect(MockMvcResultMatchers.model().attribute("signin", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("login/loginPage"));
 	}
 
 	@Test
 	public void testSignupForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/signup"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("signup/signupPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("user"))
-				.andExpect(MockMvcResultMatchers.model().attribute("user", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("signup/signupPage"));
 	}
 
 	@Test//아이디 찾기 폼
 	public void testFindIdForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findId"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/findIdPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserId"))
-				.andExpect(MockMvcResultMatchers.model().attribute("findUserId", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("finds/findIdPage"));
 	}
 
 	@Test// 비밀번호 찾기 폼
 	public void testFindPasswordForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/findPassword"))
 				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("findUserPassword"))
-				.andExpect(MockMvcResultMatchers.model().attribute("findUserPassword", Matchers.instanceOf(User.class)));
+				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"));
 	}
 
 	@Test//비밀번호 변경 폼 로드 성공

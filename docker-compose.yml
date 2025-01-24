@@ -1,0 +1,13 @@
+#docker-compose.yml
+
+version: '3.8'
+
+services:
+  springstudy:
+    image: nanoruri/springstudy:1.1.0
+    ports:
+      - "8084:8082"
+    volumes:
+      - ./springstudy/target/application.yml:/app/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=/app/application.yml

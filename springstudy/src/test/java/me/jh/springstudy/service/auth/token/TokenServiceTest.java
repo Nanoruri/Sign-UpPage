@@ -3,14 +3,14 @@ package me.jh.springstudy.service.auth.token;
 import io.jsonwebtoken.JwtException;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
-import me.jh.springstudy.entitiy.auth.RefreshToken;
+import me.jh.springstudy.entity.auth.RefreshToken;
 import me.jh.springstudy.exception.user.UserException;
-import me.jh.springstudy.service.auth.token.TokenService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class TokenServiceTest {
 
 

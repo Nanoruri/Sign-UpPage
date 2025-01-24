@@ -1,6 +1,6 @@
 package me.jh.springstudy.dao;
 
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
  * Jpa와 CustomDao를 상속받는다.
  */
 @Repository
-public interface UserDao extends JpaRepository<User, String>, UserPropertiesDao {
+public interface UserDao extends JpaRepository<User, String> {// todo: Dao/ Repository 분리하기
 
-	User findByNameAndPhoneNum(String name, String phoneNum);
-	boolean existsByEmail(String email);
+
+    User findByNameAndPhoneNum(String name, String phoneNum);
+
+    boolean existsByEmail(String email);
 
 }

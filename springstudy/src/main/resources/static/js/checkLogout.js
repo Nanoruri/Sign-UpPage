@@ -1,4 +1,4 @@
-document.addEventListener('authFetchCompleted', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const loginLogoutButtonDiv = document.getElementById('loginLogoutButton');
 
     // 초기 로그인 상태 확인
@@ -10,13 +10,16 @@ document.addEventListener('authFetchCompleted', function () {
 
         if (isLoggedIn) {
             const logoutForm = createForm('/study/logout', 'post');
-            const logoutButton = createButton('submit', 'btn btn-danger border-2', '로그아웃');
+            const logoutButton = createButton('button', 'btn btn-danger border-2', '로그아웃');
             logoutForm.appendChild(logoutButton);
-            logoutForm.addEventListener('submit', handleLogout);
+            logoutForm.addEventListener('click', handleLogout);
             loginLogoutButtonDiv.appendChild(logoutForm);
         } else {
             const loginForm = createForm('/study/login', 'get');
-            const loginButton = createButton('submit', 'btn btn-primary border-2', '로그인');
+            const loginButton = createButton('button', 'btn btn-primary border-2', '로그인');
+            loginButton.addEventListener('click', function () {
+                window.location.href = '/study/login';
+            });
             loginForm.appendChild(loginButton);
             loginLogoutButtonDiv.appendChild(loginForm);
         }

@@ -1,7 +1,7 @@
 package me.jh.springstudy.service.auth;
 
-import me.jh.springstudy.utils.auth.JwtGenerator;
-import me.jh.springstudy.dto.JWToken;
+import me.jh.core.utils.auth.JwtGenerator;
+import me.jh.core.dto.token.JWToken;
 import me.jh.springstudy.exception.user.UserException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class AuthenticationServiceTest {
 
 

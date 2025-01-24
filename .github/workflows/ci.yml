@@ -1,0 +1,92 @@
+name: CI # WorkFolw name
+
+on:
+  push:
+    # develop 브랜치에서 release 브랜치로 푸시되는 경우를 트리거
+    branches:
+      - 'release'  # release 브랜치로 푸시될 때
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'  # 태그 push에도 트리거
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and release'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-     
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Upload Jacoco Report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/index.html
+
+      - name: Check coverage threshold
+        run: |
+          coverage=$(awk '/<span class="percentage">/ {print $2}' target/site/jacoco/index.html | sed 's/%//')
+          
+          if [ "$coverage" -lt 90 ]; then
+            echo "Coverage is below 90%: $coverage%"
+            exit 1
+          else
+            echo "Coverage is above 90%: $coverage%"
+          fi
+
+      - name: Extract version from JAR file
+        id: version
+        run: |
+          VERSION=$(ls springstudy/target/springstudy-* | \
+          grep -oP 'springstudy-(\d+\.\d+\.\d+)(-RELEASE)?' | \
+          sort -V | \
+          tail -n 1 | \
+          sed 's/springstudy-//; s/-RELEASE//')
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Extracted version: $VERSION"
+
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Debug VERSION
+        run: echo "VERSION=${{ env.VERSION }}"
+          echo "JAR_FILE=springstudy/target/springstudy-${{ env.VERSION }}.jar"
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --build-arg JAR_FILE=springstudy/target/springstudy-${{ env.VERSION }}.jar \
+            -t nanoruri/springstudy:${{ env.VERSION }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push nanoruri/springstudy:${{ env.VERSION }}

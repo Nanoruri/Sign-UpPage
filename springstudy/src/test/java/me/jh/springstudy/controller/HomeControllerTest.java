@@ -1,8 +1,11 @@
 package me.jh.springstudy.controller;
 
+import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.CommentDao;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.core.utils.auth.JwtProvider;
+import me.jh.springstudy.dao.auth.RefreshTokenDao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -42,6 +45,13 @@ public class HomeControllerTest {
 
 	@MockBean
 	private JwtProvider jwtProvider;
+
+	@MockBean
+	private BoardDao boardDao;
+	@MockBean
+	private CommentDao commentDao;
+	@MockBean
+	private RefreshTokenDao refreshTokenDao;
 
 //	@MockBean
 //	private HttpSession session;

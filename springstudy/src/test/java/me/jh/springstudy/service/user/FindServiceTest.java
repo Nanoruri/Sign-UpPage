@@ -2,7 +2,7 @@ package me.jh.springstudy.service.user;
 
 
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.entitiy.User;
+import me.jh.springstudy.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class FindServiceTest {
 
@@ -79,20 +80,59 @@ public class FindServiceTest {
 	@Test
 	public void ValidateUserTest() {
 		String userId = "test";
-		String name = "test";
+		String name = "testName";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, "hashedPassword", phoneNum,
 				null, null, null, null,"USER");
 
-		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
-
-		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
 
 		boolean validUser = findService.validateUser(user);
 		assertTrue(validUser, "사용자를 찾았습니다.");
 
-		verify(userDao, times(1)).findByProperties(user);
+		verify(userDao, times(1)).findById(user.getUserId());
 	}
+
+	/**
+	 * 사용자 이름 불일치 테스트
+	 */
+	@Test
+	public void validateUserNameMismatch() {
+		String userId = "test";
+		String name = "test";
+		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null, "USER");
+
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
+
+		boolean validUser = findService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+	/**
+	 * 사용자 전화번호 불일치 테스트
+	 */
+	@Test
+	public void validateUserPhoneNumMismatch() {
+		String userId = "test";
+		String name = "testName";
+		String phoneNum = "010-4321-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null, "USER");
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
+
+		boolean validUser = findService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+
 
 	/**
 	 * 사용자 정보 조회 실패 테스트
@@ -100,17 +140,17 @@ public class FindServiceTest {
 	@Test
 	public void ValidateUserFailedTest() {
 		String userId = "Unknown";
-		String name = "test";
+		String name = "testName";
 		String phoneNum = "010-1234-5678";
 		User user = new User(userId, name, "hashedPassword", phoneNum,
 				null, null, null, null,"USER");
 
-		when(userDao.findByProperties(user)).thenReturn(Optional.empty());
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.empty());
 
 		boolean validUser = findService.validateUser(user);
 		assertFalse(validUser, "사용자를 찾지 못했습니다.");
 
-		verify(userDao, times(1)).findByProperties(user);
+		verify(userDao, times(1)).findById(user.getUserId());
 	}
 
 	/**
@@ -124,7 +164,7 @@ public class FindServiceTest {
 		User user = new User(userId, name, null, phoneNum,
 				null, null, null, null,"USER");
 
-		when(userDao.findByProperties(user)).thenReturn(Optional.ofNullable(changePasswordUser));
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(changePasswordUser));
 
 		String newPassword = "changedPassword";
 
@@ -143,7 +183,7 @@ public class FindServiceTest {
 
 		//given
 		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패해야함
-		when(userDao.findByProperties(changePasswordUser)).thenReturn(Optional.empty());
+		when(userDao.findById(changePasswordUser.getUserId())).thenReturn(Optional.empty());
 
 		// Act & Assert
 		try {
@@ -155,7 +195,7 @@ public class FindServiceTest {
 
 		// Verify
 		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패하고 해당 예외가 발생하는지 확인
-		verify(userDao, times(1)).findByProperties(changePasswordUser);
+		verify(userDao, times(1)).findById(changePasswordUser.getUserId());
 		verifyNoMoreInteractions(userDao);
 	}
 

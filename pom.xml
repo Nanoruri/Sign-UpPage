@@ -6,11 +6,12 @@
 
     <groupId>me.jh.springstudy</groupId>
     <artifactId>SignUp</artifactId>
-    <version>1.0.4-RELEASE</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>springstudy</module>
+        <module>core</module>
     </modules>
 
 
@@ -72,6 +73,21 @@
             <artifactId>spring-security-core</artifactId>
             <version>5.7.12</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+        <dependency><!--CVE-2024-38821-->
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>5.7.14</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+
+        <dependency><!-- 버전 충돌로 인한 버전 통일 -->
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.13.5</version>
+        </dependency>
+
 
         <!--보안 이슈 CVE-2024-22233, CVE-2016-1000027, CVE-2023-20861로 인한 교체-->
         <dependency>
@@ -202,11 +218,12 @@
             <version>1.2.13</version>
         </dependency>
 
-        <dependency><!--tomcat의 CVE-2024-23672로 인한 버전 교체-->
+        <dependency><!--CVE-2024-52316로 인한 버전 교체-->
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>9.0.90</version>
+            <version>9.0.98</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-websocket</artifactId>
@@ -245,6 +262,27 @@
             <version>2.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
+
 
 
     </dependencies>
@@ -253,73 +291,7 @@
     <build>
         <plugins>
 
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
 
-                <configuration>
-                    <excludes><!--테스트 제외설정-->
-                        <exclude>me/jh/springstudy/config/**/CorsConfig.class</exclude>
-                        <exclude>me/jh/springstudy/exception/signup/**</exclude>
-                        <exclude>me/jh/springstudy/exception/signin/**</exclude>
-                        <exclude>me/jh/springstudy/exception/finds/**</exclude>
-                        <exclude>me/jh/springstudy/dto/**</exclude>
-                        <exclude>me/jh/springstudy/dao/MemberDaoEntityManager.class</exclude>
-                        <exclude>me/jh/springstudy/config/JwtProvider.class</exclude>
-                    </excludes>
-                </configuration>
-
-                <executions>
-                    <execution><!--테스트 전 실행 설정-->
-                        <goals><!--목표 설정-->
-                            <goal>prepare-agent</goal><!--Jacoco에이전트 준비-->
-                        </goals>
-                    </execution>
-
-                    <execution><!--테스트 단계-->
-                        <id>jacoco-report</id>
-                        <phase>test</phase><!--테스트 단계에서 실행-->
-                        <goals>
-                            <goal>report</goal><!--리포트 생성-->
-                        </goals>
-                    </execution>
-
-                    <execution><!--테스트 후 커버리지 검증-->
-                        <id>jacoco-check</id>
-                        <phase>verify</phase><!--검증 단계에서 실행-->
-                        <goals>
-                            <goal>check</goal><!--커버리지 체크-->
-                        </goals>
-
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element> <!--전체 코드 커버리지-->
-                                    <limits>
-                                        <limit>
-                                            <counter>INSTRUCTION</counter><!--명령어 수-->
-                                            <value>COVEREDRATIO</value><!--커버리지 비율-->
-                                            <minimum>0.80</minimum><!--비율 설정-->
-                                        </limit>
-                                    </limits>
-                                    <element>METHOD</element><!--메소드 단위 커버리지-->
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter><!--라인 단위 커버리지-->
-                                            <value>TOTALCOUNT</value><!--전체 코드 수-->
-                                            <maximum>50</maximum><!--최대 코드 수-->
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
-                    </execution>
-
-                </executions>
-
-
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

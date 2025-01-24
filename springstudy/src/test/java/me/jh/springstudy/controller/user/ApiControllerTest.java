@@ -3,12 +3,15 @@ package me.jh.springstudy.controller.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
-import me.jh.springstudy.utils.auth.JwtGenerator;
-import me.jh.springstudy.utils.auth.JwtProvider;
+import me.jh.board.dao.BoardDao;
+import me.jh.board.dao.CommentDao;
+import me.jh.core.utils.auth.JwtGenerator;
+import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
 import me.jh.springstudy.dao.UserDao;
-import me.jh.springstudy.dto.JWToken;
-import me.jh.springstudy.entitiy.User;
+import me.jh.core.dto.token.JWToken;
+import me.jh.springstudy.dao.auth.RefreshTokenDao;
+import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
 import me.jh.springstudy.service.auth.token.TokenService;
@@ -30,6 +33,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @WebMvcTest(controllers = ApiController.class) // YourController는 실제 컨트롤러 클래스명으로 대체해야 합니다.
 @Import(SecurityConfig.class)
+@ActiveProfiles("test")
 //@AutoConfigureMockMvc
 //@SpringBootTest(classes = MySpringBootApplication.class)
 public class ApiControllerTest {
@@ -72,6 +77,12 @@ public class ApiControllerTest {
 	private AuthenticationManager authenticationManager;
 	@MockBean
 	private TokenService tokenService;
+	@MockBean
+	private BoardDao boardDao;
+	@MockBean
+	private CommentDao commentDao;
+	@MockBean
+	private RefreshTokenDao refreshTokenDao;
 
 
 	@Mock

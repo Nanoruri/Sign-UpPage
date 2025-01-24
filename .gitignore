@@ -11,6 +11,8 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/httpClient.xml
+
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -136,6 +138,17 @@ ReadMe
 springstudy/target
 springstudy/.idea/workspace.xml
 
+#board submodule Target
+board/target
+board/.idea/workspace.xml
+board.iml
+
+#SignUp submodule Target
+core/target
+
 
 SignUp.iml
 springstudy.iml
+
+#LogBack
+logs
