@@ -44,7 +44,10 @@ public class JwtAuthenticationFilterTest {
 	public void testDoFilterInternal_ValidToken() throws ServletException, IOException {
 		String token = "valid_token";
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getMethod()).thenReturn("GET");
+		when(jwtProvider.validateToken(token)).thenReturn(true);
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
+		when(request.getParameter("tabName")).thenReturn("general");
 		when(jwtProvider.validateToken(token)).thenReturn(true);
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken("user123", null);
@@ -61,7 +64,8 @@ public class JwtAuthenticationFilterTest {
 	public void testDoFilterInternal_InvalidToken() throws ServletException, IOException {
 		String token = "invalid_token";
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getMethod()).thenReturn("GET");
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
 		doThrow(new JwtException("유효하지 않은 토큰입니다.")).when(jwtProvider).validateToken(token);
 
 
@@ -76,7 +80,8 @@ public class JwtAuthenticationFilterTest {
 	@Test
 	public void testDoFilterInternal_NoToken() throws ServletException, IOException {
 		when(request.getHeader("Authorization")).thenReturn(null);
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
+		when(request.getMethod()).thenReturn("GET");
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(jwtProvider, never()).validateToken(any());
@@ -87,7 +92,9 @@ public class JwtAuthenticationFilterTest {
 	public void testDoFilterInternal_TokenNotStartWithBearer() throws ServletException, IOException {
 
 		when(request.getHeader("Authorization")).thenReturn("invalid_token");
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
+		when(request.getMethod()).thenReturn("GET");
+
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(jwtProvider, never()).validateToken(any());
@@ -97,7 +104,8 @@ public class JwtAuthenticationFilterTest {
 	@Test
 	public void testDoFilterInternal_NoHeader() throws ServletException, IOException {
 		when(request.getHeader(null)).thenReturn(null);
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
+		when(request.getMethod()).thenReturn("GET");
 		jwtAuthenticationFilter.doFilter(request, response, chain);
 
 		verify(chain, never()).doFilter(request, response);
@@ -107,7 +115,8 @@ public class JwtAuthenticationFilterTest {
 	public void testDoFilterInternal_TokenInvalid() throws ServletException, IOException {
 		String token = "invalid_token_but_not_null";
 		when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
+		when(request.getMethod()).thenReturn("GET");
 		when(jwtProvider.validateToken(token)).thenReturn(false);
 
 		jwtAuthenticationFilter.doFilter(request, response, chain);
@@ -119,7 +128,8 @@ public class JwtAuthenticationFilterTest {
 
 	@Test
 	void shouldNotFilterForExcludedPaths() throws ServletException {
-		when(request.getRequestURI()).thenReturn("/study/board/api/memberBoard");
+		when(request.getRequestURI()).thenReturn("/study/board/api/");
+		when(request.getMethod()).thenReturn("GET");
 
 		boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
 
@@ -130,7 +140,8 @@ public class JwtAuthenticationFilterTest {
 
 	@Test
 	void shouldFilterForNonExcludedPaths() throws ServletException {
-		when(request.getRequestURI()).thenReturn("/study/board/api/otherPath");
+		when(request.getRequestURI()).thenReturn("/study/user/api/");
+		when(request.getMethod()).thenReturn("POST");
 
 		boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
 
@@ -142,8 +153,9 @@ public class JwtAuthenticationFilterTest {
 
     @Test
     public void shouldNotFilter_generalTabWithoutToken() throws ServletException {
-        when(request.getRequestURI()).thenReturn("/study/board/api/detail/1");
+        when(request.getRequestURI()).thenReturn("/study/board/api/1");
         when(request.getParameter("tabName")).thenReturn("general");
+		when(request.getMethod()).thenReturn("GET");
         when(request.getHeader("Authorization")).thenReturn(null);
 
         boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
@@ -157,8 +169,9 @@ public class JwtAuthenticationFilterTest {
 
     @Test
     public void shouldFilter_generalTabWithToken() throws ServletException {
-        when(request.getRequestURI()).thenReturn("/study/board/api/detail/1");
+        when(request.getRequestURI()).thenReturn("/study/board/api/");
         when(request.getParameter("tabName")).thenReturn("general");
+		when(request.getMethod()).thenReturn("GET");
         when(request.getHeader("Authorization")).thenReturn("Bearer validToken");
 
         boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
@@ -172,8 +185,9 @@ public class JwtAuthenticationFilterTest {
 
     @Test
     public void shouldFilter_nonGeneralTabWithoutToken() throws ServletException {
-        when(request.getRequestURI()).thenReturn("/study/board/api/detail/1");
+        when(request.getRequestURI()).thenReturn("/study/board/api/");
         when(request.getParameter("tabName")).thenReturn("member");
+		when(request.getMethod()).thenReturn("GET");
         when(request.getHeader("Authorization")).thenReturn(null);
 
         boolean result = jwtAuthenticationFilter.shouldNotFilter(request);
