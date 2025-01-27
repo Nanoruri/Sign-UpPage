@@ -76,16 +76,12 @@ public class SecurityConfig {
 
                 .authorizeRequests()//권한 설정
 
-                .antMatchers("/user/api/**").permitAll()
-                .anyRequest().permitAll()//모든 요청에 대해 접근을 허용함.
-
                 .antMatchers("/user/**", "/").permitAll()
                 .antMatchers("/board/page/**").permitAll()
                 .antMatchers("/board/api/", "/board/api/search").permitAll()
                 .requestMatchers(new AuthTabRequestMatcher()).permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
-
 
                 .and()
                 .formLogin().disable()
