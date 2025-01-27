@@ -109,7 +109,7 @@ public class BoardApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.saveBoard(eq(userId), any(Board.class))).thenReturn(true);
 
-        mockMvc.perform(post("/board/api/create")
+        mockMvc.perform(post("/board/api/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
@@ -132,7 +132,7 @@ public class BoardApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.saveBoard(eq(userId), any(Board.class))).thenReturn(false);
 
-        mockMvc.perform(post("/board/api/create")
+        mockMvc.perform(post("/board/api/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
@@ -153,7 +153,7 @@ public class BoardApiControllerTest {
 
         when(authService.getAuthenticatedUserId()).thenReturn(null);
 
-        mockMvc.perform(post("/board/api/create")
+        mockMvc.perform(post("/board/api/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
@@ -169,7 +169,7 @@ public class BoardApiControllerTest {
         Page<BoardNoCommentDTO> boardPage = new PageImpl<>(List.of(boardDTO));
         when(boardService.getBoard("general", pageable)).thenReturn(boardPage);
 
-        mockMvc.perform(get("/board/api/generalBoard")
+        mockMvc.perform(get("/board/api/?tabName=general")
                         .param("page", "0")  // 페이지 번호
                         .param("size", "10")  // 페이지 크기
                         .contentType(MediaType.APPLICATION_JSON))
@@ -193,7 +193,7 @@ public class BoardApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(user);
         when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(true);
 
-        mockMvc.perform(put("/board/api/update/{id}", id)
+        mockMvc.perform(put("/board/api/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
                 .andExpect(status().isOk());
@@ -212,7 +212,7 @@ public class BoardApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(user);
         when(boardService.updateBoard(eq(id), eq(user), any(Board.class))).thenReturn(false);
 
-        mockMvc.perform(put("/board/api/update/{id}", id)
+        mockMvc.perform(put("/board/api/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\"}"))
                 .andExpect(status().isForbidden());
@@ -233,7 +233,7 @@ public class BoardApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(boardService.deleteBoard(post.getId(), userId)).thenReturn(true);
 
-        mockMvc.perform(delete("/board/api/delete/{boardId}", post.getId())
+        mockMvc.perform(delete("/board/api/{boardId}", post.getId())
                 )
                 .andExpect(status().isNoContent());
     }
@@ -249,7 +249,7 @@ public class BoardApiControllerTest {
         doThrow(new AccessDeniedException("삭제 권한이 없습니다."))
                 .when(boardService).deleteBoard(boardId, userId);
 
-        mockMvc.perform(delete("/board/api/delete/{boardId}", board.getId()))
+        mockMvc.perform(delete("/board/api/{boardId}", board.getId()))
                 .andExpect(status().isForbidden());
     }
 
@@ -262,7 +262,7 @@ public class BoardApiControllerTest {
         doThrow(new IllegalArgumentException("게시글이 존재하지 않습니다."))
                 .when(boardService).deleteBoard(boardId, userId);
 
-        mockMvc.perform(delete("/board/api/delete/{boardId}", boardId))
+        mockMvc.perform(delete("/board/api/{boardId}", boardId))
                 .andExpect(status().isNotFound());
     }
 
@@ -279,7 +279,7 @@ public class BoardApiControllerTest {
         when(boardService.getBoardDetail(boardId)).thenReturn(boardDTO);
         when(boardService.isUserAuthorized(boardDTO, userId)).thenReturn(true);
 
-        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+        mockMvc.perform(get("/board/api/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.board.id").value(boardId))
@@ -300,7 +300,7 @@ public class BoardApiControllerTest {
         when(boardService.getBoardDetail(boardId)).thenReturn(boardDTO);
         when(boardService.isUserAuthorized(boardDTO, userId)).thenReturn(false);
 
-        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+        mockMvc.perform(get("/board/api/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -316,7 +316,7 @@ public class BoardApiControllerTest {
         when(boardService.getBoardDetail(boardId)).thenReturn(boardDTO);
         when(boardService.isUserAuthorized(boardDTO, null)).thenReturn(false);
 
-        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+        mockMvc.perform(get("/board/api/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -329,7 +329,7 @@ public class BoardApiControllerTest {
         when(authService.getAuthenticatedUserIdOrNull()).thenReturn(userId);
         when(boardService.getBoardDetail(boardId)).thenReturn(null);
 
-        mockMvc.perform(get("/board/api/detail/{boardId}", boardId)
+        mockMvc.perform(get("/board/api/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -365,7 +365,7 @@ public class BoardApiControllerTest {
 
         when(boardService.getBoard("member", pageable)).thenReturn(boardPage);
 
-        mockMvc.perform(get("/board/api/memberBoard")
+        mockMvc.perform(get("/board/api/?tabName=member")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
