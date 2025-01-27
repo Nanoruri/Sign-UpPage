@@ -14,7 +14,7 @@ function showBoardDetail(postId, tabName) {
         headers['Authorization'] = `Bearer ${token}`; // 토큰이 존재하면 헤더에 추가
     }
 
-    fetch(`/study/board/api/detail/${postId}?tabName=${tabName}`, {
+    fetch(`/study/board/api/${postId}?tabName=${tabName}`, {
         method: 'GET',
         headers: headers
     })
