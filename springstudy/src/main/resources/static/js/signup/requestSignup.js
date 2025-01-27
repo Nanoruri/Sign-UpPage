@@ -45,7 +45,7 @@ function requestSignup(event) {
                             break;
                     }
                 } else if (response.ok) {
-                    window.location.href = '/study/signupSuccess';
+                    window.location.href = '/study/user/page/signupSuccess';
                 }
             })
             .catch(function (error) {

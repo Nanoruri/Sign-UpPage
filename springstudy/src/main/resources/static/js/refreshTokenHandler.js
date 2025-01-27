@@ -10,7 +10,7 @@ const refreshAccessToken = async (refreshToken) => {
 
     if (!response.ok) {
       alert('로그인이 필요합니다.');
-      window.location.href = '/study/user/login';
+      window.location.href = '/study/user/page/login';
       throw new Error('리프레시 토큰 처리 실패');
     }
 

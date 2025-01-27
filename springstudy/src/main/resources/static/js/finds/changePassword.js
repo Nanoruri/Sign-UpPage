@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // If token is not present, redirect to an error page
     if (!passwordToken) {
-        window.location.href = '/study/findPassword';
+        window.location.href = '/study/user/page/findPassword';
     }
 
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(function (data) {
                     console.log('비밀번호 변경 성공:', data);
                     sessionStorage.removeItem('findPassword');
-                    window.location.href = '/study/passwordChangeSuccess';
+                    window.location.href = '/study/user/page/passwordChangeSuccess';
                 })
                 .catch(function (error) {
                     console.error('비밀번호 변경 중 오류 발생:', error);

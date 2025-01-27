@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleLogin() {
-        window.location.href = '/study/login';
+        window.location.href = '/study/user/page/login';
     }
 
     function handleLogout() {

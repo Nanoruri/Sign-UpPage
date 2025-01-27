@@ -54,28 +54,28 @@ public class PageControllerTest {
 
 	@Test
 	public void testLoginForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/login"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/login"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("login/loginPage"));
 	}
 
 	@Test
 	public void testSignupForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/signup"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/signup"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("signup/signupPage"));
 	}
 
 	@Test//아이디 찾기 폼
 	public void testFindIdForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/findId"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/findId"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/findIdPage"));
 	}
 
 	@Test// 비밀번호 찾기 폼
 	public void testFindPasswordForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/findPassword"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/findPassword"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/findPasswordPage"));
 	}
@@ -83,7 +83,7 @@ public class PageControllerTest {
 	@Test//비밀번호 변경 폼 로드 성공
 	public void testPasswordChangeFormSuccess() throws Exception {
 		//세션에 저장된 사용자 정보가 있을때의 요청을 수행
-		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChange"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/passwordChange"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/newPasswordPage"));
 	}
@@ -105,21 +105,21 @@ public class PageControllerTest {
 
 	@Test
 	public void testSignupSuccessPage() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/signupSuccess"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/signupSuccess"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("signup/signupSuccessPage"));
 	}
 
 	@Test
 	public void testPasswordChangeSuccessPage() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/passwordChangeSuccess"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/passwordChangeSuccess"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("finds/passwordChangeSuccessPage"));
 	}
 
 	@Test
 	public void testErrorPage() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/error"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/page/error"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("errors/error400"));
 	}

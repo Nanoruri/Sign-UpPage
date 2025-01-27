@@ -1,14 +1,14 @@
  function buttonsSetUp(buttons) {
         buttons.signUpButton.addEventListener('click', function () {
-            window.location.href = '/study/signup';
+            window.location.href = '/study/user/page/signup';
         });
 
         buttons.findPasswordButton.addEventListener('click', function () {
-            window.location.href = '/study/findPassword';
+            window.location.href = '/study/user/page/findPassword';
         });
 
         buttons.findIdButton.addEventListener('click', function () {
-            window.location.href = '/study/findId';
+            window.location.href = '/study/user/page/findId';
         });
 
         buttons.boardButton.addEventListener('click', function () {

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const loginForm = createForm('/study/login', 'get');
             const loginButton = createButton('button', 'btn btn-primary border-2', '로그인');
             loginButton.addEventListener('click', function () {
-                window.location.href = '/study/login';
+                window.location.href = '/study/user/page/login';
             });
             loginForm.appendChild(loginButton);
             loginLogoutButtonDiv.appendChild(loginForm);
