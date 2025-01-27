@@ -6,7 +6,7 @@ function getAllPost() {
 
     // 게시글 목록 불러오기
     function loadBoardList(page = 0) {
-        fetch(`/study/board/api/generalBoard?page=${page}&size=${pageSize}`)
+        fetch(`/study/board/api/?tabName=general&page=${page}&size=${pageSize}`)
             .then(response => response.json())
             .then(data => {
                 displayBoardList(data.content); // 게시글 목록 표시

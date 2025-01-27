@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 회원 게시글 로드 함수
     function loadMemberBoardList(page = 0) {
-        fetchWithAuth(`/study/board/api/memberBoard?page=${page}&size=${pageSize}`, {
+        fetchWithAuth(`/study/board/api/?tabName=member&page=${page}&size=${pageSize}`, {
             method: 'GET'
         })
             .then(response => {

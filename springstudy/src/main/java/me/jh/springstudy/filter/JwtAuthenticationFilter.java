@@ -63,17 +63,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        //todo: 해당 경로들은 인증이 필요한 authController를 만들어 빼도록 하기
-        String[] notExcludePath = {"/study/board/api/memberBoard", "/study/board/api/getBoardInfo/", "/study/board/api/delete/",
-                "/study/board/api/update/", "/study/board/api/create", "/study/board/api/upload-image", "/study/comment/api"};
-        String path = request.getRequestURI();
 
-        String tabName = request.getParameter("tabName");
+        String path = request.getRequestURI();
+        String type = request.getParameter("tabName");
         String token = request.getHeader("Authorization");
 
-        if (path.startsWith("/study/board/api/detail/")) {
-            return "general".equals(tabName) && token == null;
+        // 인증이 필요하지 않은 경로
+        String[] publicPaths = {
+                "/study/board/api/search" // 게시글 검색
+        };
+
+        if (Arrays.stream(publicPaths).anyMatch(path::startsWith)) {
+            return true; // 필터 적용하지 않음
         }
-        return Arrays.stream(notExcludePath).noneMatch(path::startsWith);
+
+        // 게시글 상세 조회 경로 처리 (동적 boardId 포함)
+        if (request.getMethod().equals("GET") && path.matches("/study/board/api/\\d+")) {
+            return token == null; // 토큰이 없으면 필터 적용하지 않음 (인증되지 않은 사용자)
+        }
+
+
+        // 게시글 목록 조회에서 일반 게시판(type=general)만 인증 필요 없음
+        if ("/study/board/api/".equals(path) && "general".equals(type) && token == null) {
+            return true; // 필터 적용하지 않음
+        }
+        // 인증이 필요한 경로
+        String[] protectedPaths = {
+                "/study/board/api/", // 회원 전용 게시판
+                "/study/board/api/upload-image", // 이미지 업로드
+                "/study/comment/api"
+        };
+
+
+        return Arrays.stream(protectedPaths).noneMatch(path::startsWith);
     }
 }

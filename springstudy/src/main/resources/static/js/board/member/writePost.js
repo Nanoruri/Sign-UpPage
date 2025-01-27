@@ -95,7 +95,7 @@ function createPost(event) {
         content: content
     };
 
-    fetchWithAuth('/study/board/api/create', {
+    fetchWithAuth('/study/board/api/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -75,8 +75,11 @@ public class SecurityConfig {
         http.csrf().disable()
 
                 .authorizeRequests()//권한 설정
+
                 .antMatchers("/user/**", "/").permitAll()
                 .antMatchers("/board/page/**").permitAll()
+                .antMatchers("/board/api/", "/board/api/search").permitAll()
+                .requestMatchers(new AuthTabRequestMatcher()).permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
 
