@@ -75,7 +75,7 @@ public class CommentApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(true);
 
-        mockMvc.perform(post("/comment/api/create-comment")
+        mockMvc.perform(post("/comment/api/")
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"content\":\"Test Comment\",\"board\":{\"id\":1}}"))
@@ -92,7 +92,7 @@ public class CommentApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.saveComment(eq(board.getId()), any(Comment.class), eq(userId))).thenReturn(false);
 
-        mockMvc.perform(post("/comment/api/create-comment")
+        mockMvc.perform(post("/comment/api/")
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"content\":\"Test Comment\",\"board\":{\"id\":1}}"))
@@ -110,7 +110,7 @@ public class CommentApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.updateComment(eq(commentId), any(Comment.class), eq(userId))).thenReturn(true);
 
-        mockMvc.perform(put("/comment/api/update-comment")
+        mockMvc.perform(put("/comment/api/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"content\":\"Test Comment\"}"))
@@ -130,7 +130,7 @@ public class CommentApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.updateComment(eq(commentId), any(Comment.class), eq(commentUserId))).thenReturn(false);
 
-        mockMvc.perform(put("/comment/api/update-comment")
+        mockMvc.perform(put("/comment/api/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"content\":\"Test Comment\"}"))
@@ -147,7 +147,7 @@ public class CommentApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.deleteComment(commentId, userId)).thenReturn(true);
 
-        mockMvc.perform(delete("/comment/api/delete/{commentId}", commentId)
+        mockMvc.perform(delete("/comment/api/{commentId}", commentId)
                         .header("Authorization", token))
                 .andExpect(status().isNoContent());
     }
@@ -161,7 +161,7 @@ public class CommentApiControllerTest {
         when(authService.getAuthenticatedUserId()).thenReturn(userId);
         when(commentService.deleteComment(commentId, userId)).thenReturn(false);
 
-        mockMvc.perform(delete("/comment/api/delete/{commentId}", commentId)
+        mockMvc.perform(delete("/comment/api/{commentId}", commentId)
                         .header("Authorization", token))
                 .andExpect(status().isForbidden());
     }
