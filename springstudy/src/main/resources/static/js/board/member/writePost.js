@@ -103,7 +103,7 @@ function createPost(event) {
         body: JSON.stringify(formData)
     })
         .then(response => {
-            if (response.ok) {
+            if (response.status === 201) {
                 alert('게시글이 작성되었습니다.');
                 window.location.href = '/study/board/page/boardIndex';
             } else {

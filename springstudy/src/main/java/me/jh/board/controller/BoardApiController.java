@@ -52,7 +52,7 @@ public class BoardApiController {
 
 
     @Operation(summary = "게시글 생성", description = "생성할 게시글의 정보를 받아 게시글을 생성")
-    @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
+    @ApiResponse(responseCode = "201", description = "게시글 생성 성공")
     @ApiResponse(responseCode = "403", description = "권한 없음")
     @PreAuthorize("isAuthenticated()")
     @PostMapping
@@ -63,7 +63,7 @@ public class BoardApiController {
         if (userId == null || !boardService.saveBoard(userId, board)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 

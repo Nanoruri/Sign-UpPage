@@ -113,7 +113,7 @@ public class BoardApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .content("{\"id\":1,\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"date\":\"" + date + "\",\"tab\":\"" + tab + "\"}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
