@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 인증이 필요하지 않은 경로
         String[] publicPaths = {
-                "/study/board/api/search" // 게시글 검색
+                "/study/board/api/posts" // 게시글 검색
         };
 
         if (Arrays.stream(publicPaths).anyMatch(path::startsWith)) {

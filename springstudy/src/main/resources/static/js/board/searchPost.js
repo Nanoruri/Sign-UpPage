@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 검색 API 호출
     function searchPosts(query, type, tab) {
-        const url = `/study/board/api/search?query=${encodeURIComponent(query)}&type=${type}&tabName=${tab}&page=${currentPage}&size=${pageSize}`;
+        const url = `/study/board/api/posts?query=${encodeURIComponent(query)}&type=${type}&tabName=${tab}&page=${currentPage}&size=${pageSize}`;
 
         fetch(url)
             .then(response => response.json())

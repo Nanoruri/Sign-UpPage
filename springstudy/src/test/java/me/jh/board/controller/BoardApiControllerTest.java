@@ -343,7 +343,7 @@ public class BoardApiControllerTest {
 
         when(boardService.searchPosts("title", "title", pageable, thisTab)).thenReturn(boardPage);
 
-        mockMvc.perform(get("/board/api/search")
+        mockMvc.perform(get("/board/api/posts")
                         .param("query", "title")
                         .param("type", "title")
                         .param("page", "0")

@@ -78,7 +78,7 @@ public class SecurityConfig {
 
                 .antMatchers("/user/**", "/").permitAll()
                 .antMatchers("/board/page/**").permitAll()
-                .antMatchers("/board/api/", "/board/api/search").permitAll()
+                .antMatchers("/board/api/", "/board/api/posts").permitAll()
                 .requestMatchers(new AuthTabRequestMatcher()).permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()

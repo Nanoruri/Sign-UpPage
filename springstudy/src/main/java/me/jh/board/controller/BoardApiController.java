@@ -130,7 +130,7 @@ public class BoardApiController {
 
     @Operation(summary = "게시글 검색", description = "쿼리와 필터 파라미터를 사용하여 게시글을 검색")
     @ApiResponse(responseCode = "200", description = "게시글 결과 반환")
-    @GetMapping("/search")
+    @GetMapping("/posts")
     public ResponseEntity<Page<BoardBasicDTO>> searchPosts(@RequestParam("query") String query,
                                                            @RequestParam("type") String type,
                                                            @RequestParam("tabName") String tabName, Pageable pageable) {
