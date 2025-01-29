@@ -8,6 +8,7 @@ import me.jh.board.dao.CommentDao;
 import me.jh.core.utils.auth.JwtGenerator;
 import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.config.SecurityConfig;
+import me.jh.springstudy.controller.user.api.UserController;
 import me.jh.springstudy.dao.UserDao;
 import me.jh.core.dto.token.JWToken;
 import me.jh.springstudy.dao.auth.RefreshTokenDao;
@@ -45,12 +46,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@WebMvcTest(controllers = ApiController.class) // YourController는 실제 컨트롤러 클래스명으로 대체해야 합니다.
+@WebMvcTest(controllers = UserController.class)
 @Import(SecurityConfig.class)
 @ActiveProfiles("test")
 //@AutoConfigureMockMvc
 //@SpringBootTest(classes = MySpringBootApplication.class)
-public class ApiControllerTest {
+public class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
