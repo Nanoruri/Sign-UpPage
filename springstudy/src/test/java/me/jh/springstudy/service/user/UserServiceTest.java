@@ -14,13 +14,14 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-public class SignupServiceTest {
+public class UserServiceTest {
 
 
 	@Mock
@@ -29,12 +30,11 @@ public class SignupServiceTest {
 	private User successTestUser;
 	@Mock
 	private User failTestUser;
-	;
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
-	SignupService signupService;
+	UserService userService;
 
 
 	@BeforeEach
@@ -54,13 +54,13 @@ public class SignupServiceTest {
 	public void signupServiceSuccesseTest() {
 		//given
 		//이메일 중복 호출 시 중복이 아닌 상태로 설정
-		when(signupService.isDuplicateEmail(successTestUser.getEmail())).thenReturn(false);
+		when(userService.isDuplicateEmail(successTestUser.getEmail())).thenReturn(false);
 		//비밀번호 해시화
 		when(passwordEncoder.encode(successTestUser.getPassword())).thenReturn("hashedPassword");
 
 		//when
 		//회원가입 메서드 실행
-		signupService.registerMember(successTestUser);
+		userService.registerMember(successTestUser);
 
 
 		//then
@@ -89,7 +89,7 @@ public class SignupServiceTest {
 		// when
 		try {
 			// 예외가 발생하지 않았으므로 테스트 실패
-			signupService.registerMember(failTestUser);
+			userService.registerMember(failTestUser);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			// then
@@ -111,12 +111,12 @@ public class SignupServiceTest {
 		//중복검사에 관한 테스트
 		// given
 		// 이메일 중복 호출 시 중복인 상태로 설정
-		when(signupService.isDuplicateEmail(failTestUser.getEmail())).thenReturn(true);
+		when(userService.isDuplicateEmail(failTestUser.getEmail())).thenReturn(true);
 
 		// when
 		try {
 			// 예외가 발생하지 않았으므로 테스트 실패
-			signupService.registerMember(failTestUser);
+			userService.registerMember(failTestUser);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			// then
@@ -134,7 +134,7 @@ public class SignupServiceTest {
 		//when
 		//회원가입 메서드 실행
 		try {
-			signupService.registerMember(failTestUser);
+			userService.registerMember(failTestUser);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			//then
@@ -155,7 +155,7 @@ public class SignupServiceTest {
 		//when
 		//회원가입 메서드 실행
 		try {
-			signupService.registerMember(failTestUser);
+			userService.registerMember(failTestUser);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			//then
@@ -180,7 +180,7 @@ public class SignupServiceTest {
 
 		//when
 		//아이디 중복검사 메서드 실행
-		boolean result = signupService.isDuplicateId(userId);
+		boolean result = userService.isDuplicateId(userId);
 		//then
 		//중복인 상태이므로 true가 반환되어야 함
 		assertTrue(result);
@@ -202,7 +202,7 @@ public class SignupServiceTest {
 
 		//when
 		//아이디 중복검사 메서드 실행
-		boolean result = signupService.isDuplicateId(userId);
+		boolean result = userService.isDuplicateId(userId);
 
 		//then
 		//중복이 아니므로 false가 반환되어야 함
@@ -225,7 +225,7 @@ public class SignupServiceTest {
 		//when
 		//아이디 중복검사 메서드 실행
 		try {
-			signupService.isDuplicateId(userId);
+			userService.isDuplicateId(userId);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			//then
@@ -246,11 +246,11 @@ public class SignupServiceTest {
 		//given
 		//이메일을 중복인 상태로 설정
 		String email = "failTest@naver.com";
-		when(signupService.isDuplicateEmail(email)).thenReturn(true);
+		when(userService.isDuplicateEmail(email)).thenReturn(true);
 
 		//when
 		//이메일 중복검사 메서드 실행
-		boolean result = signupService.isDuplicateEmail(email);
+		boolean result = userService.isDuplicateEmail(email);
 		assertTrue(result);
 
 		//verify
@@ -266,11 +266,11 @@ public class SignupServiceTest {
 		//given
 		//이메일을 중복이 아닌 상태로 설정
 		String email = "test@test.com";
-		when(signupService.isDuplicateEmail(failTestUser.getEmail())).thenReturn(true);
+		when(userService.isDuplicateEmail(failTestUser.getEmail())).thenReturn(true);
 
 		//when
 		//이메일 중복검사 메서드 실행
-		boolean result = signupService.isDuplicateEmail(failTestUser.getEmail());
+		boolean result = userService.isDuplicateEmail(failTestUser.getEmail());
 		assertTrue(result);
 
 		//verify
@@ -291,7 +291,7 @@ public class SignupServiceTest {
 		//when
 		//이메일 패턴 확인 메서드 실행
 		try {
-			signupService.isDuplicateEmail(email);
+			userService.isDuplicateEmail(email);
 			fail("예외 발생 실패..");
 		} catch (UserException e) {
 			//then
@@ -304,5 +304,163 @@ public class SignupServiceTest {
 		verify(userDao, times(0)).existsByEmail(email);
 	}
 
+
+	/**
+	 * 아이디 찾기 성공 테스트
+	 */
+	@Test
+	public void findIdSuccessTest() {
+		String name = "test";
+		String phoneNum = "010-1234-5678";
+
+		when(userDao.findByNameAndPhoneNum(name, phoneNum)).thenReturn(successTestUser);
+
+		String result = userService.findId(name, phoneNum);
+		assertEquals("test", result);
+
+		verify(userDao, times(1)).findByNameAndPhoneNum(name, phoneNum);
+	}
+
+	/**
+	 * 아이디 찾기 실패 테스트
+	 */
+	@Test
+	public void findIdFailedTest() {
+		String name = "Unknown";
+		String phoneNum = "010-0000-0000";
+
+		when(userDao.findByNameAndPhoneNum(name, phoneNum)).thenReturn(null);
+
+		String result = userService.findId(name, phoneNum);
+		assertNull(result, "아이디 찾기 실패해야함");
+
+		verify(userDao, times(1)).findByNameAndPhoneNum(name, phoneNum);
+	}
+
+
+	/**
+	 * 사용자 정보 조회 성공 테스트
+	 */
+	@Test
+	public void ValidateUserTest() {
+		String userId = "test";
+		String name = "testName";
+		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null,"USER");
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(successTestUser));
+
+		boolean validUser = userService.validateUser(user);
+		assertTrue(validUser, "사용자를 찾았습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+	/**
+	 * 사용자 이름 불일치 테스트
+	 */
+	@Test
+	public void validateUserNameMismatch() {
+		String userId = "test";
+		String name = "test";
+		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null, "USER");
+
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(successTestUser));
+
+		boolean validUser = userService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+	/**
+	 * 사용자 전화번호 불일치 테스트
+	 */
+	@Test
+	public void validateUserPhoneNumMismatch() {
+		String userId = "test";
+		String name = "testName";
+		String phoneNum = "010-4321-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null, "USER");
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(failTestUser));
+
+		boolean validUser = userService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+
+
+	/**
+	 * 사용자 정보 조회 실패 테스트
+	 */
+	@Test
+	public void ValidateUserFailedTest() {
+		String userId = "Unknown";
+		String name = "testName";
+		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, "hashedPassword", phoneNum,
+				null, null, null, null,"USER");
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.empty());
+
+		boolean validUser = userService.validateUser(user);
+		assertFalse(validUser, "사용자를 찾지 못했습니다.");
+
+		verify(userDao, times(1)).findById(user.getUserId());
+	}
+
+	/**
+	 * 비밀번호 변경 성공 테스트
+	 */
+	@Test
+	public void changePasswordSuccessTest() {
+		String userId = "test";
+		String name = "testName";
+		String phoneNum = "010-1234-5678";
+		User user = new User(userId, name, null, phoneNum,
+				null, null, null, null,"USER");
+
+		when(userDao.findById(user.getUserId())).thenReturn(Optional.ofNullable(successTestUser));
+
+		String newPassword = "changedPassword";
+
+		boolean result = userService.changePassword(user, newPassword);
+
+		assertTrue(result, "비밀번호 변경 성공해야함");
+		verify(userDao, times(1)).save(successTestUser);
+		verify(passwordEncoder, times(1)).encode(newPassword);
+	}
+
+	/**
+	 * 비밀번호 변경 예외 테스트
+	 */
+	@Test
+	public void changePasswordFailedTest() {
+
+		//given
+		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패해야함
+		when(userDao.findById(failTestUser.getUserId())).thenReturn(Optional.empty());
+
+		// Act & Assert
+		try {
+			userService.changePassword(failTestUser, "changedPassword");
+			fail("비밀번호 변경이 실패해야함");
+		} catch (Exception e) {
+			assertEquals("해당 사용자 정보가 없습니다", e.getMessage());
+		}
+
+		// Verify
+		// 사용자 정보가 없는 경우, 비밀번호 변경이 실패하고 해당 예외가 발생하는지 확인
+		verify(userDao, times(1)).findById(failTestUser.getUserId());
+		verifyNoMoreInteractions(userDao);
+	}
 }
 

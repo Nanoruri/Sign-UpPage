@@ -10,8 +10,7 @@ import me.jh.core.utils.auth.JwtProvider;
 import me.jh.springstudy.entity.User;
 import me.jh.springstudy.exception.user.UserErrorType;
 import me.jh.springstudy.exception.user.UserException;
-import me.jh.springstudy.service.user.FindService;
-import me.jh.springstudy.service.user.SignupService;
+import me.jh.springstudy.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,7 @@ import java.util.Map;
 public class UserController {
 
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
-    private final SignupService signupService;
-    private final FindService findService;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
     private final JwtGenerator jwtGenerator;
 
@@ -40,13 +38,11 @@ public class UserController {
     /**
      * 컨트롤러에 의존성을 주입하는 생성자.
      *
-     * @param signupService 회원 관련 작업을 수행하는 서비스
-     * @param findservice   아이디/비밀번호 찾기를 수행하는 서비스
+     * @param userService 회원 관련 작업을 수행하는 서비스
      */
     @Autowired
-    public UserController(SignupService signupService, FindService findservice, JwtProvider jwtProvider, JwtGenerator jwtGenerator) {
-        this.signupService = signupService;
-        this.findService = findservice;
+    public UserController(UserService userService, JwtProvider jwtProvider, JwtGenerator jwtGenerator) {
+        this.userService = userService;
         this.jwtProvider = jwtProvider;
         this.jwtGenerator = jwtGenerator;
     }
@@ -59,7 +55,7 @@ public class UserController {
      *
      * @param user 사용자가 입력한 정보를 전달받아 회원가입에 필요한 정보를 담은 객체
      * @return 회원가입 성공시 Success페이지로 리다이렉트, 실패하면 signupError페이지로 리다이렉트
-     * @implNote 이 메서드는 {@link SignupService#registerMember(User)}를 사용하여 회원가입을 수행. 예외처리는 서비스 클래스에서 수행.
+     * @implNote 이 메서드는 {@link UserService#registerMember(User)}를 사용하여 회원가입을 수행. 예외처리는 서비스 클래스에서 수행.
      */
     @Operation(summary = "회원가입", description = "회원가입 정보를 받아 사용자 등록을 수행합니다.")
     @ApiResponses(value = {
@@ -67,7 +63,7 @@ public class UserController {
     })
     @PostMapping
     public ResponseEntity<String> signup(@RequestBody User user) {
-        signupService.registerMember(user);
+        userService.registerMember(user);
         log.info("회원 정보 저장성공");
         return ResponseEntity.ok("회원가입 성공");
     }
@@ -79,7 +75,7 @@ public class UserController {
      * @param reqData Json형식의 데이터로 이름과 전화번호 값을 들고옴
      * @return http상태코드 200과 함께 Json형식의 데이터로 아이디를 반환함.
      * @throws UserException 사용자 이름과 전화번호가 일치하지 않을 경우 사용자를 찾을 수 없다는 메세지를 반환
-     * @implNote 이 메서드는 {@link FindService#findId(String, String)}를 사용하여 사용자를 조회.
+     * @implNote 이 메서드는 {@link UserService#findId(String, String)}를 사용하여 사용자를 조회.
      */
     @Operation(summary = "사용자 ID 찾기", description = "이름과 전화번호를 기준으로 사용자의 ID를 찾습니다.")
     @ApiResponses(value = {
@@ -92,7 +88,7 @@ public class UserController {
         String phoneNum = reqData.get("phoneNum");
 
 
-        if (findService.findId(name, phoneNum) == null) {
+        if (userService.findId(name, phoneNum) == null) {
             log.warn("아이디 찾기 실패");
             throw new UserException(UserErrorType.USER_NOT_FOUND);
         }
@@ -100,7 +96,7 @@ public class UserController {
         log.info("아이디 찾기 성공");
 
         Map<String, String> response = new HashMap<>();
-        response.put("userId", findService.findId(name, phoneNum));
+        response.put("userId", userService.findId(name, phoneNum));
 
         return ResponseEntity.ok(response);
     }
@@ -114,7 +110,7 @@ public class UserController {
      * @param user 클라이언트가 입력한 아이디와 이름과 전화번호를 담아 User객체로 전달
      * @return 인증 성공시 비밀번호 변경페이지로 반환, 실패시 로그와 함께 비밀번호 찾는 페이지로 돌아옴.
      * @throws UserException 사용자를 찾을 수 없을 경우  404 상태와 사용자를 찾을 수 없다는 메세지를 반환
-     * @implNote 이 메서드는 {@link FindService#validateUser(User)}를 사용하여 사용자를 조회.
+     * @implNote 이 메서드는 {@link UserService#validateUser(User)}를 사용하여 사용자를 조회.
      */
     @Operation(summary = "비밀번호 찾기 인증", description = "사용자가 입력한 정보로 비밀번호 변경 토큰을 생성하여 반환합니다.")
     @ApiResponses(value = {
@@ -124,7 +120,7 @@ public class UserController {
     @PostMapping("/password")
     public ResponseEntity<Map<String, String>> findPassword(@RequestBody User user) {
 
-        if (!findService.validateUser(user)) {//사용자를 찾을 수 없을 경우
+        if (!userService.validateUser(user)) {//사용자를 찾을 수 없을 경우
             log.warn("잘못된 입력입니다");
             throw new UserException(UserErrorType.USER_NOT_FOUND);//사용자를 찾을 수 없다는 메세지를 반환
         }
@@ -149,7 +145,7 @@ public class UserController {
      * @return 비밀번호 변경 성공시 비밀번호 변경 성공 페이지로 리다이렉트, 실패시 401 Unauthorized 상태와 오류 메시지를 반환
      * @throws UserException 사용자를 찾을 수 없을 경우 404 상태와 사용자를 찾을 수 없다는 메세지를 반환
      * @implNote 이 메서드는 {@link JwtProvider#validateToken(String)}를 사용하여 토큰의 유효성을 검증.
-     * {@link FindService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
+     * {@link UserService#changePassword(User, String)}를 사용하여 비밀번호 변경을 수행. 예외처리는 서비스 클래스에서 수행.
      */
     @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 토큰을 검증하고 새 비밀번호를 설정합니다.")
     @ApiResponses(value = {
@@ -168,7 +164,7 @@ public class UserController {
                 User user = new User();
                 user.setUserId(userId);
 
-                if (!findService.changePassword(user, newPassword)) {
+                if (!userService.changePassword(user, newPassword)) {
                     log.warn("비밀번호 변경 실패");
                     throw new UserException(UserErrorType.USER_NOT_FOUND);
                 }
