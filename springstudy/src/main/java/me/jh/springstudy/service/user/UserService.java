@@ -150,7 +150,7 @@ public class UserService {
      * 입력된 정보로 정확히 일치하는 사용자가 데이터베이스에 존재하는지 여부를 반환.
      *
      * @return 사용자가 존재할 경우 true, 존재하지 않을 경우 false 반환
-     * @implNote 이 메서드는 {@link UserDao#findByProperties(User)}를 사용하여 사용자를 검증.
+     * @implNote 이 메서드는 {@link UserDao#findById(Object)}를 사용하여 사용자를 검증.
      */
     public boolean validateUser(User user) {
         Optional<User> foundUser = userDao.findById(user.getUserId());
@@ -176,7 +176,7 @@ public class UserService {
      * @param newPassword        새로운 비밀번호
      * @return 비밀번호 변경 성공 시 true, 실패 시 false
      * @throws UserException 사용자 정보가 일치하지 않아 비밀번호 변경에 실패할 경우 예외 발생
-     * @implNote 이 메서드는 {@link UserDao#findByProperties(User)}를 사용하여 사용자를 검증하고,
+     * @implNote 이 메서드는 {@link UserDao#findById(Object)}를 사용하여 사용자를 검증하고,
      * {@link UserDao#save(Object)}를 사용하여 변경된 비밀번호를 저장합니다.
      */
     public boolean changePassword(User changePasswordUser, String newPassword) {
