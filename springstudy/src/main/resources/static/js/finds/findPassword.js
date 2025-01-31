@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const phoneNum = document.getElementById('inputPhoneNum').value;
 
 
-            fetch('/study/user/api/findPassword', {
+            fetch('/study/user/api/password', {
             method: 'POST',
             credentials: 'include',
             headers: {

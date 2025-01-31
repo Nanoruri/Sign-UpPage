@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (commonValidate()) {
 
             try {
-                const response = await fetch('/study/user/api/loginCheck', {
+                const response = await fetch('/study/auth', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

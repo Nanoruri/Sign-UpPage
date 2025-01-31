@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleLogout(event) {
         event.preventDefault();
         sessionStorage.removeItem('aToken');
-        fetch('/study/user/api/logout', {
+        fetch('/study/auth/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken: sessionStorage.getItem('rToken') }),

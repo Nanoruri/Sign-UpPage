@@ -76,7 +76,7 @@ public class SecurityConfig {
 
                 .authorizeRequests()//권한 설정
 
-                .antMatchers("/user/**", "/").permitAll()
+                .antMatchers("/user/**","/auth/**", "/").permitAll()
                 .antMatchers("/board/page/**").permitAll()
                 .antMatchers("/board/api/", "/board/api/posts").permitAll()
                 .requestMatchers(new AuthTabRequestMatcher()).permitAll()
