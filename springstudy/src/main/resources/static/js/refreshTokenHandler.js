@@ -1,6 +1,6 @@
 const refreshAccessToken = async (refreshToken) => {
   try {
-    const response = await fetch('/study/user/api/refresh', {
+    const response = await fetch('/study/auth/refresh', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

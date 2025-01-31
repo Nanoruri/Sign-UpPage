@@ -20,7 +20,7 @@ function requestSignup(event) {
             phoneNum: phoneNum,
         };
 
-        fetch('/study/user/api/signup', {
+        fetch('/study/user/api', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

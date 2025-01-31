@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (commonValidate() && passwordValidate()) {
             const newPassword = document.getElementById('inputPassword').value;
 
-            fetch('/study/user/api/passwordChange', {
-                method: 'POST',
+            fetch('/study/user/api/password2', {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
